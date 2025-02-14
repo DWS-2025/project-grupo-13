@@ -1,4 +1,0 @@
-This is a testod
-lol
-prueba
-prueba en intellij
