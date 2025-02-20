@@ -1,20 +1,25 @@
 {{>header}}
 <html>
-
 <body>
 
     <div class="mb-3">
-        <form>
-            <label for="exampleFormControlInput1" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+        <form action="/formProcess" method="post" enctype="multipart/form-data">
+            <label for="characterName" class="form-label">Your mighty name</label>
+            <input type="text" class="form-control" name="nameOfCharacter" id="characterName">
     </div>
     <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        <label for="characterIntro" class="form-label">What can you say about yourself?</label>
+        <textarea class="form-control" name="characterDesc" rows="3" id="characterIntro"></textarea>
+    </div>
+    <div class="mb-3">
+        <p>Image name: </p>
+        <input type="text" name="imageName" />
+        <p>Image file:</p><input type='file' name='characterImage' accept=".jpg, .jpeg, .gif" />
+        <input type='submit' value='Save' />
     </div>
     </form>
-
-
-</body>
-
-</html>
+    
+    
+    </body>
+    
+    </html>
