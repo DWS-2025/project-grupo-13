@@ -6,6 +6,9 @@ import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,17 @@ public class sessionController {
 
         return "character_view";
     }
+
+    @GetMapping("/list_objects")
+	public String iterationObj(Model model) {
+
+		List<Person> people = new ArrayList<>();
+		
+
+		model.addAttribute("people", people);
+
+		return "listing";
+	}
 
     @GetMapping("/download_image")
     public ResponseEntity<Object> downloadImage(Model model) throws MalformedURLException {
