@@ -1,14 +1,20 @@
 package com.grupo13.grupo13;
 
 public class Weapon {
+    private String name;
     private int damage;
     private String image;
     private String description;
 
-    public Weapon(int damage, String image, String description){
-            this.damage = damage;
-            this.image = image;
-            this.description = description;
+    public Weapon(String name, int damage, String image, String description){
+        this.name = name;
+        this.damage = damage;
+        this.image = image;            
+        this.description = description;
+    }
+
+    public String getName(){
+        return name;
     }
 
     public int getDamage() {
@@ -33,6 +39,10 @@ public class Weapon {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 
 }
