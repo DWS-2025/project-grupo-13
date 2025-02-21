@@ -1,3 +1,4 @@
+package com.grupo13.grupo13;
 public class Armor {
     private static int defense;
     private String picture;
