@@ -6,6 +6,9 @@ import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 
@@ -26,8 +32,11 @@ public class sessionController {
 
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
 
+   
+
     @PostMapping("/formProcess")
-    public String procesarFormulario(Model model, @RequestParam String nameOfCharacter, @RequestParam String characterDesc,
+    public String procesarFormulario(Model model, @RequestParam String nameOfCharacter,
+            @RequestParam String characterDesc,
             @RequestParam String imageName, @RequestParam MultipartFile characterImage) throws IOException {
 
         character.setDesc(characterDesc);
@@ -42,25 +51,36 @@ public class sessionController {
         return "character_view";
     }
 
-   @GetMapping("/download_image")	
-	public ResponseEntity<Object> downloadImage(Model model) throws MalformedURLException {
+    @GetMapping("/list_objects")
+	public String iterationObj(Model model) {
 
-		Path imagePath = IMAGES_FOLDER.resolve("image.gif");
+		List<Person> people = new ArrayList<>();
 		
-		Resource image = new UrlResource(imagePath.toUri());
+
+		model.addAttribute("people", people);
+
+		return "listing";
+	}
+
+    @GetMapping("/download_image")
+    public ResponseEntity<Object> downloadImage(Model model) throws MalformedURLException {
+
+        Path imagePath = IMAGES_FOLDER.resolve("image.gif");
+
+        Resource image = new UrlResource(imagePath.toUri());
 
         String contentType;
         try {
-            contentType = Files.probeContentType(imagePath); 
+            contentType = Files.probeContentType(imagePath);
             if (contentType == null) {
-                contentType = "application/octet-stream"; 
+                contentType = "application/octet-stream";
             }
         } catch (IOException e) {
             contentType = "application/octet-stream";
         }
-    
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, contentType) 
+                .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(image);
     }
 
