@@ -1,16 +1,22 @@
 package com.grupo13.grupo13;
 public class Armor {
-    private static int defense;
+    private String name;
+    private int defense;
     private String picture;
     private String description;
 
-    Armor(int defense, String picture, String description){
+    Armor(String name, int defense, String picture, String description){
+        this.name=name;
         this.defense=defense;
         this.picture=picture;
         this.description=description;
     }
 
-    public static int getDefense() {
+    public String getName(){
+        return name;
+    }
+
+    public int getDefense() {
         return defense;
     }
 
