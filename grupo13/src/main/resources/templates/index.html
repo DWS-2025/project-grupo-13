@@ -1,24 +1,28 @@
 {{>header}}
 <html>
 <body>
-
-    <div class="mb-3">
-        <form action="/formProcess" method="post" enctype="multipart/form-data">
-            <label for="characterName" class="form-label">Your mighty name</label>
+<div class="d-flex align-items-center vh-100">
+<div class="d-flex align-items-center vh-100 ms-5 w-50 border border-dark p-4 rounded">
+    <form action="/formProcess" method="post" enctype="multipart/form-data" class="w-100">
+        <div class="mb-3">
+            <label for="characterName" class="form-label">Your mighty sds</label>
             <input type="text" class="form-control" name="nameOfCharacter" id="characterName">
-    </div>
-    <div class="mb-3">
-        <label for="characterIntro" class="form-label">What can you say about yourself?</label>
-        <textarea class="form-control" name="characterDesc" rows="3" id="characterIntro"></textarea>
-    </div>
-    <div class="mb-3">
-        <p>Image name: </p>
-        <input type="text" name="imageName" />
-        <p>Image file:</p><input type='file' name='characterImage' accept=".jpg, .jpeg, .gif" />
-        <input type='submit' value='Save' />
-    </div>
+        </div>
+        <div class="mb-3">
+            <label for="characterIntro" class="form-label">What can you say about yourself?</label>
+            <textarea class="form-control" name="characterDesc" rows="3" id="characterIntro"></textarea>
+        </div>
+        <div class="mb-3">
+            <p>Image name: </p>
+            <input type="text" name="imageName" class="form-control" />
+            <p>Image file:</p>
+            <input type='file' name='characterImage' accept=".jpg, .jpeg, .gif" class="form-control" />
+            <input type='submit' value='Save' class="btn btn-primary mt-3" />
+        </div>
     </form>
-    
+</div>
+<div class="w-50" style="background-image: url('/imp_imgs/background1.png'); background-size: cover; background-position: center;">
+</div>
     
     </body>
     
