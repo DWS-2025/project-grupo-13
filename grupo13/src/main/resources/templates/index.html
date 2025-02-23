@@ -1,8 +1,10 @@
 {{>header}}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <html>
 <body>
-<div class="d-flex align-items-center vh-100">
-<div class="d-flex align-items-center vh-100 ms-5 w-50 border border-dark p-4 rounded">
+<div class="d-flex align-items-center vh-100 p-4">
+    <div class="d-flex col-6 p-4 bg-secondary bg-opacity-75 text-white rounded">
     <form action="/formProcess" method="post" enctype="multipart/form-data" class="w-100">
         <div class="mb-3">
             <label for="characterName" class="form-label">Your mighty sds</label>
@@ -21,9 +23,11 @@
         </div>
     </form>
 </div>
-<div class="w-50" style="background-image: url('/imp_imgs/background1.png'); background-size: cover; background-position: center;">
+
+<body class="bg-dark" style="background: url('/imp_imgs/background1.png') no-repeat center center / cover;">
+</body>
 </div>
     
-    </body>
-    
-    </html>
+</body>
+
+</html>
