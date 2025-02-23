@@ -1,0 +1,5 @@
+List<Armor> armorList =new ArrayList<>();
+armorList.add(new Armor("Wood Armor",20, "https://dummyimage.com/320x240/87f7ff/000000.png&text=Duck", "Obtained from an oak tree"))
+
+List<Weapon> weaponList = new ArrayList<>();
+weaponList.add(new Weapon("Wood Sword",20,"https://dummyimage.com/320x240/87f7ff/000000.png&text=Duck","Obtained from an oak tree"))
