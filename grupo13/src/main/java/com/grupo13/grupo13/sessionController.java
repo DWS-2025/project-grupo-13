@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,6 +24,8 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @Controller
@@ -30,12 +33,26 @@ public class sessionController {
     @Autowired
     private Character character;
 
-    private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
+    @Autowired
+    private User user;
 
+    private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
    
+    @GetMapping("/")
+    public String index(Model model, HttpSession session) {
+    
+        session.setAttribute("user", user);
+        if(character.getName()==null){
+            return "index";
+        } else{
+            return "character_view";
+        }
+    }
+    
+
 
     @PostMapping("/formProcess")
-    public String procesarFormulario(Model model, @RequestParam String nameOfCharacter,
+    public String procesarFormulario(Model model, HttpSession session, @RequestParam String nameOfCharacter,
             @RequestParam String characterDesc,
             @RequestParam String imageName, @RequestParam MultipartFile characterImage) throws IOException {
 
@@ -47,12 +64,12 @@ public class sessionController {
 
         characterImage.transferTo(imagePath);
         model.addAttribute("character", character);
-
+        
         return "character_view";
     }
 
     @GetMapping("/list_objects")
-	public String iterationObj(Model model) {
+	public String iterationObj(Model model, HttpSession session) {
 
 		List<Armor> armorList = new ArrayList<>();
 
@@ -147,8 +164,23 @@ public class sessionController {
 		return "listing";
 	}
 
+    @PostMapping("/purchase")
+    public String postMethodName(@RequestParam int attribute, @RequestParam String name, @RequestParam String image, @RequestParam String desc, @RequestParam String type) {
+
+        if (Objects.equals("armor", type)) {
+            Armor armor_new = new Armor(name, 10, image, desc);
+            if (!user.getArmorInventory().contains(armor_new)) user.getArmorInventory().add(armor_new);          
+        } else{
+            Weapon weapon_new = new Weapon(name, 10, image, desc);
+            if (!user.getWeaponInventory().contains(weapon_new)) user.getWeaponInventory().add(weapon_new);
+        }
+        
+        return "redirect:/list_objects";
+    }
+    
+
     @GetMapping("/download_image")
-    public ResponseEntity<Object> downloadImage(Model model) throws MalformedURLException {
+    public ResponseEntity<Object> downloadImage(Model model, HttpSession session) throws MalformedURLException {
 
         Path imagePath = IMAGES_FOLDER.resolve("image.gif");
 
