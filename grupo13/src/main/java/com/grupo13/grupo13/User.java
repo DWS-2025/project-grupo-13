@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
-@Component
+
 @SessionScope
 public class User {
     private int money;
     private String userName;
-    private ArrayList<Weapon> weaponInventory;
-    private ArrayList<Armor> armorInventory;    
+    private ArrayList<Weapon> weaponInventory = new ArrayList<>();
+    private ArrayList<Armor> armorInventory = new ArrayList<>();    
 
     public User(int money, String userName) {
         this.money = money;
