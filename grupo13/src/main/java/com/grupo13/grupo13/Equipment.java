@@ -1,9 +1,10 @@
 package com.grupo13.grupo13;
 
 public class Equipment {
-    String name;
-    String picture;
-    String description;
+    private String name;
+    private String picture;
+    private String description;
+    private Long id = 0L;
 
 
     public String getName(){
@@ -18,6 +19,9 @@ public class Equipment {
     public String getDescription() {
         return description;
     }
+    public Long getId(){
+        return id;
+    }
 
     public void setDescription(String desc){
         this.description=desc;
@@ -29,6 +33,11 @@ public class Equipment {
 
     public void setName(String nam){
         this.name= nam;
+    }
+
+    public void setId(Long i){
+     this.id =i;
+
     }
 
 }
