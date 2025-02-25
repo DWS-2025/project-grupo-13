@@ -63,7 +63,8 @@ public class sessionController {
         Path imagePath = IMAGES_FOLDER.resolve("image.gif");
 
         characterImage.transferTo(imagePath);
-        model.addAttribute("character", character);
+        session.setAttribute("character", character);
+        model.addAttribute("character", session.getAttribute("character"));
         
         return "character_view";
     }
@@ -165,19 +166,21 @@ public class sessionController {
 	}
 
     @PostMapping("/purchase")
-    public String postMethodName(@RequestParam int attribute, @RequestParam String name, @RequestParam String image, @RequestParam String desc, @RequestParam String type) {
+    public String postMethodName(@RequestParam int attribute, @RequestParam String name, @RequestParam String image,
+            @RequestParam String desc, @RequestParam String type) {
 
         if (Objects.equals("armor", type)) {
             Armor armor_new = new Armor(name, 10, image, desc);
-            if (!user.getArmorInventory().contains(armor_new)) user.getArmorInventory().add(armor_new);          
-        } else{
+            if (!user.getArmorInventory().contains(armor_new))
+                user.getArmorInventory().add(armor_new);
+        } else {
             Weapon weapon_new = new Weapon(name, 10, image, desc);
-            if (!user.getWeaponInventory().contains(weapon_new)) user.getWeaponInventory().add(weapon_new);
+            if (!user.getWeaponInventory().contains(weapon_new))
+                user.getWeaponInventory().add(weapon_new);
         }
-        
+
         return "redirect:/list_objects";
     }
-    
 
     @GetMapping("/download_image")
     public ResponseEntity<Object> downloadImage(Model model, HttpSession session) throws MalformedURLException {
