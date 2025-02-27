@@ -1,13 +1,14 @@
 package com.grupo13.grupo13;
 public class Armor extends Equipment {
     
-    private int defense;
+    private int style;
     
    
 
-    Armor(String name, int defense, String picture, String description){
+    Armor(String name, int style, int defense, String picture, String description){
         this.name=name;
-        this.defense=defense;
+        this.style=style;
+        this.attribute=defense;
         this.picture=picture;
         this.description=description;
     }
@@ -15,7 +16,19 @@ public class Armor extends Equipment {
    
 
     public int getDefense() {
-        return defense;
+        return attribute;
+    }
+
+    public void setDefense(int attribute){
+        this.attribute = attribute;
+    }
+
+    public int getStyle() {
+        return style;
+    }
+
+    public void setStyle(int style) {
+        this.style = style;
     }
 
     

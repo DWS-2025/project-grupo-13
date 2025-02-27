@@ -1,9 +1,12 @@
 package com.grupo13.grupo13;
 
 public class Equipment {
+
+    long id;
     String name;
     String picture;
     String description;
+    int attribute;
 
 
     public String getName(){
@@ -30,5 +33,27 @@ public class Equipment {
     public void setName(String nam){
         this.name= nam;
     }
+
+
+    public long getId() {
+        return id;
+    }
+
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+
+    public int getAttribute() {
+        return attribute;
+    }
+
+
+    public void setAttribute(int attribute) {
+        this.attribute = attribute;
+    }
+
+    
 
 }

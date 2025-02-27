@@ -25,22 +25,18 @@
 			</div>
 			{{/current}}
 
-			{{#weapon_available}}
+			{{#available}}
 			<div class="col">
 				<form action="/purchase" method="post" enctype="multipart/form-data">
 					<div class="card" style="width:18rem;">
 						<img src="{{picture}}" class="card-img-top" alt="...">
 						<div class="card-body">
 							<h5 class="card-title">{{name}}</h5>
-							<p class="card-text">{{damage}} - {{description}}</p>
+							<p class="card-text">{{description}}</p>
 							
 							<!-- Inputs ocultos para enviar los datos de cada objeto -->
 
-							<input type="hidden" name="name" value="{{name}}">
-							<input type="hidden" name="attribute" value="{{damage}}">
-							<input type="hidden" name="image" value="{{picture}}">
-							<input type="hidden" name="desc" value="{{description}}">
-							<input type="hidden" name="type" value="weapon">
+							<input type="hidden" name="id" value="{{id}}">
 							<!--fin de los inputs ocultos-->
 							<input type='submit' value='Añadir'>
 					
@@ -48,7 +44,7 @@
 					</div>
 					</form>
 					</div>
-			{{/weapon_available}}
+			{{/available}}
 					
 		</div>
 
