@@ -10,31 +10,22 @@
 <body>
 	<p>Store</p>
 		<div class="row row-cols-auto g-4 justify-content-center">
-			{{#armors}}
+			{{#current}}
 			<div class="col">
 				<form action="/purchase" method="post" enctype="multipart/form-data">
 					<div class="card" style="width:18rem;">
 						<img src="{{picture}}" class="card-img-top" alt="...">
 						<div class="card-body">
 							<h5 class="card-title">{{name}}</h5>
-							<p class="card-text">{{defense}} - {{description}}</p>
-
-							<!-- Inputs ocultos para enviar los datos de cada objeto -->
-							<input type="hidden" name="name" value="{{name}}">
-							<input type="hidden" name="attribute" value="{{defense}}">
-							<input type="hidden" name="image" value="{{picture}}">
-							<input type="hidden" name="desc" value="{{description}}">
-							<input type="hidden" name="type" value="armor">
-							<!--fin de los inputs ocultos-->
-
-							<input type='submit' value='Añadir'>
+							<p class="card-text">{{description}}</p>
+							<p style="color: green; font-weight: bold;">Comprado</p>
 						</div>
 					</div>
 				</form>
 			</div>
-			{{/armors}}
+			{{/current}}
 
-			{{#weapons}}
+			{{#weapon_available}}
 			<div class="col">
 				<form action="/purchase" method="post" enctype="multipart/form-data">
 					<div class="card" style="width:18rem;">
@@ -57,9 +48,9 @@
 					</div>
 					</form>
 					</div>
-					{{/weapons}}
+			{{/weapon_available}}
 					
-					</div>
+		</div>
 
 </body>
 

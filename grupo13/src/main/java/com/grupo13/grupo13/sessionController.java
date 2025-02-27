@@ -36,6 +36,9 @@ public class sessionController {
     @Autowired
     private User user;
 
+    @Autowired
+    private UserService userService;
+
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
    
     @GetMapping("/")
@@ -87,34 +90,6 @@ public class sessionController {
             "https://dummyimage.com/320x240/ffd700/000000.png&text=Golden+Chestplate", 
             "Made of gold. Shiny but weak."));
 
-        armorList.add(new Armor("Dragon Scale Armor", 80, 
-            "https://dummyimage.com/320x240/dc143c/000000.png&text=Dragon+Scale", 
-            "Forged from the scales of an ancient dragon."));
-
-        armorList.add(new Armor("Shadow Cloak", 25, 
-            "https://dummyimage.com/320x240/1a1a1a/ffffff.png&text=Shadow+Cloak", 
-            "A mysterious cloak that helps the wearer move unseen."));
-
-        armorList.add(new Armor("Crystal Armor", 65, 
-            "https://dummyimage.com/320x240/87ceeb/000000.png&text=Crystal+Armor", 
-            "A magical armor made of enchanted crystals."));
-
-        armorList.add(new Armor("Obsidian Plate", 90, 
-            "https://dummyimage.com/320x240/2c2c2c/ffffff.png&text=Obsidian+Plate", 
-            "Extremely tough armor, made from volcanic obsidian."));
-
-        armorList.add(new Armor("Elven Leather", 35, 
-            "https://dummyimage.com/320x240/6b8e23/000000.png&text=Elven+Leather", 
-            "Lightweight and flexible, used by elven warriors."));
-
-        armorList.add(new Armor("Demonic Armor", 95, 
-            "https://dummyimage.com/320x240/8b0000/ffffff.png&text=Demonic+Armor", 
-            "An armor cursed with demonic energy, extremely durable."));
-
-        armorList.add(new Armor("Celestial Robes", 55, 
-            "https://dummyimage.com/320x240/ffffff/000000.png&text=Celestial+Robes", 
-            "Blessed by the gods, grants divine protection."));
-		
 
 		model.addAttribute("armors", armorList);
 
@@ -141,44 +116,44 @@ public class sessionController {
             "https://dummyimage.com/320x240/1a1a1a/ffffff.png&text=Shadow+Dagger", 
             "A dagger infused with dark energy, perfect for stealth attacks."));
 
-        weaponList.add(new Weapon("Crystal Spear", 65, 
-            "https://dummyimage.com/320x240/87ceeb/000000.png&text=Crystal+Spear", 
-            "A magical spear made from enchanted crystals."));
+       
 
-        weaponList.add(new Weapon("Obsidian War Axe", 90, 
-            "https://dummyimage.com/320x240/2c2c2c/ffffff.png&text=Obsidian+Axe", 
-            "A massive axe forged from volcanic obsidian."));
+            ArrayList<Equipment> armor_available = new ArrayList<>();
+            ArrayList<Equipment> weapon_available = new ArrayList<>();
 
-        weaponList.add(new Weapon("Elven Bow", 35, 
-            "https://dummyimage.com/320x240/6b8e23/000000.png&text=Elven+Bow", 
-            "A lightweight bow used by elven hunters."));
+            ArrayList<Equipment> currentInventory = userService.currentUserInventory();
 
-        weaponList.add(new Weapon("Demonic Scythe", 95, 
-            "https://dummyimage.com/320x240/8b0000/ffffff.png&text=Demonic+Scythe", 
-            "A cursed scythe imbued with demonic power."));
+            for (Equipment equipment : armorList) {
+                if (!currentInventory.contains(equipment)) {
+                    armor_available.add(equipment);
+                }
+            }
 
-        weaponList.add(new Weapon("Celestial Staff", 55, 
-            "https://dummyimage.com/320x240/ffffff/000000.png&text=Celestial+Staff", 
-            "A holy staff blessed by the gods, channeling divine energy."));
+            for (Equipment equipment : weaponList) {
+                if (!currentInventory.contains(equipment)) {
+                    weapon_available.add(equipment);
+                }
+            }
 
-            model.addAttribute("weapons", weaponList);
+            model.addAttribute("current", currentInventory);
+            model.addAttribute("armor_avaliable", armor_available);
+            model.addAttribute("weapon_available", weapon_available);
+
 		return "listing";
 	}
 
     @PostMapping("/purchase")
-    public String postMethodName(@RequestParam int attribute, @RequestParam String name, @RequestParam String image,
+    public String purchase(@RequestParam int attribute, @RequestParam String name, @RequestParam String image,
             @RequestParam String desc, @RequestParam String type) {
+
 
         if (Objects.equals("armor", type)) {
             Armor armor_new = new Armor(name, 10, image, desc);
-            if (!user.getArmorInventory().contains(armor_new))
-                user.getArmorInventory().add(armor_new);
+            userService.saveEquipment(armor_new);
         } else {
             Weapon weapon_new = new Weapon(name, 10, image, desc);
-            if (!user.getWeaponInventory().contains(weapon_new))
-                user.getWeaponInventory().add(weapon_new);
+            userService.saveEquipment(weapon_new);
         }
-
         return "redirect:/list_objects";
     }
 
