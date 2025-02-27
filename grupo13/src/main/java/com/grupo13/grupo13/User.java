@@ -6,17 +6,21 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 
-@SessionScope
+
 public class User {
+
+    private Long id = 0L;
     private int money;
     private String userName;
-    private ArrayList<Weapon> weaponInventory = new ArrayList<>();
-    private ArrayList<Armor> armorInventory = new ArrayList<>();    
+    private ArrayList<Equipment> inventory = new ArrayList<>();
+ 
+    public User(){}
 
     public User(int money, String userName) {
         this.money = money;
         this.userName = userName;
     }
+
     public int getMoney() {
         return money;
     }
@@ -29,12 +33,23 @@ public class User {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    public ArrayList<Weapon> getWeaponInventory() {
-        return weaponInventory;
+
+    public ArrayList<Equipment> getInventory() {
+        return inventory;
     }
-    public ArrayList<Armor> getArmorInventory() {
-        return armorInventory;
+
+    public void setInventory(ArrayList<Equipment> inventory) {
+        this.inventory = inventory;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
     
 

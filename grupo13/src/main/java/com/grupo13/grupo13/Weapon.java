@@ -2,27 +2,31 @@ package com.grupo13.grupo13;
 
 public class Weapon extends Equipment{
     
-    private int damage;
+    private int intimidation;
    
    
 
-    public Weapon(String name, int damage, String image, String description){
-       this.setName(name);
-        this.damage = damage;
-        this.setPicture(image);
-        this.setDescription(description);
-                
-        
+    public Weapon(String name, int intimidation, int damage, String image, String description){
+        this.name = name;
+        this.intimidation = intimidation;
+        this.picture = image;       
+        this.attribute=damage;
+     
+        this.description = description;
     }
 
     public int getDamage() {
-        return damage;
+        return attribute;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
+    public int getIntimidation() {
+        return intimidation;
     }
 
+    public void setIntimidation(int intimidation) {
+        this.intimidation = intimidation;
+    }
+    
   
 
     
