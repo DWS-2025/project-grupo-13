@@ -28,7 +28,7 @@ public class SampleData {
 
         equipmentRepository.save(new Weapon("Golden Rapier", 40, 10,
                 "https://i.imgur.com/Bm5NeRx.jpeg",
-                "A golden rapier. Stylish but fragile.",20));
+                "A golden rapier. Stylish but very fragile.",20));
 
         equipmentRepository.save(new Weapon("Dragon Fang Blade", 80, 10,
                 "https://dummyimage.com/320x240/dc143c/000000.png&text=Dragon+Fang",
@@ -48,7 +48,7 @@ public class SampleData {
 
         equipmentRepository.save(new Armor("Golden Chestplate", 40, 10,
                 "https://dummyimage.com/320x240/ffd700/000000.png&text=Golden+Chestplate",
-                "Made of gold. Shiny but weak.",70));
+                "Made of valuable gold. Shiny but very weak.",70));
 
     }
 
