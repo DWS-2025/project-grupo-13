@@ -32,16 +32,23 @@ public class UserService {
         return false;
     }
 
+    public int getMoney(){
+        return getLoggedUser().getMoney();
+    }
+
     public ArrayList<Equipment> currentUserInventory() {
         User user = getLoggedUser();
         return user.getInventory();
     }
 
     public void saveEquipment(long id) {
+        User user = getLoggedUser();
         if (!hasEquipment(id)) {
             Optional<Equipment> equipment = equipmentService.findById(id);
             if (equipment.isPresent()) {
-                getLoggedUser().getInventory().add(equipment.get());
+                int price = equipment.get().getPrice();
+                user.setMoney(user.getMoney()-price);
+                user.getInventory().add(equipment.get());
             }
         }
     }

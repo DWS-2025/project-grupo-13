@@ -102,7 +102,10 @@ public class sessionController {
 
         Optional<Equipment> eqOptional = equipmentService.findById(id);
         if(eqOptional.isPresent()){
-            userService.saveEquipment(id);
+            int money = userService.getMoney();
+            if(money >= eqOptional.get().getPrice()){
+                userService.saveEquipment(id);
+            }
         } //cambiarlo a ver cuando tengamos el error de no encontrado o smth like that
         return "redirect:/list_objects";
     }
