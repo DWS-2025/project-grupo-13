@@ -1,12 +1,14 @@
 package com.grupo13.grupo13;
 
 public class Equipment {
-    long id;
-    String name;
-    String picture;
-    String description;
-    int attribute;
+    private long id;
+    private String name;
+    private String picture;
+    private String description;
+    private int attribute;
+    private int price;
 
+    
 
     public String getName(){
         return name;
@@ -22,6 +24,10 @@ public class Equipment {
     }
     public Long getId(){
         return id;
+    }
+
+    public int getPrice(){
+        return price;
     }
 
     public void setDescription(String desc){
@@ -51,6 +57,8 @@ public class Equipment {
         this.attribute = attribute;
     }
 
-    
+    public void setnPrice(int p){
+      this.price= p;
+    }
 
 }

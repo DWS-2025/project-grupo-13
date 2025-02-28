@@ -6,22 +6,13 @@ public class Armor extends Equipment {
    
 
 
-    Armor(String name, int style, int defense, String picture, String description){
-        this.name=name;
+    Armor(String name, int style, int defense, String picture, String description, int price){
+        this.setName(name);
         this.style=style;
-        this.attribute=defense;
-        this.picture=picture;
-        this.description=description;
-    }
-
-   
-
-    public int getDefense() {
-        return attribute;
-    }
-
-    public void setDefense(int attribute){
-        this.attribute = attribute;
+        this.setAttribute(defense);
+        this.setPicture(picture);
+        this.setDescription(description);
+        this.setnPrice(price);
     }
 
     public int getStyle() {

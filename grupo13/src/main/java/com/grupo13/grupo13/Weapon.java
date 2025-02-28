@@ -6,18 +6,16 @@ public class Weapon extends Equipment{
    
    
 
-    public Weapon(String name, int intimidation, int damage, String image, String description){
-        this.name = name;
+    public Weapon(String name, int intimidation, int damage, String image, String description, int price){
+        this.setName(name);
         this.intimidation = intimidation;
-        this.picture = image;       
-        this.attribute=damage;
-     
-        this.description = description;
+        this.setPicture(image);      
+        this.setAttribute(damage);
+        this.setDescription(description);
+        this.setnPrice(price);
     }
 
-    public int getDamage() {
-        return attribute;
-    }
+
 
     public int getIntimidation() {
         return intimidation;

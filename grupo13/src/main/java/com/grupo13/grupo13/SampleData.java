@@ -20,35 +20,35 @@ public class SampleData {
 
         equipmentRepository.save(new Weapon("Wood Sword", 20, 10,
                 "https://i.imgur.com/ZJDJakr.jpeg",
-                "A basic sword made from oak wood."));
+                "A basic sword made from oak wood.",10));
 
         equipmentRepository.save(new Weapon("Iron Longsword", 50, 10,
                 "https://i.imgur.com/xq1BDBK.jpeg",
-                "A strong and reliable iron longsword."));
+                "A strong and reliable iron longsword.",15));
 
         equipmentRepository.save(new Weapon("Golden Rapier", 40, 10,
                 "https://i.imgur.com/Bm5NeRx.jpeg",
-                "A golden rapier. Stylish but fragile."));
+                "A golden rapier. Stylish but fragile.",20));
 
         equipmentRepository.save(new Weapon("Dragon Fang Blade", 80, 10,
                 "https://dummyimage.com/320x240/dc143c/000000.png&text=Dragon+Fang",
-                "A blade crafted from the fang of an ancient dragon."));
+                "A blade crafted from the fang of an ancient dragon.",30));
 
         equipmentRepository.save(new Weapon("Shadow Dagger", 25, 10,
                 "https://dummyimage.com/320x240/1a1a1a/ffffff.png&text=Shadow+Dagger",
-                "A dagger infused with dark energy, perfect for stealth attacks."));
+                "A dagger infused with dark energy, perfect for stealth attacks.",40));
 
         equipmentRepository.save(new Armor("Wood Armor", 20, 10,
                 "https://dummyimage.com/320x240/87f7ff/000000.png&text=Wood+Armor",
-                "Obtained from an oak tree. Light but fragile."));
+                "Obtained from an oak tree. Light but fragile.",50));
 
         equipmentRepository.save(new Armor("Iron Plate", 50, 10,
                 "https://dummyimage.com/320x240/a8a8a8/000000.png&text=Iron+Plate",
-                "A strong iron armor that provides good protection."));
+                "A strong iron armor that provides good protection.",65));
 
         equipmentRepository.save(new Armor("Golden Chestplate", 40, 10,
                 "https://dummyimage.com/320x240/ffd700/000000.png&text=Golden+Chestplate",
-                "Made of gold. Shiny but weak."));
+                "Made of gold. Shiny but weak.",70));
 
     }
 
