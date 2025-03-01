@@ -19,15 +19,15 @@ public class SampleData {
         userRepository.save(lupe);
 
         equipmentRepository.save(new Weapon("Wood Sword", 20, 10,
-                "https://i.imgur.com/ZJDJakr.jpeg",
+                "imp_imgs/w1.png",
                 "A basic sword made from oak wood.",10));
 
         equipmentRepository.save(new Weapon("Iron Longsword", 50, 10,
-                "https://i.imgur.com/xq1BDBK.jpeg",
+                "imp_imgs/w2.png",
                 "A strong and reliable iron longsword.",15));
 
         equipmentRepository.save(new Weapon("Golden Rapier", 40, 10,
-                "https://i.imgur.com/Bm5NeRx.jpeg",
+                "imp_imgs/w3.png",
                 "A golden rapier. Stylish but very fragile.",20));
 
         equipmentRepository.save(new Weapon("Dragon Fang Blade", 80, 10,

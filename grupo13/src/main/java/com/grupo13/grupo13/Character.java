@@ -12,6 +12,7 @@ public class Character {
     private int healthPoints;
     private boolean weaponEquiped;
     private boolean armorEquiped;
+    private String imageName;
 
     public String getName() {
         return name;
@@ -49,7 +50,14 @@ public class Character {
     public void setArmorEquiped(boolean armorEquiped) {
         this.armorEquiped = armorEquiped;
     }
+    
+    public String getImageName() {
+        return imageName;
+    }
 
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
     
 
 }
