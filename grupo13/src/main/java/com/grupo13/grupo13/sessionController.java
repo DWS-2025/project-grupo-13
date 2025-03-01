@@ -65,9 +65,10 @@ public class sessionController {
 
         character.setDesc(characterDesc);
         character.setName(nameOfCharacter);
-
+        imageName +=".jpg";
+        character.setImageName(imageName);
         Files.createDirectories(IMAGES_FOLDER);
-        Path imagePath = IMAGES_FOLDER.resolve("image.gif");
+        Path imagePath = IMAGES_FOLDER.resolve(imageName);
 
         characterImage.transferTo(imagePath);
         session.setAttribute("character", character);
@@ -115,7 +116,7 @@ public class sessionController {
     @GetMapping("/download_image")
     public ResponseEntity<Object> downloadImage(Model model, HttpSession session) throws MalformedURLException {
 
-        Path imagePath = IMAGES_FOLDER.resolve("image.gif");
+        Path imagePath = IMAGES_FOLDER.resolve(character.getImageName());
 
         Resource image = new UrlResource(imagePath.toUri());
 
