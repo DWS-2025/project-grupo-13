@@ -1,9 +1,14 @@
 {{>header}}
-   <div class="site-content">
-   <img src="/download_image" class="w-25 h-auto img-fluid rounded"></img>
-
-
-   <p>{{character.name}}</p>
-   <p>{{character.desc}}</p>
+<div class="d-flex vh-100 p-4">
+   <div class="d-flex col-6">
+      <div>
+         <img src="/download_image" class="w-50 h-auto img-fluid rounded"></img>
+         <p>Character Name: {{character.name}}</p>
+         <p>Description: {{character.desc}}</p>
+      </div>
+   </div>
+   <div class="row row-cols-auto g-4 justify-content-center">
+      <!--por añadi la lista del inventario-->
+   </div>
 </div>
 {{>footer}}

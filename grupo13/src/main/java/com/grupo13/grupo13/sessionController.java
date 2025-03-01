@@ -72,7 +72,9 @@ public class sessionController {
         characterImage.transferTo(imagePath);
         session.setAttribute("character", character);
         model.addAttribute("character", session.getAttribute("character"));
-        
+        List<Equipment> equipmentList = equipmentService.findAll();
+        model.addAttribute("current", equipmentList);
+
         return "character_view";
     }
 
