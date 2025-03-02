@@ -23,5 +23,15 @@ public class EquipmentService{
 		equipmentRepository.save(equipment);		
 	}
 
+	public boolean isWeapon(Equipment equipment){
+
+		return (equipment instanceof Weapon);
+
+	}
+
+	public int getAttribute(Equipment equipment){
+		return equipment.getAttribute();
+	}
+
 
 }

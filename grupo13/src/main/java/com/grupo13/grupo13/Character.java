@@ -6,12 +6,16 @@ import org.springframework.web.context.annotation.SessionScope;
 @Component
 @SessionScope
 public class Character {
+    private long id;
     private String name;
     private String desc;
     private int strength;
+    private int defense;
     private int healthPoints;
     private boolean weaponEquiped;
     private boolean armorEquiped;
+    private Equipment weapon;
+    private Equipment armor;
     private String imageName;
 
     public String getName() {
@@ -57,6 +61,30 @@ public class Character {
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
+    }
+    public Long getId() {
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+    public int getDefense() {
+        return defense;
+    }
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+    public Equipment getWeapon() {
+        return weapon;
+    }
+    public void setWeapon(Equipment weapon) {
+        this.weapon = weapon;
+    }
+    public Equipment getArmor() {
+        return armor;
+    }
+    public void setArmor(Equipment armor) {
+        this.armor = armor;
     }
     
 

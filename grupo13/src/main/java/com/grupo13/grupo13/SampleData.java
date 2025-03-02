@@ -15,7 +15,7 @@ public class SampleData {
 
     @PostConstruct
     public void init() {
-        User lupe = new User(100, "Lupe");
+        User lupe = new User(10000, "Lupe");
         userRepository.save(lupe);
 
         equipmentRepository.save(new Weapon("Wood Sword", 20, 10,

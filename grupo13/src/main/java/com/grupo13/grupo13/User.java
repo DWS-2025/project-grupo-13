@@ -2,8 +2,6 @@ package com.grupo13.grupo13;
 
 import java.util.ArrayList;
 
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.SessionScope;
 
 
 
@@ -12,6 +10,7 @@ public class User {
     private Long id = 0L;
     private int money;
     private String userName;
+    private Character character;
     private ArrayList<Equipment> inventory = new ArrayList<>();
  
     public User(){}
@@ -48,6 +47,14 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Character getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(Character character) {
+        this.character = character;
     }
 
 
