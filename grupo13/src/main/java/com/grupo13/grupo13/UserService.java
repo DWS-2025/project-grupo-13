@@ -23,13 +23,17 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public boolean hasEquipment(long id){
+    public boolean hasEquipment(long id) {
         User user = getLoggedUser();
         Optional<Equipment> equipment = equipmentService.findById(id);
-        if(equipment.isPresent()){
+        if (equipment.isPresent()) {
             return user.getInventory().contains(equipment.get());
         }
         return false;
+    }
+
+    public int getMoney() {
+        return getLoggedUser().getMoney();
     }
 
     public ArrayList<Equipment> currentUserInventory() {
@@ -38,12 +42,22 @@ public class UserService {
     }
 
     public void saveEquipment(long id) {
+        User user = getLoggedUser();
         if (!hasEquipment(id)) {
             Optional<Equipment> equipment = equipmentService.findById(id);
             if (equipment.isPresent()) {
-                getLoggedUser().getInventory().add(equipment.get());
+                int price = equipment.get().getPrice();
+                user.setMoney(user.getMoney() - price);
+                user.getInventory().add(equipment.get());
             }
         }
     }
 
+    public void saveCharacter(Character character) {
+        getLoggedUser().setCharacter(character);
+    }
+
+    public Character getCharacter() {
+        return getLoggedUser().getCharacter();
+    }
 }

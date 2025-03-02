@@ -1,11 +1,99 @@
-<html>
 {{>header}}
-<body>
-   <img src="/download_image"></img>
-   <p>{{character.name}}</p>
-   <p>{{character.desc}}</p>
+<div class="d-flex vh-100 p-4">
+   <div class="d-flex col-5">
+      <div class="card w-100 border-dark" style="background-color:  rgb(249, 196, 164);">
+         <img src="/download_image" class="card-img-top" alt="...">
+         <div class="card-body">
+            <h5 class="card-title">{{character.name}}</h5>
+            <p class="card-text">{{character.desc}}</p>
+         </div>
+         <ul class="list-group list-group-flush" >
+            <li class="list-group-item"style="background-color:  rgb(249, 196, 164);">{{character.strength}}</li>
+            <li class="list-group-item"style="background-color:  rgb(249, 196, 164);">{{character.defense}}</li>
+            {{#character.armor}}
+            <li class="list-group-item"style="background-color:  rgb(249, 196, 164);">
+               <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardA" style="background-color:  rgb(255, 179, 132);";
+               aria-expanded="true" aria-controls="collapseCardA"> Button with data-bs-target </button>
+               <div class="collapse" id="collapseCardA">
+                  <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
+                     <div class="row g-0">
+                        <div class="col-md-4">
+                           <img src="{{picture}}" class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                           <div class="card-body">
+                              <h5 class="card-title">{{name}}</h5>
+                              <p class="card-text"> {{description}} </p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </li>
+            {{/character.armor}}
 
+            {{^character.armor}}
+            <li class="list-group-item"style="background-color:  rgb(249, 196, 164);">No armor equipped</li>
+            {{/character.armor}}
 
+            {{#character.weapon}}
+            <li class="list-group-item"style="background-color:  rgb(249, 196, 164);">
+
+            <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardW" style="background-color:  rgb(255, 179, 132);";
+               aria-expanded="true" aria-controls="collapseCardW"> Button with data-bs-target </button>
+            <div class="collapse" id="collapseCardW" >
+               <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
+                  <div class="row g-0">
+                     <div class="col-md-4">
+                        <img src="{{picture}}" class="img-fluid rounded-start" alt="...">
+                     </div>
+                     <div class="col-md-8">
+                        <div class="card-body">
+                           <h5 class="card-title">{{name}}</h5>
+                           <p class="card-text"> {{description}} </p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            </li>
+            {{/character.weapon}}
+
+            {{^character.weapon}}
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">No weapon equipped</li>
+            {{/character.weapon}}
+         </ul>
+      </div>
+   </div>
+   <div class="col-8 row row-cols-auto g-4 justify-content-center">
+      {{#current}}
+      <div class="col">
+         <form action="/equip" method="post" enctype="multipart/form-data">
+            <div class="card" style="width:17rem;">
+               <img src="{{picture}}" class="card-img-top" alt="..." height="306px" width="1024px">
+               <div class="card-body">
+                  <h5 class="card-title">{{name}}</h5>
+                  <p class="card-text">{{description}}</p>
+                  {{#style}}
+                  <h6 class="card-style">Defense: {{attribute}}</h6>
+                  <h6 class="card-style">Style: {{style}}</h6>
+                  {{/style}}
+                  {{#intimidation}}
+                  <h6 class="card-style">Attack: {{attribute}}</h6>
+                  <h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
+                  {{/intimidation}}
+                  <!-- Inputs ocultos para enviar los datos de cada objeto -->
+
+                  <input type="hidden" name="id" value="{{id}}">
+                  <!--fin de los inputs ocultos-->
+                  <input type='submit' value='Equip'>
+               </div>
+            </div>
+         </form>
+      </div>
+      {{/current}}
+   </div>
+</div>
+<body class="bg-dark" style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/imp_imgs/ch_background.jpg') no-repeat center center / cover;">
 </body>
-
-</html>
+{{>footer}}

@@ -15,20 +15,20 @@ public class SampleData {
 
     @PostConstruct
     public void init() {
-        User lupe = new User(100, "Lupe");
+        User lupe = new User(10000, "Lupe");
         userRepository.save(lupe);
 
         equipmentRepository.save(new Weapon("Wood Sword", 20, 10,
-                "https://i.imgur.com/ZJDJakr.jpeg",
+                "imp_imgs/w1.png",
                 "A basic sword made from oak wood.",10));
 
         equipmentRepository.save(new Weapon("Iron Longsword", 50, 10,
-                "https://i.imgur.com/xq1BDBK.jpeg",
+                "imp_imgs/w2.png",
                 "A strong and reliable iron longsword.",15));
 
         equipmentRepository.save(new Weapon("Golden Rapier", 40, 10,
-                "https://i.imgur.com/Bm5NeRx.jpeg",
-                "A golden rapier. Stylish but fragile.",20));
+                "imp_imgs/w3.png",
+                "A golden rapier. Stylish but very fragile.",20));
 
         equipmentRepository.save(new Weapon("Dragon Fang Blade", 80, 10,
                 "https://dummyimage.com/320x240/dc143c/000000.png&text=Dragon+Fang",
@@ -48,7 +48,7 @@ public class SampleData {
 
         equipmentRepository.save(new Armor("Golden Chestplate", 40, 10,
                 "https://dummyimage.com/320x240/ffd700/000000.png&text=Golden+Chestplate",
-                "Made of gold. Shiny but weak.",70));
+                "Made of valuable gold. Shiny but very weak.",70));
 
     }
 
