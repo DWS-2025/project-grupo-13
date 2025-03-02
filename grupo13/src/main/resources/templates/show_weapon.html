@@ -1,0 +1,17 @@
+{{>header}}
+
+<p>Nombre: {{equipment.name}}</p>
+<p>Intimidacion: {{equipment.intimidation}}</p>
+<p>Damage: {{equipment.attribute}}</p>
+<p>Descripcion: {{equipment.description}}</p>
+<p>Precio: {{equipment.price}}</p>
+
+<form action="/equipment/{{id}}/delete" method="post">
+    <input type='submit' value='Eliminar Arma' />
+</form>
+
+<a href="/equipment/{{id}}/edit">Editar Arma</a>
+<br>
+
+<a href="/equipment_manager">Volver a Gestionar Equipamiento</a>
+{{>footer}}

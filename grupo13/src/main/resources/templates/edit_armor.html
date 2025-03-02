@@ -1,0 +1,17 @@
+{{>header}}
+<h1>Editar Armadura</h1>
+<form action="/equipment/{{id}}/edit" method="post">
+    <p>Nombre: </p>
+    <input type='text' name='name' value="{{equipment.name}}" />
+    <p>Estilo: </p>
+    <input type='text' name='style' value="{{equipment.style}}" />
+    <p>Descripcion:</p>
+    <textarea name='description'>{{equipment.description}}</textarea>
+    <p>Defensa: </p>
+    <input type='text' name='attribute' value="{{equipment.attribute}}" />
+    <p>Precio: </p>
+    <input type='text' name='attribute' value="{{equipment.price}}" />
+    <br><br>
+    <input type='submit' value='Save' />
+</form>
+{{>footer}}

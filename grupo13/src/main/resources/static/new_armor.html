@@ -1,0 +1,68 @@
+<style>
+    .header {
+        background-color: #b9821ae7;
+        justify-content: center;
+        text-align: center;
+        padding: 15px;
+        margin: 0 0;
+    }
+
+    .element-header {
+        color: #910202;
+        text-decoration: none;
+    }
+
+    .element-header:hover {
+        color: #ff0000;
+        text-decoration: underline;
+    }
+
+    .dropdown-menu {
+        width: 200px;
+    }
+</style>
+
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <ul class="header">
+        <a class="element-header" aria-current="page" href="/list_objects">Armas</a>
+        <a class="element-header" href="...">Personaje</a>
+        <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Admin</a>
+        <ul class="dropdown-menu">
+            <li><a class="element-header" href="/equipment_manager">Gestionar Equipamiento</a></li>
+            <li><a class="element-header" href="new_armor.html">Crear Armadura</a></li>
+            <li><a class="element-header" href="new_weapon.html">Crear Arma</a></li>
+        </ul>
+    </ul>
+    <div class="site-content" style="width: 95%; margin:auto">
+
+
+        <form action="/armor/new" method="post">
+            <p>Nombre: </p>
+            <input type='text' name='name' />
+            <p>Estilo: </p>
+            <input type='text' name='style' />
+            <p>Defensa:</p>
+            <input type='text' name='defense' />
+            <p>Imagen</p>
+            <input type='file' name='picture' accept=".jpg, .jpeg, .gif .png" class="form-control" />
+            <p>Descripcion:</p>
+            <textarea name='description' rows=5 cols=40></textarea>
+            <p>Precio:</p>
+            <input type='text' name='price' />
+            <input type='submit' value='Save' />
+        </form>
+    </div>
+</body>
+
+</html>
