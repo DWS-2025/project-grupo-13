@@ -16,11 +16,11 @@ public class AdminController {
     @Autowired
     private EquipmentService equipmentService;
 
-    @GetMapping("/admin")
+    @GetMapping("/show_equipment")
 	public String iterationObj(Model model) {
 
         model.addAttribute("equipment", equipmentService.findAll());
 
-		return "admin";
+		return "show_equipment";
 	}
 }
