@@ -1,16 +1,16 @@
 {{>header}}
 <h1>Editar arma</h1>
-<form action="/equipment/{{id}}/edit" method="post">
+<form action="/equipment/{{equipment.id}}/edit" method="post">
     <p>Nombre: </p>
-    <input type='text' name='name' value="{{equipment.name}}" />
+    <input type='text' name='name' value="{{equipment.name}}" required />
     <p>Intimidacion: </p>
-    <input type='text' name='intimidation' value="{{equipment.intimidation}}" />
+    <input type='text' name='intimidation' value="{{equipment.intimidation}}" required/>
     <p>Descripcion:</p>
-    <textarea name='description'>{{equipment.description}}</textarea>
+    <textarea name='description' required>{{equipment.description}}</textarea>
     <p>Damage: </p>
-    <input type='text' name='attribute' value="{{equipment.attribute}}" />
+    <input type='text' name='attribute' value="{{equipment.attribute}}" required/>
     <p>Precio: </p>
-    <input type='text' name='attribute' value="{{equipment.price}}" />
+    <input type='text' name='price' value="{{equipment.price}}" required/>
     <br><br>
     <input type='submit' value='Save' />
 </form>

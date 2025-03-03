@@ -113,16 +113,19 @@ public class AdminController {
         }
 	}   
 
-	/*@PostMapping("/equipment/{id}/edit")
+	@PostMapping("/equipment/{id}/edit")
 	public String updateEquipment(Model model, @PathVariable long id, Equipment updatedEquipment) {
 
+        
 		Optional<Equipment> editedEquipment = equipmentService.findById(id);
 
 		if (editedEquipment.isPresent()) {
 			Equipment oldEquipment = editedEquipment.get();
 			equipmentService.update(oldEquipment, updatedEquipment);
 			return "redirect:/equipment/" + id;
-		} //else{return equipment_not_found}
+		}else{
+            return "equipment_manager"; //not_found
+        }
 	}
-    */
+    
 }
