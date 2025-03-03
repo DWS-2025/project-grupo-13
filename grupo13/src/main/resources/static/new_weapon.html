@@ -35,33 +35,33 @@
 
 <body>
     <ul class="header">
-        <a class="element-header" aria-current="page" href="/list_objects">Armas</a>
-        <a class="element-header" href="...">Personaje</a>
+        <a class="element-header" aria-current="page" href="/list_objects">Shop</a>
+        <a class="element-header" href="...">Character</a>
         <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Admin</a>
         <ul class="dropdown-menu">
-            <li><a class="element-header" href="/equipment_manager">Gestionar Equipamiento</a></li>
-            <li><a class="element-header" href="new_armor.html">Crear Armadura</a></li>
-            <li><a class="element-header" href="new_weapon.html">Crear Arma</a></li>
+            <li><a class="element-header" href="/equipment_manager">Manage equipment</a></li>
+            <li><a class="element-header" href="new_armor.html">Create new armor</a></li>
+            <li><a class="element-header" href="new_weapon.html">Create new weapon</a></li>
         </ul>
     </ul>
     <div class="site-content" style="width: 95%; margin:auto">
 
 
         <form action="/weapon/new" method="post" enctype="multipart/form-data">
-            <p>Nombre: </p>
+            <p>Name: </p>
             <input type='text' name='name' required />
-            <p>Intimidacion:</p>
+            <p>Intimidation:</p>
             <input type='text' name='intimidation' required />
             <p>Damage:</p>
             <input type='text' name='damage' />
-            <p>Descripcion:</p>
+            <p>Description:</p>
             <textarea name='description' rows=5 cols=40 required></textarea>
-            <p>Precio:</p>
+            <p>Price:</p>
             <input type='text' name='price' />
-            <p>Image name: </p>
+            <p>Picture name: </p>
             <input type="text" name="image" class="form-control" />
-            <p>Image file:</p>
+            <p>Picture file:</p>
             <input type='file' name='weaponImage' accept=".jpg, .jpeg, .gif" class="form-control" />
             <input type='submit' value='Save' />
         </form>
