@@ -37,23 +37,23 @@ public class SampleData {
                 "A golden rapier. Stylish but very fragile.",20));
 
         equipmentRepository.save(new Weapon("Dragon Fang Blade", 80, 10,
-                "https://dummyimage.com/320x240/dc143c/000000.png&text=Dragon+Fang",
+                "imp_imgs/w5.png",
                 "A blade crafted from the fang of an ancient dragon.",30));
 
         equipmentRepository.save(new Weapon("Shadow Dagger", 25, 10,
-                "https://dummyimage.com/320x240/1a1a1a/ffffff.png&text=Shadow+Dagger",
+                "imp_imgs/w4.png",
                 "A dagger infused with dark energy, perfect for stealth attacks.",40));
 
         equipmentRepository.save(new Armor("Wood Armor", 20, 10,
-                "https://dummyimage.com/320x240/87f7ff/000000.png&text=Wood+Armor",
+                "imp_imgs/a1.png",
                 "Obtained from an oak tree. Light but fragile.",50));
 
         equipmentRepository.save(new Armor("Iron Plate", 50, 10,
-                "https://dummyimage.com/320x240/a8a8a8/000000.png&text=Iron+Plate",
+                "imp_imgs/a2.png",
                 "A strong iron armor that provides good protection.",65));
 
         equipmentRepository.save(new Armor("Golden Chestplate", 40, 10,
-                "https://dummyimage.com/320x240/ffd700/000000.png&text=Golden+Chestplate",
+                "imp_imgs/a3.png",
                 "Made of valuable gold. Shiny but very weak.",70));
 
     }
