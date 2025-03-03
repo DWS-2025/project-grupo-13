@@ -30,6 +30,7 @@ public class CharacterService {
         characterRepository.save(character);
     }
 
+    //for equipping armor or weapon, sets the necessary values from the equipment
     public void equipWeapon(Equipment weapon, Character character){
         character.setWeaponEquiped(true);
         character.setStrength(equipmentService.getAttribute(weapon));
@@ -42,7 +43,7 @@ public class CharacterService {
         character.setArmor(armor);
 
     }
-
+//gets the equipment
     public Equipment getEquipedWeapon(Character character){
         return character.getWeapon();
     }
@@ -50,5 +51,18 @@ public class CharacterService {
     public Equipment getEquipedArmor(Character character){
         return character.getArmor();
     }
+
+    public void unEquipWeapon(Character character){
+        character.setWeapon(null);
+        character.setStrength(0);
+        character.setWeaponEquiped(false);
+    }
+
+    public void unEquipArmor(Character character){
+        character.setArmor(null);
+        character.setDefense(0);
+        character.setArmorEquiped(false);
+    }
+
 
 }

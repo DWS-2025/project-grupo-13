@@ -144,7 +144,7 @@ public class sessionController {
     }
 
     @PostMapping("/equip")
-    public String getMethodName(@RequestParam long id, Model model) {
+    public String equip(@RequestParam long id, Model model) {
         
         Character character = userService.getCharacter();
         Optional<Equipment> equipment = equipmentService.findById(id);
@@ -156,6 +156,23 @@ public class sessionController {
                 characterService.equipArmor(equipment.get(), character);
                 model.addAttribute("equipedA", equipment.get());
 
+            }        
+            return "redirect:/";
+
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/unEquip")
+    public String unEquip(@RequestParam long id, Model model) {
+        
+        Character character = userService.getCharacter();
+        Optional<Equipment> equipment = equipmentService.findById(id);
+        if(equipment.isPresent()){
+            if(equipmentService.isWeapon(equipment.get())){
+                characterService.unEquipWeapon(character);
+            } else{
+                characterService.unEquipArmor( character);
             }        
             return "redirect:/";
 

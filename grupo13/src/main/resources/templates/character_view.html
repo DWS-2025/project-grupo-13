@@ -7,55 +7,70 @@
             <h5 class="card-title">{{character.name}}</h5>
             <p class="card-text">{{character.desc}}</p>
          </div>
-         <ul class="list-group list-group-flush" >
-            <li class="list-group-item"style="background-color:  rgb(249, 196, 164);">{{character.strength}}</li>
-            <li class="list-group-item"style="background-color:  rgb(249, 196, 164);">{{character.defense}}</li>
+         <ul class="list-group list-group-flush">
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.strength}}</li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.defense}}</li>
             {{#character.armor}}
-            <li class="list-group-item"style="background-color:  rgb(249, 196, 164);">
-               <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardA" style="background-color:  rgb(255, 179, 132);";
-               aria-expanded="true" aria-controls="collapseCardA"> Button with data-bs-target </button>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+               <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardA"
+                  style="background-color:  rgb(255, 179, 132);" ; aria-expanded="true" aria-controls="collapseCardA">
+                  Equipped armor</button>
                <div class="collapse" id="collapseCardA">
-                  <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
-                     <div class="row g-0">
-                        <div class="col-md-4">
-                           <img src="{{picture}}" class="img-fluid rounded-start" alt="...">
-                        </div>
-                        <div class="col-md-8">
-                           <div class="card-body">
-                              <h5 class="card-title">{{name}}</h5>
-                              <p class="card-text"> {{description}} </p>
+                  <form action="/unEquip" method="post" enctype="multipart/form-data">
+                     <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
+                        <div class="row g-0">
+                           <div class="col-md-4">
+                              <img src="{{picture}}" class="img-fluid rounded-start" alt="...">
+                           </div>
+                           <div class="col-md-8">
+                              <div class="card-body">
+                                 <h5 class="card-title">{{name}}</h5>
+                                 <p class="card-text"> {{description}} </p>
+                                 <input type='submit' value='Unequip'>
+                                 <!-- Hidden inputs-->
+                                 <input type="hidden" name="id" value="{{id}}">
+                                 <!--end of hidden inputs-->
+                              </div>
                            </div>
                         </div>
                      </div>
-                  </div>
+                  </form>
                </div>
             </li>
             {{/character.armor}}
 
             {{^character.armor}}
-            <li class="list-group-item"style="background-color:  rgb(249, 196, 164);">No armor equipped</li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">No armor equipped</li>
             {{/character.armor}}
 
             {{#character.weapon}}
-            <li class="list-group-item"style="background-color:  rgb(249, 196, 164);">
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
 
-            <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardW" style="background-color:  rgb(255, 179, 132);";
-               aria-expanded="true" aria-controls="collapseCardW"> Button with data-bs-target </button>
-            <div class="collapse" id="collapseCardW" >
-               <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
-                  <div class="row g-0">
-                     <div class="col-md-4">
-                        <img src="{{picture}}" class="img-fluid rounded-start" alt="...">
-                     </div>
-                     <div class="col-md-8">
-                        <div class="card-body">
-                           <h5 class="card-title">{{name}}</h5>
-                           <p class="card-text"> {{description}} </p>
+               <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardW"
+                  style="background-color:  rgb(255, 179, 132);" ; aria-expanded="true" aria-controls="collapseCardW">
+                  Equipped weapon </button>
+               <div class="collapse" id="collapseCardW">
+                  <form action="/unEquip" method="post" enctype="multipart/form-data">
+
+                     <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
+                        <div class="row g-0">
+                           <div class="col-md-4">
+                              <img src="{{picture}}" class="img-fluid rounded-start" alt="...">
+                           </div>
+                           <div class="col-md-8">
+                              <div class="card-body">
+                                 <h5 class="card-title">{{name}}</h5>
+                                 <p class="card-text"> {{description}} </p>
+                                 <input type='submit' value='Unequip'>
+                                 <!-- Hidden inputs-->
+                                 <input type="hidden" name="id" value="{{id}}">
+                                 <!--end of hidden inputs-->
+                              </div>
+                           </div>
                         </div>
                      </div>
-                  </div>
+                  </form>
                </div>
-            </div>
             </li>
             {{/character.weapon}}
 
@@ -94,6 +109,8 @@
       {{/current}}
    </div>
 </div>
-<body class="bg-dark" style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/imp_imgs/ch_background.jpg') no-repeat center center / cover;">
+
+<body class="bg-dark"
+   style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/imp_imgs/ch_background.jpg') no-repeat center center / cover;">
 </body>
 {{>footer}}
