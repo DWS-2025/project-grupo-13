@@ -126,7 +126,8 @@ public class sessionController {
                 return "sp_errors";
             }
         } // cambiarlo a ver cuando tengamos el error de no encontrado o smth like that
-        return "redirect:/list_objects";
+        model.addAttribute("message", "Could not purchase, doesnt exist");
+        return "sp_errors";
     }
 
     @GetMapping("/download_image")
@@ -171,7 +172,7 @@ public class sessionController {
             return "redirect:/";
 
         }else{
-            model.addAttribute("message", "Could not equip, wtf");
+            model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
     }
@@ -189,8 +190,10 @@ public class sessionController {
             }        
             return "redirect:/";
 
+        }else{
+            model.addAttribute("message", "Could not unEquip, doesnt exist");
+            return "sp_errors";
         }
-        return "redirect:/";
     }
     
 
