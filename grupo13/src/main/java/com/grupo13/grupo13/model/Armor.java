@@ -2,22 +2,21 @@ package com.grupo13.grupo13.model;
 
 public class Armor extends Equipment {
 
+    //the new attribute
     private int style;
 
+    //constructor
     public Armor(String name, int style, int defense, String picture, String description, int price) {
-        super();
-        this.setName(name);
+        super(name, picture, description, style, price);
         this.style = style;
-        this.setAttribute(defense);
-        this.setPicture(picture);
-        this.setDescription(description);
-        this.setnPrice(price);
     }
 
+    //get function of the new attribute
     public int getStyle() {
         return style;
     }
 
+    //set function of the new attribute
     public void setStyle(int style) {
         this.style = style;
     }
