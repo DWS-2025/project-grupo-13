@@ -106,25 +106,35 @@ public class AdminController {
                 return "edit_weapon";
             } else {
                 model.addAttribute("equipment", equipment.get());
-                return "show_armor";
+                return "edit_armor";
             }
 		}else{
-            return "equipment_manager"; //not_found
+            model.addAttribute("message", "Could not manage, not found");
+            return "sp_errors";
         }
 	}   
 
-	@PostMapping("/equipment/{id}/edit")
-	public String updateEquipment(Model model, @PathVariable long id, Equipment updatedEquipment) {
+    @PostMapping("/equipment/{id}/edit")
+	public String updateEquipment(Model model, @PathVariable long id, @RequestParam String name, @RequestParam String description, @RequestParam int intimidation, @RequestParam int style, @RequestParam int attribute, @RequestParam int price, @RequestParam String picture){
 
         
 		Optional<Equipment> editedEquipment = equipmentService.findById(id);
 
 		if (editedEquipment.isPresent()) {
 			Equipment oldEquipment = editedEquipment.get();
-			equipmentService.update(oldEquipment, updatedEquipment);
-			return "redirect:/equipment/" + id;
+            if(equipmentService.isWeapon(oldEquipment)){
+                Equipment updatedEquipment = new Weapon(name, intimidation, attribute, picture, description, price);
+                equipmentService.update(oldEquipment, updatedEquipment);
+			    return "redirect:/equipment/" + id;
+            }else{
+                Equipment updatedEquipment = new Armor(name, style, attribute, picture, description, price);
+                equipmentService.update(oldEquipment, updatedEquipment);
+			    return "redirect:/equipment/" + id;
+            }
+			
 		}else{
-            return "equipment_manager"; //not_found
+            model.addAttribute("message", "Could not manage, not found");
+            return "sp_errors";
         }
 	}
     
