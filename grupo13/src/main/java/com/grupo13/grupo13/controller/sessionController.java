@@ -1,4 +1,4 @@
-package com.grupo13.grupo13;
+package com.grupo13.grupo13.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,6 +19,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.Equipment;
+import com.grupo13.grupo13.service.CharacterService;
+import com.grupo13.grupo13.service.EquipmentService;
+import com.grupo13.grupo13.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 

@@ -1,4 +1,4 @@
-package com.grupo13.grupo13;
+package com.grupo13.grupo13.model;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;

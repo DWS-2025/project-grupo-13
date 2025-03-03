@@ -1,4 +1,4 @@
-package com.grupo13.grupo13;
+package com.grupo13.grupo13.model;
 
 public class Equipment {
     private long id;

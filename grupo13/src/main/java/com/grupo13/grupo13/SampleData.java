@@ -3,6 +3,12 @@ package com.grupo13.grupo13;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.grupo13.grupo13.model.Armor;
+import com.grupo13.grupo13.model.User;
+import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.repository.EquipmentRepository;
+import com.grupo13.grupo13.repository.UserRepository;
+
 import jakarta.annotation.PostConstruct;
 
 @Service

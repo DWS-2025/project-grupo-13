@@ -1,10 +1,12 @@
-package com.grupo13.grupo13;
+package com.grupo13.grupo13.repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Component;
+
+import com.grupo13.grupo13.model.Character;
 @Component
 public class CharacterRepository {
     private AtomicLong nextId = new AtomicLong(1L);

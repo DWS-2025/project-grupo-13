@@ -1,4 +1,4 @@
-package com.grupo13.grupo13;
+package com.grupo13.grupo13.controller;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -9,6 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.grupo13.grupo13.model.Armor;
+import com.grupo13.grupo13.model.Equipment;
+import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.repository.EquipmentRepository;
+import com.grupo13.grupo13.service.EquipmentService;
 
 
 @Controller
@@ -55,7 +61,7 @@ public class AdminController {
 
         equipmentService.save(armor);
         
-        return "saved_weapon";
+        return "saved_armor";
     }
 
     @PostMapping("/equipment/{id}/delete")
@@ -63,7 +69,7 @@ public class AdminController {
 
         equipmentRepository.deleteById(id);
 
-		return "deleted_weapon";
+		return "deleted_equipment";
 	}
 
    

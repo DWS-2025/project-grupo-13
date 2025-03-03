@@ -1,10 +1,14 @@
-package com.grupo13.grupo13;
+package com.grupo13.grupo13.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.Equipment;
+import com.grupo13.grupo13.repository.CharacterRepository;
 
 @Service
 public class CharacterService {
