@@ -49,13 +49,13 @@
 
         <form action="/weapon/new" method="post" enctype="multipart/form-data">
             <p>Nombre: </p>
-            <input type='text' name='name' />
+            <input type='text' name='name'required />
             <p>Intimidacion:</p>
-            <input type='text' name='intimidation' />
+            <input type='text' name='intimidation'required />
             <p>Damage:</p>
             <input type='text' name='damage' />
             <p>Descripcion:</p>
-            <textarea name='description' rows=5 cols=40></textarea>
+            <textarea name='description' rows=5 cols=40 required></textarea>
             <p>Precio:</p>
             <input type='text' name='price' />
             <p>Image name: </p>
