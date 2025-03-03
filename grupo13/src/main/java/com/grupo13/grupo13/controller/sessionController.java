@@ -50,10 +50,11 @@ public class sessionController {
 
         ArrayList<Equipment> currentInventory = userService.currentUserInventory();
         Character character = userService.getCharacter();
-
+//gets the character and its inventory for mustache
         model.addAttribute("character", character);
         model.addAttribute("current", currentInventory);
 
+        //checks if the user has "logged", in the first fase is creating the character
         if (character == null) {
             return "index";
         } else {
@@ -65,16 +66,18 @@ public class sessionController {
     public String procesarFormulario(Model model, HttpSession session, @RequestParam String nameOfCharacter,
             @RequestParam String characterDesc,
             @RequestParam String imageName, @RequestParam MultipartFile characterImage) throws IOException {
-
+//creates the character
         Character character = new Character();
         character.setDesc(characterDesc);
         character.setName(nameOfCharacter);
         imageName += ".jpg";
         character.setImageName(imageName);
 
+        //saves the character in the repository
         characterService.save(character);
         userService.saveCharacter(character);
 
+        //saves image in the correspondent folder
         Files.createDirectories(IMAGES_FOLDER);
         Path imagePath = IMAGES_FOLDER.resolve(imageName);
         characterImage.transferTo(imagePath);
@@ -94,7 +97,9 @@ public class sessionController {
         ArrayList<Equipment> available = new ArrayList<>();
 
         ArrayList<Equipment> currentInventory = userService.currentUserInventory();
-
+//gets the listing of the current equipment in the repository and the inventory
+//creates a list of the equipment that the user doesnt have
+//the html will present the inventory as purchased and the not purchased (available) equipments
         for (Equipment equipment : equipmentList) {
             if (!currentInventory.contains(equipment)) {
                 available.add(equipment);
@@ -108,13 +113,17 @@ public class sessionController {
     }
 
     @PostMapping("/purchase")
-    public String purchase(@RequestParam long id) {
+    public String purchase(@RequestParam long id, Model model) {
 
         Optional<Equipment> eqOptional = equipmentService.findById(id);
         if (eqOptional.isPresent()) {
+            //checks if the user has enough money or if its homeless
             int money = userService.getMoney();
             if (money >= eqOptional.get().getPrice()) {
                 userService.saveEquipment(id);
+            } else{
+                model.addAttribute("message", "You don't have any money left, go work or something");
+                return "sp_errors";
             }
         } // cambiarlo a ver cuando tengamos el error de no encontrado o smth like that
         return "redirect:/list_objects";
@@ -123,13 +132,14 @@ public class sessionController {
     @GetMapping("/download_image")
     public ResponseEntity<Object> downloadImage(Model model, HttpSession session) throws MalformedURLException {
 
+
         Character character = userService.getCharacter();
         Path imagePath = IMAGES_FOLDER.resolve(character.getImageName());
 
         Resource image = new UrlResource(imagePath.toUri());
 
         String contentType;
-        try {
+        try { //gets the type of the image
             contentType = Files.probeContentType(imagePath);
             if (contentType == null) {
                 contentType = "application/octet-stream";
@@ -138,6 +148,7 @@ public class sessionController {
             contentType = "application/octet-stream";
         }
 
+        //returns the image
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(image);
@@ -148,10 +159,10 @@ public class sessionController {
         
         Character character = userService.getCharacter();
         Optional<Equipment> equipment = equipmentService.findById(id);
-        if(equipment.isPresent()){
-            if(equipmentService.isWeapon(equipment.get())){
-                characterService.equipWeapon(equipment.get(), character);
-                model.addAttribute("equipedW", equipment.get());
+        if(equipment.isPresent()){ //if it exists
+            if(equipmentService.isWeapon(equipment.get())){ //checks if its a weapon or an armor
+                characterService.equipWeapon(equipment.get(), character); //equips it, adding the necessary attributes
+                model.addAttribute("equipedW", equipment.get()); 
             } else{
                 characterService.equipArmor(equipment.get(), character);
                 model.addAttribute("equipedA", equipment.get());
@@ -159,8 +170,10 @@ public class sessionController {
             }        
             return "redirect:/";
 
+        }else{
+            model.addAttribute("message", "Could not equip, wtf");
+            return "sp_errors";
         }
-        return "redirect:/";
     }
 
     @PostMapping("/unEquip")
@@ -169,7 +182,7 @@ public class sessionController {
         Character character = userService.getCharacter();
         Optional<Equipment> equipment = equipmentService.findById(id);
         if(equipment.isPresent()){
-            if(equipmentService.isWeapon(equipment.get())){
+            if(equipmentService.isWeapon(equipment.get())){ //same checks as last, this time hust sets the attributes o null or 0
                 characterService.unEquipWeapon(character);
             } else{
                 characterService.unEquipArmor( character);
