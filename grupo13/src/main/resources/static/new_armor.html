@@ -47,19 +47,21 @@
     <div class="site-content" style="width: 95%; margin:auto">
 
 
-        <form action="/armor/new" method="post">
+        <form action="/armor/new" method="post" enctype="multipart/form-data">
             <p>Nombre: </p>
             <input type='text' name='name' />
             <p>Estilo: </p>
             <input type='text' name='style' />
             <p>Defensa:</p>
             <input type='text' name='defense' />
-            <p>Imagen</p>
-            <input type='file' name='picture' accept=".jpg, .jpeg, .gif .png" class="form-control" />
             <p>Descripcion:</p>
             <textarea name='description' rows=5 cols=40></textarea>
             <p>Precio:</p>
             <input type='text' name='price' />
+            <p>Image name: </p>
+            <input type="text" name="picture" class="form-control" />
+            <p>Image file:</p>
+            <input type='file' name='armorImage' accept=".jpg, .jpeg, .gif" class="form-control" />
             <input type='submit' value='Save' />
         </form>
     </div>

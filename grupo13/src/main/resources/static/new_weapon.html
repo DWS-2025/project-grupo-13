@@ -47,19 +47,21 @@
     <div class="site-content" style="width: 95%; margin:auto">
 
 
-        <form action="/weapon/new" method="post">
+        <form action="/weapon/new" method="post" enctype="multipart/form-data">
             <p>Nombre: </p>
             <input type='text' name='name' />
             <p>Intimidacion:</p>
             <input type='text' name='intimidation' />
             <p>Damage:</p>
             <input type='text' name='damage' />
-            <p>Archivo de la imagen:</p>
-            <input type='file' name='picture' accept=".jpg, .jpeg, .gif .png" class="form-control" />
             <p>Descripcion:</p>
             <textarea name='description' rows=5 cols=40></textarea>
             <p>Precio:</p>
             <input type='text' name='price' />
+            <p>Image name: </p>
+            <input type="text" name="image" class="form-control" />
+            <p>Image file:</p>
+            <input type='file' name='weaponImage' accept=".jpg, .jpeg, .gif" class="form-control" />
             <input type='submit' value='Save' />
         </form>
     </div>
