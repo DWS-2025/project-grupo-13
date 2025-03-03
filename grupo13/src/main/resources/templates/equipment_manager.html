@@ -1,6 +1,10 @@
 {{>header}}
-<h1>Equipamiento</h1>
-{{#equipment}}
-<a href="equipment/{{id}}">{{name}}</a><br>
-{{/equipment}}
+<h1>Equipment</h1>
+<div class="card" style="width: 18rem">
+    {{#equipment}}
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="equipment/{{id}}">{{name}}</a></li>
+    </ul>
+    {{/equipment}}
+</div>
 {{>footer}}

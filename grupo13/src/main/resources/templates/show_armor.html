@@ -1,17 +1,18 @@
 {{>header}}
 
-<p>Nombre: {{equipment.name}}</p>
-<p>Estilo: {{equipment.style}}</p>
-<p>Defensa: {{equipment.attribute}}</p>
-<p>Descripcion: {{equipment.description}}</p>
-<p>Precio: {{equipment.price}}</p>
-
-<form action="/equipment/{{id}}/delete" method="post">
-    <input type='submit' value='Eliminar Armadura' />
-</form>
-
-<a href="/equipment/{{id}}/edit">Editar Armadura</a>
-<br>
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">{{equipment.name}}</h5>
+        <p class="card-text"><p>Style: {{equipment.style}}</p>
+        <p>Defense: {{equipment.attribute}}</p>
+        <p>Description: {{equipment.description}}</p>
+        <p>Price: {{equipment.price}}</p></p>
+        <a href="#" class="card-link"><form action="/equipment/{{id}}/delete" method="post">
+            <input type='submit' value='Eliminar Armadura' />
+        </form></a>
+        <a href="#" class="card-link"><a href="/equipment/{{id}}/edit">Editar Armadura</a></a>
+    </div>
+</div>
 
 <a href="/equipment_manager">Volver a Gestionar Equipamiento</a>
 {{>footer}}
