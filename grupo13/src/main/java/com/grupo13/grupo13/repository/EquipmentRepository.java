@@ -18,12 +18,12 @@ public class EquipmentRepository {
         return equipments.values().stream().toList();
     }
 
-    //search for a specific equipment
+    //searches for a specific equipment
     public Optional<Equipment> findById(long id) {
         return Optional.ofNullable(equipments.get(id));
     }
 
-    //create a new equipment and setting its id
+    //creates a new equipment and setting its id
     public void save(Equipment equipment) {
         long id = equipment.getId();
         if (id == 0) {
@@ -33,7 +33,7 @@ public class EquipmentRepository {
         equipments.put(id, equipment);
     }
 
-    //delete an equipement by its id
+    //deletes an equipement by its id
     public void deleteById(long id) {
         equipments.remove(id);
     }

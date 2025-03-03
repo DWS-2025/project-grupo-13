@@ -16,7 +16,7 @@ public class SampleData {
     @Autowired
     private EquipmentRepository equipmentRepository;
 
-    //load the default items
+    //loads the default items
     @PostConstruct
     public void init() {
         User lupe = new User(10000, "Lupe");

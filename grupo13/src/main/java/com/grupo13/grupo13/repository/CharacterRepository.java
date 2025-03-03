@@ -18,12 +18,12 @@ public class CharacterRepository {
         return characters.values().stream().toList();
     }
     
-    //search a character by his id
+    //searchs a character by his id
     public Optional<Character> find(long id) {
         return Optional.ofNullable(characters.get(id));
     }
 
-    //create a character and its id
+    //creates a character and its id
     public void save(Character Character) {
         long id = Character.getId();
         if (id == 0) {

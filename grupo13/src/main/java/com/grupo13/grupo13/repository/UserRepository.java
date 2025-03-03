@@ -12,12 +12,12 @@ public class UserRepository{
     private AtomicLong nextId = new AtomicLong(1L);
 	private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
 
-    //return all users in a list
+    //returns all users in a list
     public List<User> findAll() {
         return users.values().stream().toList();
     }
 
-    //create a new user and its id
+    //creates a new user and its id
     public void save(User user) {
         long id = user.getId();
         if (id == 0) {

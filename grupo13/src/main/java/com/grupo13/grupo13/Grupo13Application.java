@@ -12,7 +12,7 @@ public class Grupo13Application {
 		return new User(100, "Lupe");
 	}
 
-	//start the app
+	//starts the app
 	public static void main(String[] args) {
 		SpringApplication.run(Grupo13Application.class, args);
 	}
