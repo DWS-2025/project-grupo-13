@@ -49,17 +49,17 @@
 
         <form action="/armor/new" method="post">
             <p>Nombre: </p>
-            <input type='text' name='name' />
+            <input type='text' name='name'required />
             <p>Estilo: </p>
-            <input type='text' name='style' />
+            <input type='text' name='style'required />
             <p>Defensa:</p>
-            <input type='text' name='defense' />
+            <input type='text' name='defense'required />
             <p>Imagen</p>
-            <input type='file' name='picture' accept=".jpg, .jpeg, .gif .png" class="form-control" />
+            <input type='file' name='picture' accept=".jpg, .jpeg, .gif .png" class="form-control"required />
             <p>Descripcion:</p>
-            <textarea name='description' rows=5 cols=40></textarea>
+            <textarea name='description' rows=5 cols=40 required> </textarea>
             <p>Precio:</p>
-            <input type='text' name='price' />
+            <input type='text' name='price' required/>
             <input type='submit' value='Save' />
         </form>
     </div>
