@@ -26,7 +26,7 @@ public class SampleData {
 
         equipmentRepository.save(new Weapon("Wood Sword", 20, 10,
                 "imp_imgs/w1.png",
-                "A basic sword made from oak wood.",10));
+                "A basic sword made from oak wood.",10000));
 
         equipmentRepository.save(new Weapon("Iron Longsword", 50, 10,
                 "imp_imgs/w2.png",
