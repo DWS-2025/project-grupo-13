@@ -121,6 +121,7 @@ public class sessionController {
             int money = userService.getMoney();
             if (money >= eqOptional.get().getPrice()) {
                 userService.saveEquipment(id);
+                return "redirect:/list_objects";
             } else{
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
@@ -163,11 +164,8 @@ public class sessionController {
         if(equipment.isPresent()){ //if it exists
             if(equipmentService.isWeapon(equipment.get())){ //checks if its a weapon or an armor
                 characterService.equipWeapon(equipment.get(), character); //equips it, adding the necessary attributes
-                model.addAttribute("equipedW", equipment.get()); 
             } else{
                 characterService.equipArmor(equipment.get(), character);
-                model.addAttribute("equipedA", equipment.get());
-
             }        
             return "redirect:/";
 
@@ -184,9 +182,9 @@ public class sessionController {
         Optional<Equipment> equipment = equipmentService.findById(id);
         if(equipment.isPresent()){
             if(equipmentService.isWeapon(equipment.get())){ //same checks as last, this time hust sets the attributes o null or 0
-                characterService.unEquipWeapon(character);
+                characterService.unEquipWeapon(character, id);
             } else{
-                characterService.unEquipArmor( character);
+                characterService.unEquipArmor( character, id);
             }        
             return "redirect:/";
 

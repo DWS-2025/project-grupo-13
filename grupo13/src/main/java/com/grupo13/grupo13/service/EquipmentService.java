@@ -4,16 +4,24 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.EquipmentRepository;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Equipment;
+import com.grupo13.grupo13.model.User;
+import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.service.CharacterService;
 
 @Service
 public class EquipmentService {
 	@Autowired
 	private EquipmentRepository equipmentRepository;
+	
+	@Autowired
+	@Lazy
+	private CharacterService characterService;
 
 	public List<Equipment> findAll() {
 		return equipmentRepository.findAll();
@@ -63,5 +71,30 @@ public class EquipmentService {
 		}
 	}
 
+	public void delete(long id) {
+
+		if (findById(id).isPresent()) {
+			Equipment equipment = findById(id).get();
+//Deletes from users inventory
+			for (User user : equipment.getUsers()) {
+				user.getInventory().remove(equipment);
+			}
+//Deletes from characters equipped
+			for(Character character : equipment.getCharacters()){
+				if (isWeapon(equipment)) {
+					character.setWeapon(null);
+        			character.setStrength(0);
+        			character.setWeaponEquiped(false);
+				}else{
+					character.setArmor(null);
+        			character.setDefense(0);
+        			character.setArmorEquiped(false);
+				}
+			}
+
+			equipmentRepository.deleteById(id);
+		}
+
+	}
 
 }

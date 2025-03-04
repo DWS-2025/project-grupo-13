@@ -28,6 +28,9 @@ public class CharacterRepository {
         }
         characters.put(id, Character);
     }
+    public void deleteById(long id) {
+        characters.remove(id);
+    }
     
 }
 

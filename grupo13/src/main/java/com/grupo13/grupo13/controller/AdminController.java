@@ -17,17 +17,19 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Equipment;
 import com.grupo13.grupo13.model.Weapon;
-import com.grupo13.grupo13.repository.EquipmentRepository;
+import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.EquipmentService;
+import com.grupo13.grupo13.service.UserService;
 
 @Controller
 public class AdminController {
 
     @Autowired
     private EquipmentService equipmentService;
-
     @Autowired
-    private EquipmentRepository equipmentRepository;
+    private UserService userService;
+    @Autowired
+    private CharacterService characterService;
 
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/static/imp_imgs");
 
@@ -49,6 +51,7 @@ public class AdminController {
     public String iterationObj(Model model) {
 
         model.addAttribute("equipment", equipmentService.findAll());
+        model.addAttribute("character", userService.getCharacter());
 
         return "equipment_manager";
     }
@@ -90,7 +93,7 @@ public class AdminController {
     @PostMapping("/equipment/{id}/delete")
     public String deleteEquipment(Model model, @PathVariable long id) throws IOException {
 
-        equipmentRepository.deleteById(id);
+        equipmentService.delete(id);
 
         return "deleted_equipment";
     }
@@ -112,7 +115,15 @@ public class AdminController {
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
         }
-	}   
+	}
+    
+    @GetMapping("/delete_Character")
+    public String getMethodName(Model model) {
+        
+        characterService.delete(userService.getCharacter());
+        return "deleted_character";
+    }
+    
 
     @PostMapping("/equipment/{id}/edit")
 	public String updateEquipment(Model model, @PathVariable long id, @RequestParam String name, @RequestParam String description, @RequestParam int intimidation, @RequestParam int style, @RequestParam int attribute, @RequestParam int price, @RequestParam String picture){

@@ -1,5 +1,7 @@
 package com.grupo13.grupo13.model;
 
+import java.util.ArrayList;
+
 public class Equipment {
     private long id;
     private String name;
@@ -7,6 +9,8 @@ public class Equipment {
     private String description;
     private int attribute;
     private int price;
+    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<Character> characters = new ArrayList<>();
 
     
 
@@ -61,4 +65,26 @@ public class Equipment {
       this.price= p;
     }
 
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+
+
+    public void setUsers(ArrayList<User> users) {
+        this.users = users;
+    }
+
+    public ArrayList<Character> getCharacters() {
+        return characters;
+    }
+
+    public void setCharacters(ArrayList<Character> characters) {
+        this.characters = characters;
+    }
 }

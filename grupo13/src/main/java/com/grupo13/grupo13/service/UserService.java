@@ -55,6 +55,7 @@ public class UserService {
                 int price = equipment.get().getPrice();
                 user.setMoney(user.getMoney() - price);
                 user.getInventory().add(equipment.get());
+                equipment.get().getUsers().add(user);
             }
         }
     }
