@@ -7,7 +7,7 @@ public class Weapon extends Equipment {
 
     //constructor
     public Weapon(String name, int intimidation, int damage, String picture, String description, int price) {
-        super(name, picture, description, intimidation, price);
+        super(name, picture, description, damage, price);
         this.intimidation = intimidation;
     }
 

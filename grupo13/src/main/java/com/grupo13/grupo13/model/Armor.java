@@ -7,7 +7,7 @@ public class Armor extends Equipment {
 
     //constructor
     public Armor(String name, int style, int defense, String picture, String description, int price) {
-        super(name, picture, description, style, price);
+        super(name, picture, description, defense, price);
         this.style = style;
     }
 
