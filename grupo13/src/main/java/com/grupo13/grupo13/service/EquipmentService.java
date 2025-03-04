@@ -56,6 +56,9 @@ public class EquipmentService {
 			nolder.setAttribute(nnewer.getAttribute());
 			nolder.setDescription(nnewer.getDescription());
 			nolder.setnPrice(nnewer.getPrice());
+			for(Character character : nolder.getCharacters()){
+				character.setStrength(nnewer.getAttribute());
+			}
 			equipmentRepository.save(nolder);
 		} else if (older instanceof Armor & newer instanceof Armor) {
 			Armor nolder = (Armor) older;
@@ -65,6 +68,9 @@ public class EquipmentService {
 			nolder.setAttribute(nnewer.getAttribute());
 			nolder.setDescription(nnewer.getDescription());
 			nolder.setnPrice(nnewer.getPrice());
+			for(Character character : nolder.getCharacters()){
+				character.setDefense(nnewer.getAttribute());
+			}
 			equipmentRepository.save(nolder);
 		}
 	}

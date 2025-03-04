@@ -46,6 +46,8 @@ public class sessionController {
         //gets the character and its inventory for mustache
         model.addAttribute("character", character);
         model.addAttribute("current", currentInventory);
+        model.addAttribute("user", userService.getLoggedUser());
+
 
         //checks if the user has "logged", in the first fase is creating the character
         if (character == null) {
@@ -79,6 +81,7 @@ public class sessionController {
         model.addAttribute("character", character);
         ArrayList<Equipment> currentInventory = userService.currentUserInventory();
         model.addAttribute("current", currentInventory);
+        model.addAttribute("user", userService.getLoggedUser());
 
         return "character_view";
     }
@@ -98,7 +101,7 @@ public class sessionController {
                 available.add(equipment);
             }
         }
-
+        model.addAttribute("user", userService.getLoggedUser());
         model.addAttribute("current", currentInventory);
         model.addAttribute("available", available);
         return "listing";
