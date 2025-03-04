@@ -60,7 +60,7 @@ public class CharacterService {
         return character.getArmor();
     }
 
-        //unequips the weapon in use
+    //unequips the weapon in use
     public void unEquipWeapon(Character character, long id){
         character.setWeapon(null);
         character.setStrength(0);
@@ -82,6 +82,7 @@ public class CharacterService {
         }
     }
 
+    //deletes the given character
     public void delete(Character character){
         if (character.getArmor()!=null) {
             long id = character.getArmor().getId();

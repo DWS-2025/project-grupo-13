@@ -10,15 +10,16 @@ import jakarta.annotation.PostConstruct;
 
 @Service
 public class SampleData {
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private EquipmentRepository equipmentRepository;
+        //attributes
+        @Autowired
+        private UserRepository userRepository;
+        @Autowired
+        private EquipmentRepository equipmentRepository;
 
-    //loads the default items
-    @PostConstruct
-    public void init() {
+        //loads the default items
+        @PostConstruct
+        public void init() {
         User lupe = new User(10000, "Lupe");
         userRepository.save(lupe);
 
@@ -53,7 +54,6 @@ public class SampleData {
         equipmentRepository.save(new Armor("Golden Chestplate", 40, 10,
                 "imp_imgs/a3.png",
                 "Made of valuable gold. Shiny but very weak.",70));
-
     }
     
 }

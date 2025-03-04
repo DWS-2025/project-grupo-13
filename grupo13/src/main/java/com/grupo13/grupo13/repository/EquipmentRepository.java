@@ -37,4 +37,5 @@ public class EquipmentRepository {
     public void deleteById(long id) {
         equipments.remove(id);
     }
+    
 }

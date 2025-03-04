@@ -48,6 +48,14 @@ public class Equipment {
         return price;
     }
 
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+
+    public ArrayList<Character> getCharacters() {
+        return characters;
+    }
+
     //set functions
     public void setId(long id) {
         this.id = id;
@@ -73,26 +81,16 @@ public class Equipment {
       this.price= p;
     }
 
-
     public void setPrice(int price) {
         this.price = price;
     }
-
-
-    public ArrayList<User> getUsers() {
-        return users;
-    }
-
 
     public void setUsers(ArrayList<User> users) {
         this.users = users;
     }
 
-    public ArrayList<Character> getCharacters() {
-        return characters;
-    }
-
     public void setCharacters(ArrayList<Character> characters) {
         this.characters = characters;
     }
+    
 }

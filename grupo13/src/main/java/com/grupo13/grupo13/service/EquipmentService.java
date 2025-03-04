@@ -10,7 +10,6 @@ import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Equipment;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Character;
-import com.grupo13.grupo13.service.CharacterService;
 
 @Service
 public class EquipmentService {
@@ -18,7 +17,6 @@ public class EquipmentService {
 	//attributes
 	@Autowired
 	private EquipmentRepository equipmentRepository;
-	
 	@Autowired
 	@Lazy
 	private CharacterService characterService;
@@ -71,15 +69,16 @@ public class EquipmentService {
 		}
 	}
 
+	//deletes an equipment
 	public void delete(long id) {
 
 		if (findById(id).isPresent()) {
 			Equipment equipment = findById(id).get();
-//Deletes from users inventory
+			//deletes from users inventory
 			for (User user : equipment.getUsers()) {
 				user.getInventory().remove(equipment);
 			}
-//Deletes from characters equipped
+			//deletes from characters equipped
 			for(Character character : equipment.getCharacters()){
 				if (isWeapon(equipment)) {
 					character.setWeapon(null);

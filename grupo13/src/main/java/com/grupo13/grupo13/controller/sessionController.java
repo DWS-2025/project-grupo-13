@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.controller;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.springframework.http.HttpHeaders;
@@ -9,40 +8,33 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Equipment;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.EquipmentService;
 import com.grupo13.grupo13.service.UserService;
-
 import jakarta.servlet.http.HttpSession;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 
 @Controller
 public class sessionController {
 
+    //attributes
     @Autowired
     private UserService userService;
-
     @Autowired
     private EquipmentService equipmentService;
-
     @Autowired
     private CharacterService characterService;
-
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
 
     @GetMapping("/")
@@ -50,7 +42,8 @@ public class sessionController {
 
         ArrayList<Equipment> currentInventory = userService.currentUserInventory();
         Character character = userService.getCharacter();
-//gets the character and its inventory for mustache
+
+        //gets the character and its inventory for mustache
         model.addAttribute("character", character);
         model.addAttribute("current", currentInventory);
 
@@ -66,7 +59,8 @@ public class sessionController {
     public String procesarFormulario(Model model, HttpSession session, @RequestParam String nameOfCharacter,
             @RequestParam String characterDesc,
             @RequestParam String imageName, @RequestParam MultipartFile characterImage) throws IOException {
-//creates the character
+        
+        //creates the character
         Character character = new Character();
         character.setDesc(characterDesc);
         character.setName(nameOfCharacter);
@@ -93,13 +87,12 @@ public class sessionController {
     public String iterationObj(Model model, HttpSession session) {
 
         List<Equipment> equipmentList = equipmentService.findAll();
-
         ArrayList<Equipment> available = new ArrayList<>();
-
         ArrayList<Equipment> currentInventory = userService.currentUserInventory();
-//gets the listing of the current equipment in the repository and the inventory
-//creates a list of the equipment that the user doesnt have
-//the html will present the inventory as purchased and the not purchased (available) equipments
+
+        //gets the listing of the current equipment in the repository and the inventory
+        //creates a list of the equipment that the user doesnt have
+        //the html will present the inventory as purchased and the not purchased (available) equipments
         for (Equipment equipment : equipmentList) {
             if (!currentInventory.contains(equipment)) {
                 available.add(equipment);
@@ -108,7 +101,6 @@ public class sessionController {
 
         model.addAttribute("current", currentInventory);
         model.addAttribute("available", available);
-
         return "listing";
     }
 
@@ -117,7 +109,7 @@ public class sessionController {
 
         Optional<Equipment> eqOptional = equipmentService.findById(id);
         if (eqOptional.isPresent()) {
-            //checks if the user has enough money or if its homeless
+            //checks if the user has enough money or if it's homeless
             int money = userService.getMoney();
             if (money >= eqOptional.get().getPrice()) {
                 userService.saveEquipment(id);
@@ -126,7 +118,7 @@ public class sessionController {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
             }
-        } // cambiarlo a ver cuando tengamos el error de no encontrado o smth like that
+        }
         model.addAttribute("message", "Could not purchase, doesnt exist");
         return "sp_errors";
     }
@@ -134,13 +126,11 @@ public class sessionController {
     @GetMapping("/download_image")
     public ResponseEntity<Object> downloadImage(Model model, HttpSession session) throws MalformedURLException {
 
-
         Character character = userService.getCharacter();
         Path imagePath = IMAGES_FOLDER.resolve(character.getImageName());
-
         Resource image = new UrlResource(imagePath.toUri());
-
         String contentType;
+
         try { //gets the type of the image
             contentType = Files.probeContentType(imagePath);
             if (contentType == null) {
@@ -161,6 +151,7 @@ public class sessionController {
         
         Character character = userService.getCharacter();
         Optional<Equipment> equipment = equipmentService.findById(id);
+
         if(equipment.isPresent()){ //if it exists
             if(equipmentService.isWeapon(equipment.get())){ //checks if its a weapon or an armor
                 characterService.equipWeapon(equipment.get(), character); //equips it, adding the necessary attributes
@@ -180,6 +171,7 @@ public class sessionController {
         
         Character character = userService.getCharacter();
         Optional<Equipment> equipment = equipmentService.findById(id);
+
         if(equipment.isPresent()){
             if(equipmentService.isWeapon(equipment.get())){ //same checks as last, this time hust sets the attributes o null or 0
                 characterService.unEquipWeapon(character, id);
@@ -194,5 +186,4 @@ public class sessionController {
         }
     }
     
-
 }
