@@ -6,6 +6,8 @@ import org.springframework.web.context.annotation.SessionScope;
 @Component
 @SessionScope
 public class Character {
+
+    //attributes 
     private long id;
     private String name;
     private String desc;
@@ -17,75 +19,95 @@ public class Character {
     private Equipment weapon;
     private Equipment armor;
     private String imageName;
+    
+    //get functions
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
     }
+
     public String getDesc() {
         return desc;
     }
+
     public int getStrength() {
         return strength;
     }
+    
+    public int getDefense() {
+        return defense;
+    }
+
     public int getHealthPoints() {
         return healthPoints;
     }
+
     public boolean isWeaponEquiped() {
         return weaponEquiped;
     }
+
     public boolean isArmorEquiped() {
         return armorEquiped;
     }
+    
+    public Equipment getWeapon() {
+        return weapon;
+    }
+
+    public Equipment getArmor() {
+        return armor;
+    }
+        
+    public String getImageName() {
+        return imageName;
+    }
+    
+    //set function
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
     public void setStrength(int strength) {
         this.strength = strength;
     }
+    
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
     public void setHealthPoints(int healthPoints) {
         this.healthPoints = healthPoints;
     }
+
     public void setWeaponEquiped(boolean weaponEquiped) {
         this.weaponEquiped = weaponEquiped;
     }
+
     public void setArmorEquiped(boolean armorEquiped) {
         this.armorEquiped = armorEquiped;
     }
-    
-    public String getImageName() {
-        return imageName;
+
+    public void setWeapon(Equipment weapon) {
+        this.weapon = weapon;
+    }
+
+    public void setArmor(Equipment armor) {
+        this.armor = armor;
     }
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
     }
-    public Long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
-    public int getDefense() {
-        return defense;
-    }
-    public void setDefense(int defense) {
-        this.defense = defense;
-    }
-    public Equipment getWeapon() {
-        return weapon;
-    }
-    public void setWeapon(Equipment weapon) {
-        this.weapon = weapon;
-    }
-    public Equipment getArmor() {
-        return armor;
-    }
-    public void setArmor(Equipment armor) {
-        this.armor = armor;
-    }
-    
 
 }

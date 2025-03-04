@@ -1,8 +1,6 @@
 package com.grupo13.grupo13.service;
-
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -16,6 +14,8 @@ import com.grupo13.grupo13.service.CharacterService;
 
 @Service
 public class EquipmentService {
+
+	//attributes
 	@Autowired
 	private EquipmentRepository equipmentRepository;
 	
@@ -23,32 +23,32 @@ public class EquipmentService {
 	@Lazy
 	private CharacterService characterService;
 
+	//returns all equipments in a list
 	public List<Equipment> findAll() {
 		return equipmentRepository.findAll();
 	}
 
-	// Searches by id
+	//searches by id
 	public Optional<Equipment> findById(long id) {
 		return equipmentRepository.findById(id);
 	}
 
-	// Saves in repository
+	//saves in repository
 	public void save(Equipment equipment) {
 		equipmentRepository.save(equipment);
 	}
 
-	// checks if it is a weapon
+	//checks if it is a weapon
 	public boolean isWeapon(Equipment equipment) {
-
 		return (equipment instanceof Weapon);
-
 	}
 
+	//gets the attribute for an equipment
 	public int getAttribute(Equipment equipment) {
 		return equipment.getAttribute();
 	}
 
-	// updates an equipment when edited, each attribute
+	//updates an equipment when edited, each attribute
 	public void update(Equipment older, Equipment newer) {
 		if (older instanceof Weapon & newer instanceof Weapon) {
 			Weapon nolder = (Weapon) older;
@@ -96,5 +96,4 @@ public class EquipmentService {
 		}
 
 	}
-
 }

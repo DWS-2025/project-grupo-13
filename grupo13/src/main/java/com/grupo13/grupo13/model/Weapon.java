@@ -2,22 +2,21 @@ package com.grupo13.grupo13.model;
 
 public class Weapon extends Equipment {
 
+    //the new attribute
     private int intimidation;
 
-    public Weapon(String name, int intimidation, int damage, String image, String description, int price) {
-        super();
-        this.setName(name);
+    //constructor
+    public Weapon(String name, int intimidation, int damage, String picture, String description, int price) {
+        super(name, picture, description, intimidation, price);
         this.intimidation = intimidation;
-        this.setPicture(image);
-        this.setAttribute(damage);
-        this.setDescription(description);
-        this.setnPrice(price);
     }
 
+    //get function of the new attribute
     public int getIntimidation() {
         return intimidation;
     }
 
+    //set function of the new attribute
     public void setIntimidation(int intimidation) {
         this.intimidation = intimidation;
     }
