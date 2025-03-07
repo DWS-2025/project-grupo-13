@@ -4,17 +4,17 @@
             <form action="/formProcess" method="post" enctype="multipart/form-data" class="w-100">
                 <div class="mb-3">
                     <label for="characterName" class="form-label">Name: </label>
-                    <input type="text" class="form-control" name="nameOfCharacter" id="characterName" required>
+                    <input type="text" class="form-control" name="nameOfCharacter" id="characterName">
                 </div>
                 <div class="mb-3">
                     <label for="characterIntro" class="form-label">What can you say about yourself?</label>
-                    <textarea class="form-control" name="characterDesc" rows="3" id="characterIntro" required></textarea>
+                    <textarea class="form-control" name="characterDesc" rows="3" id="characterIntro"></textarea>
                 </div>
                 <div class="mb-3">
                     <p>Picture name: </p>
-                    <input type="text" name="imageName" class="form-control" required/>
+                    <input type="text" name="imageName" class="form-control"/>
                     <p>Picture file:</p>
-                    <input type='file' name='characterImage' accept=".jpg, .jpeg, .gif" class="form-control" required />
+                    <input type='file' name='characterImage' accept=".jpg, .jpeg, .gif" class="form-control"/>
                     <input type='submit' value='Save' class="btn btn-primary mt-3" />
                 </div>
             </form>
