@@ -200,8 +200,6 @@ public class sessionController {
     public ResponseEntity<Object> getImage(Model model, @PathVariable String imageName ) throws MalformedURLException {
         
         Path IMP_IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images", "imp_imgs");
-
-        Character character = userService.getCharacter();
         Path imagePath = IMP_IMAGES_FOLDER.resolve(imageName);
         Resource image = new UrlResource(imagePath.toUri());
         String contentType;
