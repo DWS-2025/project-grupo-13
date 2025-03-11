@@ -57,7 +57,10 @@ public class AdminController {
 
     @PostMapping("/weapon/new")
     public String newEquipment(Model model, Weapon weapon, @RequestParam MultipartFile weaponImage, @RequestParam String image) throws IOException {
-
+        if (weapon.getName().isBlank()||weapon.getDescription().isBlank()|| weaponImage.isEmpty() || image.isBlank()) {
+            model.addAttribute("message", "Some or all parameters were left blank");
+            return "sp_errors";
+        }
         //recives the information to create a new weapon
         String defenitiveImage;
         image += ".jpg";
@@ -75,7 +78,10 @@ public class AdminController {
 
     @PostMapping("/armor/new")
     public String newEquipment(Model model, Armor armor, @RequestParam MultipartFile armorImage, @RequestParam String picture) throws IOException {
-
+        if (armor.getName().isBlank()||armor.getDescription().isBlank()|| armorImage.isEmpty() || picture.isBlank()) {
+            model.addAttribute("message", "Some or all parameters were left blank");
+            return "sp_errors";
+        }
         //recives the information to create a new armor
         String defenitivePicture;
         picture += ".jpg";
@@ -121,6 +127,11 @@ public class AdminController {
     
     @PostMapping("/equipment/{id}/edit")
 	public String updateEquipment(Model model, @PathVariable long id, @RequestParam String name, @RequestParam String description, @RequestParam int intimidation, @RequestParam int style, @RequestParam int attribute, @RequestParam int price, @RequestParam String picture){
+
+        if (name.isBlank()||description.isBlank()|| picture.isBlank() ) {
+            model.addAttribute("message", "Some or all parameters were left blank");
+            return "sp_errors";
+        }
 
 		Optional<Equipment> editedEquipment = equipmentService.findById(id);
 

@@ -2,15 +2,15 @@
 <h1>Edit weapon</h1>
 <form action="/equipment/{{equipment.id}}/edit" method="post">
     <p>Name: </p>
-    <input type='text' name='name' value="{{equipment.name}}" required />
+    <input type='text' name='name' value="{{equipment.name}}"/>
     <p>Intimidation: </p>
-    <input type='text' name='intimidation' value="{{equipment.intimidation}}" required/>
+    <input type='text' name='intimidation' value="{{equipment.intimidation}}"/>
     <p>Description:</p>
-    <textarea name='description' required>{{equipment.description}}</textarea>
+    <textarea name='description'>{{equipment.description}}</textarea>
     <p>Attack: </p>
-    <input type='text' name='attribute' value="{{equipment.attribute}}" required/>
+    <input type='text' name='attribute' value="{{equipment.attribute}}"/>
     <p>Price: </p>
-    <input type='text' name='price' value="{{equipment.price}}" required/>
+    <input type='text' name='price' value="{{equipment.price}}"/>
     <input type="hidden" name="picture" value="{{equipment.picture}}">
     <input type="hidden" name="style" value="0">
     <br><br>

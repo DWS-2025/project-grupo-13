@@ -65,6 +65,10 @@ public class sessionController {
             @RequestParam String characterDesc,
             @RequestParam String imageName, @RequestParam MultipartFile characterImage) throws IOException {
         
+                if (nameOfCharacter.isBlank() || characterDesc.isBlank() || imageName.isBlank()) {
+                    model.addAttribute("message", "Some or all parameters were left blank");
+                    return "sp_errors";
+                }
         //creates the character
         Character character = new Character();
         character.setDesc(characterDesc);
