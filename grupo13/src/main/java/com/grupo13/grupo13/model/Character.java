@@ -16,8 +16,8 @@ public class Character {
     private int healthPoints;
     private boolean weaponEquiped;
     private boolean armorEquiped;
-    private Equipment weapon;
-    private Equipment armor;
+    private Weapon weapon;
+    private Armor armor;
     private String imageName;
     
     //get functions
@@ -53,11 +53,11 @@ public class Character {
         return armorEquiped;
     }
     
-    public Equipment getWeapon() {
+    public Weapon getWeapon() {
         return weapon;
     }
 
-    public Equipment getArmor() {
+    public Armor getArmor() {
         return armor;
     }
         
@@ -98,11 +98,11 @@ public class Character {
         this.armorEquiped = armorEquiped;
     }
 
-    public void setWeapon(Equipment weapon) {
+    public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
     }
 
-    public void setArmor(Equipment armor) {
+    public void setArmor(Armor armor) {
         this.armor = armor;
     }
 

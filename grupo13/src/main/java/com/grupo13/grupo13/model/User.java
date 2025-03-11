@@ -1,6 +1,8 @@
 package com.grupo13.grupo13.model;
 import java.util.ArrayList;
 
+import org.hibernate.type.descriptor.java.ArrayMutabilityPlan;
+
 public class User {
 
     //attributes
@@ -8,7 +10,8 @@ public class User {
     private int money;
     private String userName;
     private Character character;
-    private ArrayList<Equipment> inventory = new ArrayList<>();
+    private ArrayList<Weapon> inventoryWeapon = new ArrayList<>();
+    private ArrayList<Armor> inventoryArmor = new ArrayList<>();
  
     //constructor
     public User(int money, String userName) {
@@ -33,8 +36,12 @@ public class User {
         return character;
     }
 
-    public ArrayList<Equipment> getInventory() {
-        return inventory;
+    public ArrayList<Weapon> getInventoryWeapon() {
+        return inventoryWeapon;
+    }
+
+    public ArrayList<Armor> getInventoryArmor() {
+        return inventoryArmor;
     }
 
     //set functions
@@ -54,8 +61,12 @@ public class User {
         this.character = character;
     }
 
-    public void setInventory(ArrayList<Equipment> inventory) {
-        this.inventory = inventory;
+    public void setInventoryWeapon(ArrayList<Weapon> inventoryWeapon) {
+        this.inventoryWeapon = inventoryWeapon;
     }
+    public void setInventoryArmor(ArrayList<Armor> inventoryArmor) {
+        this.inventoryArmor = inventoryArmor;
+    }
+
 
 }

@@ -4,7 +4,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.grupo13.grupo13.model.Character;
-import com.grupo13.grupo13.model.Equipment;
+import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.repository.CharacterRepository;
 
 @Service
@@ -34,29 +35,29 @@ public class CharacterService {
     }
 
     //for equipping armor or weapon, sets the necessary values from the equipment and adds the character to the equipment
-    public void equipWeapon(Equipment weapon, Character character){
+    public void equipWeapon(Weapon weapon, Character character){
         character.setWeaponEquiped(true);
-        character.setStrength(equipmentService.getAttribute(weapon));
+        character.setStrength(equipmentService.getWeaponAttribute(weapon));
         character.setWeapon(weapon);
         weapon.getCharacters().add(character);
     }
 
     //equips an armor to the character that recives
-    public void equipArmor(Equipment armor, Character character){
+    public void equipArmor(Armor armor, Character character){
         character.setArmorEquiped(true);
-        character.setDefense(equipmentService.getAttribute(armor));
+        character.setDefense(equipmentService.getArmorAttribute(armor));
         character.setArmor(armor);
         armor.getCharacters().add(character);
 
     }
 
     //gets the equipment
-    public Equipment getEquipedWeapon(Character character){
+    public Weapon getEquipedWeapon(Character character){
         return character.getWeapon();
     }
 
     //gets the armor in use
-    public Equipment getEquipedArmor(Character character){
+    public Armor getEquipedArmor(Character character){
         return character.getArmor();
     }
 
@@ -66,8 +67,8 @@ public class CharacterService {
         character.setStrength(0);
         character.setWeaponEquiped(false);
         //removes the character from the list
-        if(equipmentService.findById(id).isPresent()){
-            equipmentService.findById(id).get().getCharacters().remove(character);
+        if(equipmentService.findWeaponById(id).isPresent()){
+            equipmentService.findWeaponById(id).get().getCharacters().remove(character);
         }
     }
 
@@ -77,23 +78,23 @@ public class CharacterService {
         character.setDefense(0);
         character.setArmorEquiped(false);
         //removes the character from the list
-        if(equipmentService.findById(id).isPresent()){
-            equipmentService.findById(id).get().getCharacters().remove(character);
+        if(equipmentService.findArmorById(id).isPresent()){
+            equipmentService.findArmorById(id).get().getCharacters().remove(character);
         }
     }
 
-    //deletes the given character
+    //deletes the given character   
     public void delete(Character character){
         if (character.getArmor()!=null) {
             long id = character.getArmor().getId();
-            if(equipmentService.findById(id).isPresent()){
-                equipmentService.findById(id).get().getCharacters().remove(character);
+            if(equipmentService.findArmorById(id).isPresent()){
+                equipmentService.findArmorById(id).get().getCharacters().remove(character);
             }
         }
         if (character.getWeapon()!=null) {
             long id = character.getWeapon().getId();
-            if(equipmentService.findById(id).isPresent()){
-                equipmentService.findById(id).get().getCharacters().remove(character);
+            if(equipmentService.findWeaponById(id).isPresent()){
+                equipmentService.findWeaponById(id).get().getCharacters().remove(character);
             }
         }
         userService.getLoggedUser().setCharacter(null);

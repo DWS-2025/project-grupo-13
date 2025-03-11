@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import com.grupo13.grupo13.model.Weapon;
-import com.grupo13.grupo13.repository.EquipmentRepository;
+import com.grupo13.grupo13.repository.ArmorRepository;
+import com.grupo13.grupo13.repository.WeaponRepository;
 import com.grupo13.grupo13.model.Armor;
-import com.grupo13.grupo13.model.Equipment;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Character;
 
@@ -16,39 +16,53 @@ public class EquipmentService {
 
 	//attributes
 	@Autowired
-	private EquipmentRepository equipmentRepository;
+	private ArmorRepository armorRepository;
+	private WeaponRepository weaponRepository;
 	@Autowired
 	@Lazy
 	private CharacterService characterService;
 
 	//returns all equipments in a list
-	public List<Equipment> findAll() {
-		return equipmentRepository.findAll();
+	public List<Weapon> findAllWeapon() {
+		return weaponRepository.findAll();
+	}
+
+	public List<Armor> findAllArmor() {
+		return armorRepository.findAll();
 	}
 
 	//searches by id
-	public Optional<Equipment> findById(long id) {
-		return equipmentRepository.findById(id);
+	public Optional<Weapon> findWeaponById(long id) {
+		return weaponRepository.findById(id);
+	}
+	public Optional<Armor> findArmorById(long id) {
+		return armorRepository.findById(id);
 	}
 
 	//saves in repository
-	public void save(Equipment equipment) {
-		equipmentRepository.save(equipment);
+	public void saveWeapon(Weapon equipment) {
+		weaponRepository.save(equipment);
+	}
+
+	public void saveArmor(Armor equipment) {
+		armorRepository.save(equipment);
 	}
 
 	//checks if it is a weapon
-	public boolean isWeapon(Equipment equipment) {
-		return (equipment instanceof Weapon);
+	public boolean isWeapon(Weapon equipment) {
+		return true;
 	}
 
 	//gets the attribute for an equipment
-	public int getAttribute(Equipment equipment) {
+	public int getWeaponAttribute(Weapon equipment) {
+		return equipment.getAttribute();
+	}
+	public int getArmorAttribute(Armor equipment) {
 		return equipment.getAttribute();
 	}
 
 	//updates an equipment when edited, each attribute
-	public void update(Equipment older, Equipment newer) {
-		if (older instanceof Weapon & newer instanceof Weapon) {
+	public void updateWeapon(Weapon older, Weapon newer) {
 			Weapon nolder = (Weapon) older;
 			Weapon nnewer = (Weapon) newer;
 			nolder.setName(nnewer.getName());
@@ -60,8 +74,11 @@ public class EquipmentService {
 			for(Character character : nolder.getCharacters()){
 				character.setStrength(nnewer.getAttribute());
 			}
-			equipmentRepository.save(nolder);
-		} else if (older instanceof Armor & newer instanceof Armor) {
+			weaponRepository.save(nolder);
+		}
+
+
+		public void updateArmor(Armor older, Armor newer){
 			Armor nolder = (Armor) older;
 			Armor nnewer = (Armor) newer;
 			nolder.setName(nnewer.getName());
@@ -73,34 +90,53 @@ public class EquipmentService {
 			for(Character character : nolder.getCharacters()){
 				character.setDefense(nnewer.getAttribute());
 			}
-			equipmentRepository.save(nolder);
+			armorRepository.save(nolder);
 		}
-	}
+	
 
 	//deletes an equipment
-	public void delete(long id) {
+	public void deleteWeapon(long id) {
 
-		if (findById(id).isPresent()) {
-			Equipment equipment = findById(id).get();
+		if (findWeaponById(id).isPresent()) {
+			Weapon equipment = findWeaponById(id).get();
 			//deletes from users inventory
 			for (User user : equipment.getUsers()) {
-				user.getInventory().remove(equipment);
+				user.getInventoryWeapon().remove(equipment);
 			}
 			//deletes from characters equipped
 			for(Character character : equipment.getCharacters()){
-				if (isWeapon(equipment)) {
+				
 					character.setWeapon(null);
         			character.setStrength(0);
         			character.setWeaponEquiped(false);
-				}else{
-					character.setArmor(null);
-        			character.setDefense(0);
-        			character.setArmorEquiped(false);
-				}
+				
 			}
 
-			equipmentRepository.deleteById(id);
+			weaponRepository.deleteById(id);
 		}
 
 	}
+
+public void deleteArmor(long id) {
+
+	if (findArmorById(id).isPresent()) {
+		Armor equipment = findArmorById(id).get();
+		//deletes from users inventory
+		for (User user : equipment.getUsers()) {
+			user.getInventoryArmor().remove(equipment);
+		}
+		//deletes from characters equipped
+		for(Character character : equipment.getCharacters()){
+			
+				character.setArmor(null);
+				character.setDefense(0);
+				character.setArmorEquiped(false);
+			
+		}
+
+		armorRepository.deleteById(id);
+	}
+
 }
+}
+

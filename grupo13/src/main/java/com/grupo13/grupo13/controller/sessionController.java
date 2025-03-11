@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
-import com.grupo13.grupo13.model.Equipment;
+import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.EquipmentService;
 import com.grupo13.grupo13.service.UserService;
@@ -43,12 +44,14 @@ public class sessionController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
 
-        ArrayList<Equipment> currentInventory = userService.currentUserInventory();
+        ArrayList<Weapon> currentInventoryWeapon = userService.currentUserInventoryWeapon();
+        ArrayList<Armor> currentInventoryArmor = userService.currentUserInventoryArmor();
         Character character = userService.getCharacter();
 
         //gets the character and its inventory for mustache
         model.addAttribute("character", character);
-        model.addAttribute("current", currentInventory);
+        model.addAttribute("currentW", currentInventoryWeapon);
+        model.addAttribute("currentA", currentInventoryWeapon);
         model.addAttribute("user", userService.getLoggedUser());
 
 
@@ -86,7 +89,8 @@ public class sessionController {
         characterImage.transferTo(imagePath);
 
         model.addAttribute("character", character);
-        ArrayList<Equipment> currentInventory = userService.currentUserInventory();
+        ArrayList<Weapon> currentInventory = userService.currentUserInventoryWeapon();
+        ArrayList<Armor> currentArmor = userService.currentUserInventoryArmor();
         model.addAttribute("current", currentInventory);
         model.addAttribute("user", userService.getLoggedUser());
 
@@ -96,21 +100,31 @@ public class sessionController {
     @GetMapping("/list_objects")
     public String iterationObj(Model model, HttpSession session) {
 
-        List<Equipment> equipmentList = equipmentService.findAll();
-        ArrayList<Equipment> available = new ArrayList<>();
-        ArrayList<Equipment> currentInventory = userService.currentUserInventory();
+        List<Weapon> equipmentListW = equipmentService.findAllWeapon();
+        List<Armor> equipmentListA = equipmentService.findAllArmor();
+        ArrayList<Weapon> availableW = new ArrayList<>();
+        ArrayList<Armor> availableA = new ArrayList<>();
+        ArrayList<Weapon> currentInventoryW = userService.currentUserInventoryWeapon();
+        ArrayList<Armor> currentInventoryA = userService.currentUserInventoryArmor();
 
         //gets the listing of the current equipment in the repository and the inventory
         //creates a list of the equipment that the user doesnt have
         //the html will present the inventory as purchased and the not purchased (available) equipments
-        for (Equipment equipment : equipmentList) {
-            if (!currentInventory.contains(equipment)) {
-                available.add(equipment);
+        for (Weapon equipmentW : equipmentListW) {
+            if (!currentInventoryW.contains(equipmentW)) {
+                availableW.add(equipmentW);
+            }
+        }
+        for (Armor equipmentA : equipmentListA) {
+            if (!currentInventoryA.contains(equipmentA)) {
+                availableA.add(equipmentA);
             }
         }
         model.addAttribute("user", userService.getLoggedUser());
-        model.addAttribute("current", currentInventory);
-        model.addAttribute("available", available);
+        model.addAttribute("currentA", currentInventoryA);
+        model.addAttribute("currentW", currentInventoryW);
+        model.addAttribute("availableA", availableA);
+        model.addAttribute("availableW", availableW);
         return "listing";
     }
 
