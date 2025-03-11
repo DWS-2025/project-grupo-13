@@ -28,7 +28,7 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private CharacterService characterService;
-    private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/static/imp_imgs");
+    private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/imp_imgs");
 
     @GetMapping("/equipment/{id}")
     public String showEquipment(Model model, @PathVariable long id) {
