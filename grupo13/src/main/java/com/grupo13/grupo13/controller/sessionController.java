@@ -128,15 +128,33 @@ public class sessionController {
         return "listing";
     }
 
-    @PostMapping("/purchase")
-    public String purchase(@RequestParam long id, Model model) {
+    @PostMapping("/purchaseWeapon")
+    public String purchaseWeapon(@RequestParam long id, Model model) {
 
-        Optional<Equipment> eqOptional = equipmentService.findById(id);
+        Optional<Weapon> eqOptional = equipmentService.findWeaponById(id);
         if (eqOptional.isPresent()) {
             //checks if the user has enough money or if it's homeless
             int money = userService.getMoney();
             if (money >= eqOptional.get().getPrice()) {
-                userService.saveEquipment(id);
+                userService.saveWeapon(id);
+                return "redirect:/list_objects";
+            } else{
+                model.addAttribute("message", "You don't have any money left, go work or something");
+                return "sp_errors";
+            }
+        }
+        model.addAttribute("message", "Could not purchase, doesnt exist");
+        return "sp_errors";
+    }
+    @PostMapping("/purchaseArmor")
+    public String purchaseArmor(@RequestParam long id, Model model) {
+
+        Optional<Armor> eqOptional = equipmentService.findArmorById(id);
+        if (eqOptional.isPresent()) {
+            //checks if the user has enough money or if it's homeless
+            int money = userService.getMoney();
+            if (money >= eqOptional.get().getPrice()) {
+                userService.saveArmor(id);
                 return "redirect:/list_objects";
             } else{
                 model.addAttribute("message", "You don't have any money left, go work or something");
@@ -170,18 +188,33 @@ public class sessionController {
                 .body(image);
     }
 
-    @PostMapping("/equip")
-    public String equip(@RequestParam long id, Model model) {
+    @PostMapping("/equipWeapon")
+    public String equipWeapon(@RequestParam long id, Model model) {
         
         Character character = userService.getCharacter();
-        Optional<Equipment> equipment = equipmentService.findById(id);
+        Optional<Weapon> equipment = equipmentService.findWeaponById(id);
 
         if(equipment.isPresent()){ //if it exists
-            if(equipmentService.isWeapon(equipment.get())){ //checks if its a weapon or an armor
+        
                 characterService.equipWeapon(equipment.get(), character); //equips it, adding the necessary attributes
-            } else{
-                characterService.equipArmor(equipment.get(), character);
-            }        
+            
+            return "redirect:/";
+
+        }else{
+            model.addAttribute("message", "Could not equip, doesnt exist");
+            return "sp_errors";
+        }
+    }
+    @PostMapping("/equipArmor")
+    public String equipArmor(@RequestParam long id, Model model) {
+        
+        Character character = userService.getCharacter();
+        Optional<Armor> equipment = equipmentService.findArmorById(id);
+
+        if(equipment.isPresent()){ //if it exists
+        
+                characterService.equipArmor(equipment.get(), character); //equips it, adding the necessary attributes
+            
             return "redirect:/";
 
         }else{
@@ -190,18 +223,33 @@ public class sessionController {
         }
     }
 
-    @PostMapping("/unEquip")
-    public String unEquip(@RequestParam long id, Model model) {
+    @PostMapping("/unEquipWeapon")
+    public String unEquipWeapon(@RequestParam long id, Model model) {
         
         Character character = userService.getCharacter();
-        Optional<Equipment> equipment = equipmentService.findById(id);
+        Optional<Weapon> equipment = equipmentService.findWeaponById(id);
 
         if(equipment.isPresent()){
-            if(equipmentService.isWeapon(equipment.get())){ //same checks as last, this time hust sets the attributes o null or 0
-                characterService.unEquipWeapon(character, id);
-            } else{
-                characterService.unEquipArmor( character, id);
-            }        
+      
+        characterService.unEquipWeapon(character, id);
+               
+            return "redirect:/";
+
+        }else{
+            model.addAttribute("message", "Could not unEquip, doesnt exist");
+            return "sp_errors";
+        }
+    }
+    @PostMapping("/unEquipArmor")
+    public String unEquipArmor(@RequestParam long id, Model model) {
+        
+        Character character = userService.getCharacter();
+        Optional<Armor> equipment = equipmentService.findArmorById(id);
+
+        if(equipment.isPresent()){
+      
+        characterService.unEquipArmor(character, id);
+               
             return "redirect:/";
 
         }else{
