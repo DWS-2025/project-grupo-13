@@ -23,7 +23,10 @@ import com.grupo13.grupo13.service.EquipmentService;
 import com.grupo13.grupo13.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class sessionController {
@@ -192,5 +195,29 @@ public class sessionController {
             return "sp_errors";
         }
     }
+
+    @GetMapping("/image/{imageName}")
+    public ResponseEntity<Object> getImage(Model model, @PathVariable String imageName ) throws MalformedURLException {
+        
+        Path IMP_IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images", "imp_imgs");
+        Path imagePath = IMP_IMAGES_FOLDER.resolve(imageName);
+        Resource image = new UrlResource(imagePath.toUri());
+        String contentType;
+
+        try { //gets the type of the image
+            contentType = Files.probeContentType(imagePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+        } catch (IOException e) {
+            contentType = "application/octet-stream";
+        }
+
+        //returns the image
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, contentType)
+                .body(image);
+    }
+    
     
 }

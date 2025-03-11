@@ -51,6 +51,7 @@ public class EquipmentService {
 		if (older instanceof Weapon & newer instanceof Weapon) {
 			Weapon nolder = (Weapon) older;
 			Weapon nnewer = (Weapon) newer;
+			nolder.setName(nnewer.getName());
 			nolder.setIntimidation(nnewer.getIntimidation());
 			nolder.setPicture(nnewer.getPicture());
 			nolder.setAttribute(nnewer.getAttribute());
@@ -63,6 +64,7 @@ public class EquipmentService {
 		} else if (older instanceof Armor & newer instanceof Armor) {
 			Armor nolder = (Armor) older;
 			Armor nnewer = (Armor) newer;
+			nolder.setName(nnewer.getName());
 			nolder.setStyle(nnewer.getStyle());
 			nolder.setPicture(nnewer.getPicture());
 			nolder.setAttribute(nnewer.getAttribute());
