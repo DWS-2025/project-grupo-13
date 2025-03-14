@@ -1,7 +1,6 @@
 package com.grupo13.grupo13.model;
 import java.util.ArrayList;
-
-import org.hibernate.type.descriptor.java.ArrayMutabilityPlan;
+//test
 
 public class User {
 

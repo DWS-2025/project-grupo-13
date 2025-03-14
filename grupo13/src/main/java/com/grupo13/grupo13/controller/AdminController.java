@@ -61,7 +61,7 @@ public class AdminController {
 
         //gets all equipments and characters
         model.addAttribute("armor", equipmentService.findAllArmor());
-        model.addAttribute("armor", equipmentService.findAllWeapon());
+        model.addAttribute("weapon", equipmentService.findAllWeapon());
         model.addAttribute("character", userService.getCharacter());
 
         return "equipment_manager";
