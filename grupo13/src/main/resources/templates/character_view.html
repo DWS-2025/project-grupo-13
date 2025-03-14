@@ -82,7 +82,7 @@
       </div>
    </div>
    <div class="col-8 row row-cols-auto g-4 justify-content-center">
-      {{#current}}
+      {{#currentW}}
       <div class="col">
          <form action="/equip" method="post" enctype="multipart/form-data">
             <div class="card" style="width:17rem;">
@@ -106,7 +106,32 @@
             </div>
          </form>
       </div>
-      {{/current}}
+      {{/currentW}}
+      {{#currentA}}
+      <div class="col">
+         <form action="/equip" method="post" enctype="multipart/form-data">
+            <div class="card" style="width:17rem;">
+               <img src="/image/{{picture}}" class="card-img-top" alt="..." height="306px" width="1024px">
+               <div class="card-body">
+                  <h5 class="card-title">{{name}}</h5>
+                  <p class="card-text">{{description}}</p>
+                  {{#style}}
+                  <h6 class="card-style">Defense: {{attribute}}</h6>
+                  <h6 class="card-style">Style: {{style}}</h6>
+                  {{/style}}
+                  {{#intimidation}}
+                  <h6 class="card-style">Attack: {{attribute}}</h6>
+                  <h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
+                  {{/intimidation}}
+                  <!-- Hidden inputs to avoid sending the data of every object-->
+                  <input type="hidden" name="id" value="{{id}}">
+                  <!--end of hidden inputs-->
+                  <input type='submit' value='Equip'>
+               </div>
+            </div>
+         </form>
+      </div>
+      {{/currentA}}
    </div>
 </div>
 
