@@ -89,9 +89,10 @@ public class sessionController {
         characterImage.transferTo(imagePath);
 
         model.addAttribute("character", character);
-        ArrayList<Weapon> currentInventory = userService.currentUserInventoryWeapon();
+        ArrayList<Weapon> currentWeapon = userService.currentUserInventoryWeapon();
         ArrayList<Armor> currentArmor = userService.currentUserInventoryArmor();
-        model.addAttribute("current", currentInventory);
+        model.addAttribute("currentW", currentWeapon);
+        model.addAttribute("currentA", currentArmor);
         model.addAttribute("user", userService.getLoggedUser());
 
         return "character_view";
