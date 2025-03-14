@@ -19,14 +19,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.model.Armor;
+import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
-import com.grupo13.grupo13.service.EquipmentService;
 import com.grupo13.grupo13.service.UserService;
+import com.grupo13.grupo13.service.WeaponService;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -36,7 +37,8 @@ public class sessionController {
     @Autowired
     private UserService userService;
     @Autowired
-    private EquipmentService equipmentService;
+    private WeaponService weaponService;
+    private ArmorService armorService;
     @Autowired
     private CharacterService characterService;
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
@@ -51,7 +53,7 @@ public class sessionController {
         //gets the character and its inventory for mustache
         model.addAttribute("character", character);
         model.addAttribute("currentW", currentInventoryWeapon);
-        model.addAttribute("currentA", currentInventoryWeapon);
+        model.addAttribute("currentA", currentInventoryArmor);
         model.addAttribute("user", userService.getLoggedUser());
 
 
@@ -101,8 +103,8 @@ public class sessionController {
     @GetMapping("/list_objects")
     public String iterationObj(Model model, HttpSession session) {
 
-        List<Weapon> equipmentListW = equipmentService.findAllWeapon();
-        List<Armor> equipmentListA = equipmentService.findAllArmor();
+        List<Weapon> equipmentListW = weaponService.findAllWeapon();
+        List<Armor> equipmentListA = armorService.findAllArmor();
         ArrayList<Weapon> availableW = new ArrayList<>();
         ArrayList<Armor> availableA = new ArrayList<>();
         ArrayList<Weapon> currentInventoryW = userService.currentUserInventoryWeapon();
@@ -132,7 +134,7 @@ public class sessionController {
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
 
-        Optional<Weapon> eqOptional = equipmentService.findWeaponById(id);
+        Optional<Weapon> eqOptional = weaponService.findWeaponById(id);
         if (eqOptional.isPresent()) {
             //checks if the user has enough money or if it's homeless
             int money = userService.getMoney();
@@ -150,7 +152,7 @@ public class sessionController {
     @PostMapping("/purchaseArmor")
     public String purchaseArmor(@RequestParam long id, Model model) {
 
-        Optional<Armor> eqOptional = equipmentService.findArmorById(id);
+        Optional<Armor> eqOptional = armorService.findArmorById(id);
         if (eqOptional.isPresent()) {
             //checks if the user has enough money or if it's homeless
             int money = userService.getMoney();
@@ -193,7 +195,7 @@ public class sessionController {
     public String equipWeapon(@RequestParam long id, Model model) {
         
         Character character = userService.getCharacter();
-        Optional<Weapon> equipment = equipmentService.findWeaponById(id);
+        Optional<Weapon> equipment = weaponService.findWeaponById(id);
 
         if(equipment.isPresent()){ //if it exists
         
@@ -210,7 +212,7 @@ public class sessionController {
     public String equipArmor(@RequestParam long id, Model model) {
         
         Character character = userService.getCharacter();
-        Optional<Armor> equipment = equipmentService.findArmorById(id);
+        Optional<Armor> equipment = armorService.findArmorById(id);
 
         if(equipment.isPresent()){ //if it exists
         
@@ -228,7 +230,7 @@ public class sessionController {
     public String unEquipWeapon(@RequestParam long id, Model model) {
         
         Character character = userService.getCharacter();
-        Optional<Weapon> equipment = equipmentService.findWeaponById(id);
+        Optional<Weapon> equipment = weaponService.findWeaponById(id);
 
         if(equipment.isPresent()){
       
@@ -245,7 +247,7 @@ public class sessionController {
     public String unEquipArmor(@RequestParam long id, Model model) {
         
         Character character = userService.getCharacter();
-        Optional<Armor> equipment = equipmentService.findArmorById(id);
+        Optional<Armor> equipment = armorService.findArmorById(id);
 
         if(equipment.isPresent()){
       

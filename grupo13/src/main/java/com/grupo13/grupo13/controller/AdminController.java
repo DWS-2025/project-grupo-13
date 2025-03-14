@@ -11,19 +11,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import com.grupo13.grupo13.model.Armor;
 
+import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
-import com.grupo13.grupo13.service.EquipmentService;
 import com.grupo13.grupo13.service.UserService;
+import com.grupo13.grupo13.service.WeaponService;
 
 @Controller
 public class AdminController {
 
     //attributes
     @Autowired
-    private EquipmentService equipmentService;
+    private WeaponService weaponService;
+    private ArmorService armorService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -33,7 +35,7 @@ public class AdminController {
     @GetMapping("/equipment/{id}")
     public String showWeapon(Model model, @PathVariable long id) {
 
-        Optional<Weapon> equipment = equipmentService.findWeaponById(id);
+        Optional<Weapon> equipment = weaponService.findWeaponById(id);
         
         
         
@@ -45,7 +47,7 @@ public class AdminController {
 
         public String showArmor(Model model, @PathVariable long id) {
 
-            Optional<Armor> equipment = equipmentService.findArmorById(id);
+            Optional<Armor> equipment = armorService.findArmorById(id);
             
             
             
@@ -60,8 +62,8 @@ public class AdminController {
     public String iterationObj(Model model) {
 
         //gets all equipments and characters
-        model.addAttribute("armor", equipmentService.findAllArmor());
-        model.addAttribute("weapon", equipmentService.findAllWeapon());
+        model.addAttribute("armor", armorService.findAllArmor());
+        model.addAttribute("weapon", weaponService.findAllWeapon());
         model.addAttribute("character", userService.getCharacter());
 
         return "equipment_manager";
@@ -80,7 +82,7 @@ public class AdminController {
 
         weapon.setPicture(defenitiveImage);
 
-        equipmentService.saveWeapon(weapon);
+        weaponService.saveWeapon(weapon);
 
         Path imagePath = IMAGES_FOLDER.resolve(image);
         weaponImage.transferTo(imagePath);
@@ -99,7 +101,7 @@ public class AdminController {
         picture += ".jpg";
         defenitivePicture = "imp_imgs/" + picture;
         armor.setPicture(defenitivePicture);
-        equipmentService.saveArmor(armor);
+        armorService.saveArmor(armor);
 
         Path imagePath = IMAGES_FOLDER.resolve(picture);
         armorImage.transferTo(imagePath);       
@@ -108,19 +110,19 @@ public class AdminController {
 
     @PostMapping("/equipment/{id}/deleteW")
     public String deleteWeapon(Model model, @PathVariable long id) throws IOException {
-        equipmentService.deleteWeapon(id);
+        weaponService.deleteWeapon(id);
         return "deleted_equipment";
     }
     @PostMapping("/equipment/{id}/deleteA")
     public String deleteEquipment(Model model, @PathVariable long id) throws IOException {
-        equipmentService.deleteArmor(id);
+        armorService.deleteArmor(id);
         return "deleted_equipment";
     }
 
     @GetMapping("/equipment/{id}/editW")
 	public String editEquipment(Model model, @PathVariable long id) {
 
-		Optional<Weapon> equipment = equipmentService.findWeaponById(id);
+		Optional<Weapon> equipment = weaponService.findWeaponById(id);
         
 		if (equipment.isPresent()) { //if the equipment exists, it leads to edit weapon/armor
             
@@ -137,7 +139,7 @@ public class AdminController {
     @GetMapping("/equipment/{id}/editA")
 	public String editArmor(Model model, @PathVariable long id) {
 
-		Optional<Armor> equipment = equipmentService.findArmorById(id);
+		Optional<Armor> equipment = armorService.findArmorById(id);
         
 		if (equipment.isPresent()) { //if the equipment exists, it leads to edit weapon/armor
             
@@ -165,13 +167,13 @@ public class AdminController {
             return "sp_errors";
         }
 
-		Optional<Weapon> editedEquipment = equipmentService.findWeaponById(id);
+		Optional<Weapon> editedEquipment = weaponService.findWeaponById(id);
 
 		if (editedEquipment.isPresent()) { //if the equipment exists, it reates a weapon/armor with the new information
 			Weapon oldEquipment = editedEquipment.get();
             
                 Weapon updatedEquipment = new Weapon(name, intimidation, attribute, picture, description, price);
-                equipmentService.updateWeapon(oldEquipment, updatedEquipment);
+                weaponService.updateWeapon(oldEquipment, updatedEquipment);
 			    return "redirect:/equipment/" + id;
             }
 			
@@ -189,13 +191,13 @@ public class AdminController {
             return "sp_errors";
         }
 
-		Optional<Armor> editedEquipment = equipmentService.findArmorById(id);
+		Optional<Armor> editedEquipment = armorService.findArmorById(id);
 
 		if (editedEquipment.isPresent()) { //if the equipment exists, it reates a weapon/armor with the new information
 			Armor oldEquipment = editedEquipment.get();
             
                 Armor updatedEquipment = new Armor(name, style, attribute, picture, description, price);
-                equipmentService.updateArmor(oldEquipment, updatedEquipment);
+                armorService.updateArmor(oldEquipment, updatedEquipment);
 			    return "redirect:/equipment/" + id;
             }
 			

@@ -15,7 +15,8 @@ public class CharacterService {
     @Autowired
     private CharacterRepository characterRepository;
     @Autowired
-    private EquipmentService equipmentService;
+    private WeaponService weaponService;
+    private ArmorService armorService;
     @Autowired
     private UserService userService;
 
@@ -37,7 +38,7 @@ public class CharacterService {
     //for equipping armor or weapon, sets the necessary values from the equipment and adds the character to the equipment
     public void equipWeapon(Weapon weapon, Character character){
         character.setWeaponEquiped(true);
-        character.setStrength(equipmentService.getWeaponAttribute(weapon));
+        character.setStrength(weaponService.getWeaponAttribute(weapon));
         character.setWeapon(weapon);
         weapon.getCharacters().add(character);
     }
@@ -45,7 +46,7 @@ public class CharacterService {
     //equips an armor to the character that recives
     public void equipArmor(Armor armor, Character character){
         character.setArmorEquiped(true);
-        character.setDefense(equipmentService.getArmorAttribute(armor));
+        character.setDefense(armorService.getArmorAttribute(armor));
         character.setArmor(armor);
         armor.getCharacters().add(character);
 
@@ -67,8 +68,8 @@ public class CharacterService {
         character.setStrength(0);
         character.setWeaponEquiped(false);
         //removes the character from the list
-        if(equipmentService.findWeaponById(id).isPresent()){
-            equipmentService.findWeaponById(id).get().getCharacters().remove(character);
+        if(weaponService.findWeaponById(id).isPresent()){
+            weaponService.findWeaponById(id).get().getCharacters().remove(character);
         }
     }
 
@@ -78,8 +79,8 @@ public class CharacterService {
         character.setDefense(0);
         character.setArmorEquiped(false);
         //removes the character from the list
-        if(equipmentService.findArmorById(id).isPresent()){
-            equipmentService.findArmorById(id).get().getCharacters().remove(character);
+        if(armorService.findArmorById(id).isPresent()){
+            armorService.findArmorById(id).get().getCharacters().remove(character);
         }
     }
 
@@ -87,14 +88,14 @@ public class CharacterService {
     public void delete(Character character){
         if (character.getArmor()!=null) {
             long id = character.getArmor().getId();
-            if(equipmentService.findArmorById(id).isPresent()){
-                equipmentService.findArmorById(id).get().getCharacters().remove(character);
+            if(armorService.findArmorById(id).isPresent()){
+                armorService.findArmorById(id).get().getCharacters().remove(character);
             }
         }
         if (character.getWeapon()!=null) {
             long id = character.getWeapon().getId();
-            if(equipmentService.findWeaponById(id).isPresent()){
-                equipmentService.findWeaponById(id).get().getCharacters().remove(character);
+            if(weaponService.findWeaponById(id).isPresent()){
+                weaponService.findWeaponById(id).get().getCharacters().remove(character);
             }
         }
         userService.getLoggedUser().setCharacter(null);

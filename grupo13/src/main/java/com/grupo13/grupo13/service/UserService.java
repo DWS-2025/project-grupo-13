@@ -17,7 +17,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private EquipmentService equipmentService;
+    private WeaponService weaponService;
+    private ArmorService armorService;
 
     //gets the current user
     public User getLoggedUser() {
@@ -32,7 +33,7 @@ public class UserService {
     //returns true if a character (located by its id) has a equipment in use
     public boolean hasWeapon(long id) {
         User user = getLoggedUser();
-        Optional<Weapon> equipment = equipmentService.findWeaponById(id);
+        Optional<Weapon> equipment = weaponService.findWeaponById(id);
         if (equipment.isPresent()) {
             return user.getInventoryWeapon().contains(equipment.get());
         }
@@ -40,7 +41,7 @@ public class UserService {
     }
     public boolean hasArmor(long id) {
         User user = getLoggedUser();
-        Optional<Armor> equipment = equipmentService.findArmorById(id);
+        Optional<Armor> equipment = armorService.findArmorById(id);
         if (equipment.isPresent()) {
             return user.getInventoryArmor().contains(equipment.get());
         }
@@ -65,7 +66,7 @@ public class UserService {
     public void saveWeapon(long id) {
         User user = getLoggedUser();
         if (!hasWeapon(id)) {
-            Optional<Weapon> equipment = equipmentService.findWeaponById(id);
+            Optional<Weapon> equipment = weaponService.findWeaponById(id);
             if (equipment.isPresent()) {
                 int price = equipment.get().getPrice();
                 user.setMoney(user.getMoney() - price);
@@ -78,7 +79,7 @@ public class UserService {
     public void saveArmor(long id) {
         User user = getLoggedUser();
         if (!hasArmor(id)) {
-            Optional<Armor> equipment = equipmentService.findArmorById(id);
+            Optional<Armor> equipment = armorService.findArmorById(id);
             if (equipment.isPresent()) {
                 int price = equipment.get().getPrice();
                 user.setMoney(user.getMoney() - price);
