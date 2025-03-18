@@ -1,11 +1,12 @@
 package com.grupo13.grupo13.service;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.grupo13.grupo13.model.Character;
-import com.grupo13.grupo13.model.Equipment;
+import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.repository.UserRepository;
 
@@ -16,7 +17,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private EquipmentService equipmentService;
+    private WeaponService weaponService;
+    private ArmorService armorService;
 
     //gets the current user
     public User getLoggedUser() {
@@ -29,35 +31,59 @@ public class UserService {
     }
 
     //returns true if a character (located by its id) has a equipment in use
-    public boolean hasEquipment(long id) {
+    public boolean hasWeapon(long id) {
         User user = getLoggedUser();
-        Optional<Equipment> equipment = equipmentService.findById(id);
+        Optional<Weapon> equipment = weaponService.findWeaponById(id);
         if (equipment.isPresent()) {
-            return user.getInventory().contains(equipment.get());
+            return user.getInventoryWeapon().contains(equipment.get());
         }
         return false;
     }
-
+    public boolean hasArmor(long id) {
+        User user = getLoggedUser();
+        Optional<Armor> equipment = armorService.findArmorById(id);
+        if (equipment.isPresent()) {
+            return user.getInventoryArmor().contains(equipment.get());
+        }
+        return false;
+    }
     //returns the money os the current user
     public int getMoney() {
         return getLoggedUser().getMoney();
     }
 
     //returns the inventory of the current user
-    public ArrayList<Equipment> currentUserInventory() {
+    public List<Weapon> currentUserInventoryWeapon() {
         User user = getLoggedUser();
-        return user.getInventory();
+        return user.getInventoryWeapon();
+    }
+    public List<Armor> currentUserInventoryArmor() {
+        User user = getLoggedUser();
+        return user.getInventoryArmor();
     }
 
     //put a equipment in the inventory of an scpecific user
-    public void saveEquipment(long id) {
+    public void saveWeapon(long id) {
         User user = getLoggedUser();
-        if (!hasEquipment(id)) {
-            Optional<Equipment> equipment = equipmentService.findById(id);
+        if (!hasWeapon(id)) {
+            Optional<Weapon> equipment = weaponService.findWeaponById(id);
             if (equipment.isPresent()) {
                 int price = equipment.get().getPrice();
                 user.setMoney(user.getMoney() - price);
-                user.getInventory().add(equipment.get());
+                user.getInventoryWeapon().add(equipment.get());
+                equipment.get().getUsers().add(user);
+            }
+        }
+    }
+
+    public void saveArmor(long id) {
+        User user = getLoggedUser();
+        if (!hasArmor(id)) {
+            Optional<Armor> equipment = armorService.findArmorById(id);
+            if (equipment.isPresent()) {
+                int price = equipment.get().getPrice();
+                user.setMoney(user.getMoney() - price);
+                user.getInventoryArmor().add(equipment.get());
                 equipment.get().getUsers().add(user);
             }
         }

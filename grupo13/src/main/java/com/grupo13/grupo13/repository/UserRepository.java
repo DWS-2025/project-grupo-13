@@ -2,14 +2,17 @@ package com.grupo13.grupo13.repository;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import com.grupo13.grupo13.model.User;
 
 @Component
-public class UserRepository{
+public interface UserRepository extends JpaRepository<User,Long>{
 
+    
     //attributes
-    private AtomicLong nextId = new AtomicLong(1L);
+   /* private AtomicLong nextId = new AtomicLong(1L);
 	private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
 
     //returns all users in a list
@@ -26,5 +29,5 @@ public class UserRepository{
         }
         users.put(id, user);
     }
-
+*/
 }

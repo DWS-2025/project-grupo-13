@@ -1,14 +1,29 @@
 package com.grupo13.grupo13.model;
-import java.util.ArrayList;
 
+import java.util.List;
+
+
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
+@Entity
 public class User {
-
+@Id
+@GeneratedValue(strategy = GenerationType.AUTO)
     //attributes
-    private Long id = 0L;
+    private Long id;
     private int money;
     private String userName;
+    @OneToOne
     private Character character;
-    private ArrayList<Equipment> inventory = new ArrayList<>();
+    @ManyToMany
+    private List<Weapon> inventoryWeapon;
+    @ManyToMany
+    private List<Armor> inventoryArmor;
  
     //constructor
     public User(int money, String userName) {
@@ -33,8 +48,12 @@ public class User {
         return character;
     }
 
-    public ArrayList<Equipment> getInventory() {
-        return inventory;
+    public List<Weapon> getInventoryWeapon() {
+        return inventoryWeapon;
+    }
+
+    public List<Armor> getInventoryArmor() {
+        return inventoryArmor;
     }
 
     //set functions
@@ -54,8 +73,13 @@ public class User {
         this.character = character;
     }
 
-    public void setInventory(ArrayList<Equipment> inventory) {
-        this.inventory = inventory;
+    public void setInventoryWeapon(List<Weapon> inventoryWeapon) {
+        this.inventoryWeapon = inventoryWeapon;
     }
+    public void setInventoryArmor(List<Armor> inventoryArmor) {
+        this.inventoryArmor = inventoryArmor;
+    }
+
+
 
 }
