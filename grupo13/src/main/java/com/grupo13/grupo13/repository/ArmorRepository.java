@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 import com.grupo13.grupo13.model.Armor;
 
 @Component
-public class ArmorRepository {
-
+public interface ArmorRepository extends JpaRepository<Armor,Long>{
+    
+}
+    /* 
     //attributes
     private AtomicLong nextId = new AtomicLong(1L);
 	private ConcurrentHashMap<Long, Armor> armors = new ConcurrentHashMap<>();
@@ -39,3 +41,4 @@ public class ArmorRepository {
     }
     
 }
+*/

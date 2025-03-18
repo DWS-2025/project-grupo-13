@@ -70,11 +70,10 @@ public class ArmorService {
        			character.setDefense(0);
        			character.setArmorEquiped(false);
 				}
-			}
-
-			armorRepository.deleteById(id);
 		}
 
+		armorRepository.deleteById(id);
 	}
 
-
+	
+}

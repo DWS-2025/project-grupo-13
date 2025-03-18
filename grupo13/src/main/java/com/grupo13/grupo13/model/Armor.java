@@ -1,5 +1,5 @@
 package com.grupo13.grupo13.model;
-import java.util.ArrayList;
+import java.util.List;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -17,10 +17,10 @@ public class Armor{
     private int defense;
     private int style;
     private int price;
-    @OneToMany (mappedBy = "armor")
-    private ArrayList<Character> characters;
-    @ManyToMany (mappedBy = "armor")
-    private ArrayList<User> users;
+    @OneToMany 
+    private List<Character> characters;
+    @ManyToMany (mappedBy = "armors")
+    private List<User> users;
 
     //constructor
     public Armor(String name, String picture, String description, int defense, int style, int price) {
@@ -61,11 +61,11 @@ public class Armor{
         return price;
     }
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public ArrayList<Character> getCharacters() {
+    public List<Character> getCharacters() {
         return characters;
     }
 
@@ -98,11 +98,11 @@ public class Armor{
         this.price = price;
     }
 
-    public void setUsers(ArrayList<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
-    public void setCharacters(ArrayList<Character> characters) {
+    public void setCharacters(List<Character> characters) {
         this.characters = characters;
     }
 
