@@ -1,7 +1,9 @@
 package com.grupo13.grupo13.model;
+import java.sql.Blob;
 import java.util.List;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
@@ -12,7 +14,8 @@ public class Armor{
     @GeneratedValue
     private long id;
     private String name;
-    private String picture;
+    @Lob
+    private Blob image;
     private String description;
     private int defense;
     private int style;
@@ -23,9 +26,9 @@ public class Armor{
     private List<User> users;
 
     //constructor
-    public Armor(String name, String picture, String description, int defense, int style, int price) {
+    public Armor(String name, Blob image, String description, int defense, int style, int price) {
         this.name = name;
-        this.picture = picture;
+        this.image = image;
         this.description = description;
         this.defense = defense;
         this.style = style;
@@ -41,8 +44,8 @@ public class Armor{
         return name;
     }
 
-    public String getPicture() {
-        return picture;
+    public Blob getimage() {
+        return image;
     }
 
     public String getDescription() {
@@ -78,8 +81,8 @@ public class Armor{
         this.name= nam;
     }
 
-    public void setPicture(String pict){
-        this.picture=pict;
+    public void setPicture(Blob image){
+        this.image=image;
     }
 
     public void setDescription(String desc){

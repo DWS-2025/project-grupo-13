@@ -45,7 +45,7 @@ public class ArmorService {
 		Armor nnewer = (Armor) newer;
 		nolder.setName(nnewer.getName());
 		nolder.setStyle(nnewer.getStyle());
-		nolder.setPicture(nnewer.getPicture());
+		nolder.setPicture(nnewer.getImage());
 		nolder.setStyle(nnewer.getStyle());
 		nolder.setDescription(nnewer.getDescription());
 		nolder.setPrice(nnewer.getPrice());
