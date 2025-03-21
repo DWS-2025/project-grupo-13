@@ -1,7 +1,5 @@
 package com.grupo13.grupo13.controller;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths; 
+import java.io.IOException; 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,44 +10,67 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Armor;
-import com.grupo13.grupo13.model.Equipment;
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
-import com.grupo13.grupo13.service.EquipmentService;
 import com.grupo13.grupo13.service.UserService;
+import com.grupo13.grupo13.service.WeaponService;
+
 
 @Controller
 public class AdminController {
 
     //attributes
     @Autowired
-    private EquipmentService equipmentService;
+    private WeaponService weaponService;
+
+    @Autowired
+    private ArmorService armorService;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private CharacterService characterService;
-    private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/imp_imgs");
 
-    @GetMapping("/equipment/{id}")
-    public String showEquipment(Model model, @PathVariable long id) {
+    //private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/imp_imgs");
 
-        Optional<Equipment> equipment = equipmentService.findById(id);
-        
-        //detects if it's a weapon or an armor
-        if (equipment.isPresent() & equipmentService.isWeapon(equipment.get())) {
-            model.addAttribute("equipment", equipment.get());
+    @GetMapping("weapon/{id}")
+    public String showWeapon(Model model, @PathVariable long id){
+        Optional<Weapon> weapon = weaponService.findById(id);
+
+        if (weapon.isPresent()) {
+            
+            model.addAttribute("weapon", weapon.get());
+
             return "show_weapon";
-        } else {
-            model.addAttribute("equipment", equipment.get());
+        }else{
+            return "error";
+        }
+
+    }
+    
+    @GetMapping("/armor/{id}")
+    public String showArmor(Model model, @PathVariable long id) {
+        
+        Optional<Armor> armor = armorService.findById(id);
+        
+        if(armor.isPresent()){
+
+            model.addAttribute("armor", armor.get());
             return "show_armor";
-        }//else{return "equipment not found"}
+        }else{
+            return "error";
+        }
+        
     }
 
     @GetMapping("/equipment_manager")
     public String iterationObj(Model model) {
 
         //gets all equipments and characters
-        model.addAttribute("equipment", equipmentService.findAll());
+        model.addAttribute("weapon", weaponService.findAll());
+        model.addAttribute("armor", armorService.findAll());
         model.addAttribute("character", userService.getCharacter());
 
         return "equipment_manager";
@@ -62,6 +83,7 @@ public class AdminController {
             return "sp_errors";
         }
         //recives the information to create a new weapon
+        /* 
         String defenitiveImage;
         image += ".jpg";
         defenitiveImage = "imp_imgs/" + image;
@@ -72,6 +94,7 @@ public class AdminController {
 
         Path imagePath = IMAGES_FOLDER.resolve(image);
         weaponImage.transferTo(imagePath);
+        */
 
         return "saved_weapon";
     }
@@ -83,6 +106,7 @@ public class AdminController {
             return "sp_errors";
         }
         //recives the information to create a new armor
+        /* 
         String defenitivePicture;
         picture += ".jpg";
         defenitivePicture = "imp_imgs/" + picture;
@@ -91,33 +115,50 @@ public class AdminController {
 
         Path imagePath = IMAGES_FOLDER.resolve(picture);
         armorImage.transferTo(imagePath);       
+        */
         return "saved_armor";
     }
 
-    @PostMapping("/equipment/{id}/delete")
-    public String deleteEquipment(Model model, @PathVariable long id) throws IOException {
-        equipmentService.delete(id);
-        return "deleted_equipment";
+    @PostMapping("/weapon/{id}/delete")
+    public String deleteWeapon(Model model, @PathVariable long id) throws IOException{
+        weaponService.deleteById(id);
+        
+        return "deleted_weapon";
     }
 
-    @GetMapping("/equipment/{id}/edit")
-	public String editEquipment(Model model, @PathVariable long id) {
-
-		Optional<Equipment> equipment = equipmentService.findById(id);
+    @PostMapping("/armor/{id}/delete")
+    public String deleteArmor(Model model, @PathVariable long id) throws IOException{
+        armorService.deleteById(id);
         
-		if (equipment.isPresent()) { //if the equipment exists, it leads to edit weapon/armor
-            if (equipmentService.isWeapon(equipment.get())) {
-                model.addAttribute("equipment", equipment.get());
-                return "edit_weapon";
-            } else { //if not, it sends an error message
-                model.addAttribute("equipment", equipment.get());
-                return "edit_armor";
-            }
-		}else{
+        return "deleted_armor";
+    }
+    
+    @GetMapping("/weapon/{id}/edit")
+    public String editWeapon(Model model, @PathVariable long id) {
+
+        Optional<Weapon> weapon = weaponService.findById(id);
+
+        if(weapon.isPresent()){
+            model.addAttribute("weapon", weapon.get());
+            return "edit_weapon";
+        }else{
+            return "error";
+        }
+    }
+
+    @GetMapping("/armor/{id}/edit")
+    public String editArmor(Model model, @PathVariable long id) {
+
+        Optional<Armor> armor = armorService.findById(id);
+
+        if(armor.isPresent()){
+            model.addAttribute("armor", armor.get());
+            return "edit_armor";
+        }else{
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
         }
-	}
+    }
     
     @GetMapping("/delete_Character")
     public String getMethodName(Model model) {
@@ -125,29 +166,41 @@ public class AdminController {
         return "deleted_character";
     }
     
-    @PostMapping("/equipment/{id}/edit")
-	public String updateEquipment(Model model, @PathVariable long id, @RequestParam String name, @RequestParam String description, @RequestParam int intimidation, @RequestParam int style, @RequestParam int attribute, @RequestParam int price, @RequestParam String picture){
-
-        if (name.isBlank() || description.isBlank() || picture.isBlank() ) {
+    @PostMapping("/weapon/{id}/edit")
+	public String updateWeapon(Model model, @PathVariable long id, Weapon updatedWeapon){
+        
+        if (updatedWeapon.getName().isBlank() || updatedWeapon.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
 
-		Optional<Equipment> editedEquipment = equipmentService.findById(id);
+        Optional<Weapon> editedWeapon = weaponService.findById(id);
 
-		if (editedEquipment.isPresent()) { //if the equipment exists, it reates a weapon/armor with the new information
-			Equipment oldEquipment = editedEquipment.get();
-            if(equipmentService.isWeapon(oldEquipment)){
-                Equipment updatedEquipment = new Weapon(name, intimidation, attribute, picture, description, price);
-                equipmentService.update(oldEquipment, updatedEquipment);
-			    return "redirect:/equipment/" + id;
-            }else{
-                Equipment updatedEquipment = new Armor(name, style, attribute, picture, description, price);
-                equipmentService.update(oldEquipment, updatedEquipment);
-			    return "redirect:/equipment/" + id;
-            }
-			
-		}else{ //if not, it sends an error message
+        if(editedWeapon.isPresent()){
+            Weapon oldWeapon = editedWeapon.get();
+            weaponService.update(oldWeapon, updatedWeapon);
+            return "redirect:/weapon/" + id;
+        }else{
+            model.addAttribute("message", "Could not manage, not found");
+            return "sp_errors";
+        }
+	}
+
+    @PostMapping("/armor/{id}/edit")
+	public String updateArmor(Model model, @PathVariable long id, Armor updatedArmor){
+        
+        if (updatedArmor.getName().isBlank() || updatedArmor.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
+            model.addAttribute("message", "Some or all parameters were left blank");
+            return "sp_errors";
+        }
+
+        Optional<Armor> editedArmor = armorService.findById(id);
+
+        if(editedArmor.isPresent()){
+            Armor oldArmor = editedArmor.get();
+            armorService.update(oldArmor, updatedArmor);
+            return "redirect:/Armor/" + id;
+        }else{
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
         }
