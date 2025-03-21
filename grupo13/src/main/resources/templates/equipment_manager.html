@@ -1,11 +1,17 @@
 {{>header}}
 <h1>Equipment</h1>
 <div class="card" style="width: 18rem">
-    {{#equipment}}
+    {{#armor}}
     <ul class="list-group list-group-flush">
         <li class="list-group-item"><a href="equipment/{{id}}">{{name}}</a></li>
     </ul>
-    {{/equipment}}
+    {{/armor}}
+
+    {{#weapon}}
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="equipment/{{id}}">{{name}}</a></li>
+    </ul>
+    {{/weapon}}
 
     {{#character}}
     <ul class="list-group list-group-flush">

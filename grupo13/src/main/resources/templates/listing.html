@@ -3,7 +3,7 @@
 	<h1 style="color:rgb(0, 0, 0); text-align: center; font-weight: bold; font-family: Arial, sans-serif;">Store</h1>
 
 		<div class="row row-cols-auto g-4 justify-content-center">
-			{{#current}}
+			{{#currentA}}
 			<div class="col">
 				<form action="/purchase" method="post" enctype="multipart/form-data">
 					<div class="card" style="width:18rem;">
@@ -24,9 +24,31 @@
 					</div>
 				</form>
 			</div>
-			{{/current}}
+			{{/currentA}}
+			{{#currentW}}
+			<div class="col">
+				<form action="/purchase" method="post" enctype="multipart/form-data">
+					<div class="card" style="width:18rem;">
+						<img src="/image/{{picture}}" class="card-img-top" alt="..." height="306px" width="1024px">
+						<div class="card-body">
+							<h5 class="card-title">{{name}}</h5>
+							<p class="card-text">{{description}}</p>
+							{{#style}}
+							<h6 class="card-style">Defense: {{attribute}}</h6>
+							<h6 class="card-style">Style: {{style}}</h6>
+							{{/style}}
+							{{#intimidation}}
+							<h6 class="card-intimidation">Damage: {{attribute}}</h6>
+							<h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
+							{{/intimidation}}
+							<p style="color: green; font-weight: bold;">Comprado</p>
+						</div>
+					</div>
+				</form>
+			</div>
+			{{/currentW}}
 
-			{{#available}}
+			{{#availableA}}
 			<div class="col">
 				<form action="/purchase" method="post" enctype="multipart/form-data">
 					<div class="card" style="width:18rem;">
@@ -52,7 +74,34 @@
 					</div>
 					</form>
 					</div>
-			{{/available}}
+			{{/availableA}}
+			{{#availableW}}
+			<div class="col">
+				<form action="/purchase" method="post" enctype="multipart/form-data">
+					<div class="card" style="width:18rem;">
+						<img src="/image/{{picture}}" class="card-img-top" alt="..." height="306px" width="1024px">
+						<div class="card-body">
+							<h5 class="card-title">{{name}}</h5>
+							<p class="card-text">{{description}}</p>
+							{{#style}}
+							<h6 class="card-style">Defense: {{attribute}}</h6>
+							<h6 class="card-style">Style: {{style}}</h6>
+							{{/style}}
+							{{#intimidation}}
+							<h6 class="card-intimidation">Damage: {{attribute}}</h6>
+							<h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
+							{{/intimidation}}
+							<h6 class="card-price">Price: {{price}}</h6>
+							<!-- Hidden inputs to avoid sending the data of every object-->
+							<input type="hidden" name="id" value="{{id}}">
+							<!--end of hidden inputs-->
+							<input type='submit' value='Añadir'>
+					
+						</div>
+					</div>
+					</form>
+					</div>
+			{{/availableW}}
 				
 			<body class="bg-dark" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('image/test_bg.jpg') no-repeat center center / cover;">
 			</body>
