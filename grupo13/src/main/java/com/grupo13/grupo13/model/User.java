@@ -1,16 +1,16 @@
 package com.grupo13.grupo13.model;
-
 import java.util.List;
-
-
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
 @Entity
+@Table(name = "app_user") // Cambié el nombre de la tabla
+
 public class User {
 
     //primary key
@@ -28,6 +28,9 @@ public class User {
     @ManyToMany
     private List<Armor> inventoryArmor;
  
+    //for the BBDD
+    protected User(){}
+
     //constructor
     public User(int money, String userName) {
         this.money = money;
