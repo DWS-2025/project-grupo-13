@@ -5,14 +5,11 @@ import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.model.Armor;
-import com.grupo13.grupo13.model.User;
-import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.model.Character;
 
 @Service
