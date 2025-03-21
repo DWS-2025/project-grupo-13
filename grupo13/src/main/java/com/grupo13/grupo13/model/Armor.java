@@ -1,34 +1,45 @@
 package com.grupo13.grupo13.model;
 import java.sql.Blob;
 import java.util.List;
+
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
+@Entity
 public class Armor{
 
-    //the new attribute
+    //primary key
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    //attributes
     private String name;
-    @Lob
-    private Blob image;
     private String description;
     private int defense;
-    private int style;
     private int price;
+    private int style;
+    
+    @Lob
+    private Blob imageFile;
+
     @OneToMany 
     private List<Character> characters;
+
     @ManyToMany (mappedBy = "armors")
     private List<User> users;
 
+    //for the BBDD
+    protected Armor(){}
+
     //constructor
-    public Armor(String name, Blob image, String description, int defense, int style, int price) {
+    public Armor(String name, String description, int defense, int price, int style) {
         this.name = name;
-        this.image = image;
         this.description = description;
         this.defense = defense;
         this.style = style;
@@ -44,8 +55,8 @@ public class Armor{
         return name;
     }
 
-    public Blob getimage() {
-        return image;
+    public Blob getimageFile() {
+        return imageFile;
     }
 
     public String getDescription() {
@@ -77,16 +88,16 @@ public class Armor{
         this.id = id;
     }
 
-    public void setName(String nam){
-        this.name= nam;
+    public void setName(String name){
+        this.name = name;
     }
 
-    public void setPicture(Blob image){
-        this.image=image;
+    public void setPicture(Blob imageFile){
+        this.imageFile = imageFile;
     }
 
-    public void setDescription(String desc){
-        this.description=desc;
+    public void setDescription(String description){
+        this.description = description;
     }
 
     public void setDefense(int defense) {
@@ -107,6 +118,10 @@ public class Armor{
 
     public void setCharacters(List<Character> characters) {
         this.characters = characters;
+    }
+
+    public void setImageFile(Blob imageFile) {
+        this.imageFile = imageFile;
     }
 
 }
