@@ -43,7 +43,7 @@ public class CharacterService {
     //for equipping armor or weapon, sets the necessary values from the equipment and adds the character to the equipment
     public void equipWeapon(Weapon weapon, Character character){
         character.setWeaponEquiped(true);
-        character.setStrength(weaponService.getAttribute(weapon));
+        character.setStrength(weapon.getstrength());
         character.setWeapon(weapon);
         weapon.getCharacters().add(character);
     }
@@ -51,7 +51,7 @@ public class CharacterService {
     //equips an armor to the character that recives
     public void equipArmor(Armor armor, Character character){
         character.setArmorEquiped(true);
-        character.setDefense(armorService.getAttribute(armor));
+        character.setDefense(armor.getDefense());
         character.setArmor(armor);
         armor.getCharacters().add(character);
 

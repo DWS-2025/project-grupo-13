@@ -71,7 +71,7 @@ public class Character {
         return armorEquiped;
     }
     
-    public Equipment getWeapon() {
+    public Weapon getWeapon() {
         return weapon;
     }
 
