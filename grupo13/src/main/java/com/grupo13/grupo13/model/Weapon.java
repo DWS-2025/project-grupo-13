@@ -33,10 +33,10 @@ public class Weapon {
     @Lob
 	private Blob imageFile;
 
-    @OneToMany
+    @OneToMany(mappedBy = "weapon")
     private List<Character> characters;
 
-    @ManyToMany(mappedBy = "weapons") 
+    @ManyToMany(mappedBy = "inventoryWeapon") 
     private List<User> users;
 
     //for the BBDD

@@ -26,15 +26,15 @@ public class Character {
     private boolean armorEquiped;
     private String imageName;
 
+    
+
     @OneToOne(mappedBy = "character")
     private User user;
 
-    @OneToOne(mappedBy = "character")
-    @ManyToOne  
+    @ManyToOne
     private Weapon weapon;
     
-    @OneToOne(mappedBy = "character")
-    @ManyToOne  
+    @ManyToOne
     private Armor armor;
 
     

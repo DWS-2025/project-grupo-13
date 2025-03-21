@@ -28,10 +28,10 @@ public class Armor{
     @Lob
     private Blob imageFile;
 
-    @OneToMany 
+    @OneToMany (mappedBy = "armor")
     private List<Character> characters;
 
-    @ManyToMany (mappedBy = "armors")
+    @ManyToMany (mappedBy = "inventoryArmor")
     private List<User> users;
 
     //for the BBDD
