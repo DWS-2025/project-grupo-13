@@ -7,23 +7,16 @@ import java.util.Optional;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import com.grupo13.grupo13.model.Character;
+import org.springframework.web.multipart.MultipartFile; 
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.WeaponRepository;
 
 @Service
 public class WeaponService {
-
-    private final Character character;
     
     //attributes
     @Autowired
     private WeaponRepository weaponRepository;
-
-    WeaponService(Character character) {
-        this.character = character;
-    }
 
     //saves in repository
     public void save(Weapon weapon){
@@ -72,7 +65,7 @@ public class WeaponService {
             Weapon weapon = findById(id).get();
             
             //deletes from users inventory
-            weapon.getUsers().forEach(user -> user.getInventory().remove(weapon));
+            weapon.getUsers().forEach(user -> user.getInventoryWeapon().remove(weapon));
 
             //falta el eliminar del personaje
         }

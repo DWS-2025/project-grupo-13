@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
-import com.grupo13.grupo13.model.Equipment;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.CharacterRepository;
 
@@ -16,8 +15,6 @@ public class CharacterService {
     //attributes
     @Autowired
     private CharacterRepository characterRepository;
-    @Autowired
-    private EquipmentService equipmentService;
     @Autowired
     private WeaponService weaponService;
     @Autowired

@@ -12,10 +12,13 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 @Entity
 public class User {
-@Id
-@GeneratedValue(strategy = GenerationType.AUTO)
-    //attributes
+
+    //primary key
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    //attributes
     private int money;
     private String userName;
     @OneToOne

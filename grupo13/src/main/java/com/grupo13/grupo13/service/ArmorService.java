@@ -10,20 +10,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.model.Armor;
-import com.grupo13.grupo13.model.Character;
 
 @Service
 public class ArmorService {
 
-	private final Character character;
-
 	//attributes
 	@Autowired
 	private ArmorRepository armorRepository;
-
-	ArmorService(Character character) {
-        this.character = character;
-    }
 
 	//saves in repository
     public void save(Armor armor){
@@ -72,7 +65,7 @@ public class ArmorService {
             Armor armor = findById(id).get();
             
             //deletes from users inventory
-            armor.getUsers().forEach(user -> user.getInventory().remove(armor));
+            armor.getUsers().forEach(user -> user.getInventoryArmor().remove(armor));
 
             //falta el eliminar del personaje
         }
