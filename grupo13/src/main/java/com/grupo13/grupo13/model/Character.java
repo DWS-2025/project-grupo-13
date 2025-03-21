@@ -1,13 +1,21 @@
 package com.grupo13.grupo13.model;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
-@Component
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+
+@Entity
 @SessionScope
 public class Character {
 
     //attributes 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
     private String desc;
@@ -16,9 +24,19 @@ public class Character {
     private int healthPoints;
     private boolean weaponEquiped;
     private boolean armorEquiped;
-    private Equipment weapon;
-    private Equipment armor;
     private String imageName;
+
+    @OneToOne(mappedBy = "character")
+    private User user;
+
+    @OneToOne(mappedBy = "character")
+    @ManyToOne  
+    private Weapon weapon;
+    
+    @OneToOne(mappedBy = "character")
+    @ManyToOne  
+    private Armor armor;
+
     
     //get functions
     public Long getId() {
@@ -53,11 +71,11 @@ public class Character {
         return armorEquiped;
     }
     
-    public Equipment getWeapon() {
+    public Weapon getWeapon() {
         return weapon;
     }
 
-    public Equipment getArmor() {
+    public Armor getArmor() {
         return armor;
     }
         
@@ -98,11 +116,11 @@ public class Character {
         this.armorEquiped = armorEquiped;
     }
 
-    public void setWeapon(Equipment weapon) {
+    public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
     }
 
-    public void setArmor(Equipment armor) {
+    public void setArmor(Armor armor) {
         this.armor = armor;
     }
 

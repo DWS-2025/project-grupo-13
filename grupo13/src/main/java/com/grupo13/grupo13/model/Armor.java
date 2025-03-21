@@ -1,24 +1,127 @@
 package com.grupo13.grupo13.model;
+import java.sql.Blob;
+import java.util.List;
 
-public class Armor extends Equipment {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
-    //the new attribute
+@Entity
+public class Armor{
+
+    //primary key
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    //attributes
+    private String name;
+    private String description;
+    private int defense;
+    private int price;
     private int style;
+    
+    @Lob
+    private Blob imageFile;
+
+    @OneToMany 
+    private List<Character> characters;
+
+    @ManyToMany (mappedBy = "armors")
+    private List<User> users;
+
+    //for the BBDD
+    protected Armor(){}
 
     //constructor
-    public Armor(String name, int style, int defense, String picture, String description, int price) {
-        super(name, picture, description, defense, price);
+    public Armor(String name, String description, int defense, int price, int style) {
+        this.name = name;
+        this.description = description;
+        this.defense = defense;
         this.style = style;
+        this.price = price;
     }
 
-    //get function of the new attribute
+    //get functions
+    public Long getId(){
+        return id;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public Blob getimageFile() {
+        return imageFile;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    
+    public int getDefense() {
+        return defense;
+    }
+
     public int getStyle() {
         return style;
     }
 
-    //set function of the new attribute
-    public void setStyle(int style) {
-        this.style = style;
+    public int getPrice(){
+        return price;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public List<Character> getCharacters() {
+        return characters;
+    }
+
+    //set functions
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setPicture(Blob imageFile){
+        this.imageFile = imageFile;
+    }
+
+    public void setDescription(String description){
+        this.description = description;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public void setStyle(int style){
+      this.style = style;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public void setCharacters(List<Character> characters) {
+        this.characters = characters;
+    }
+
+    public void setImageFile(Blob imageFile) {
+        this.imageFile = imageFile;
     }
 
 }

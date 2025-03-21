@@ -128,7 +128,7 @@ public class AdminController {
     @PostMapping("/equipment/{id}/edit")
 	public String updateEquipment(Model model, @PathVariable long id, @RequestParam String name, @RequestParam String description, @RequestParam int intimidation, @RequestParam int style, @RequestParam int attribute, @RequestParam int price, @RequestParam String picture){
 
-        if (name.isBlank()||description.isBlank()|| picture.isBlank() ) {
+        if (name.isBlank() || description.isBlank() || picture.isBlank() ) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }

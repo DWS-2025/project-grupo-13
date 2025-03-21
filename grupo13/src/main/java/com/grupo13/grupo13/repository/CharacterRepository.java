@@ -1,14 +1,11 @@
 package com.grupo13.grupo13.repository;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.JpaRepository;
 import com.grupo13.grupo13.model.Character;
 
-@Component
-public class CharacterRepository {
 
+public interface CharacterRepository  extends JpaRepository<Character, Long>{
+
+    /* 
     //attributes
     private AtomicLong nextId = new AtomicLong(1L);
 	private ConcurrentHashMap<Long, Character> characters = new ConcurrentHashMap<>();
@@ -35,6 +32,7 @@ public class CharacterRepository {
     public void deleteById(long id) {
         characters.remove(id);
     }
+        */
     
 }
 
