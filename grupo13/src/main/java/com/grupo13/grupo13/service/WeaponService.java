@@ -30,7 +30,7 @@ public class WeaponService {
         }
         this.save(weapon);
     }
-
+    
 	//returns all weapons in a list
     public List<Weapon> findAll(){
         return weaponRepository.findAll();
@@ -70,7 +70,6 @@ public class WeaponService {
             //falta el eliminar del personaje
         }
     }
-
 
     
     /*	

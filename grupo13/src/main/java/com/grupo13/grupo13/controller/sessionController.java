@@ -5,9 +5,13 @@ import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -287,6 +291,31 @@ public class sessionController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(image);
+    }
+
+    @GetMapping("/Weapon/{id}/image")
+    public ResponseEntity<Object> downloadImageWeapon(@PathVariable long id) throws SQLException {
+        Optional<Weapon> op = weaponService.findById(id);
+        if (op.isPresent() && op.get().getimageFile() != null) {
+            Blob image = op.get().getimageFile();
+            Resource file = new InputStreamResource(image.getBinaryStream());
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                    .contentLength(image.length()).body(file);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/Armor/{id}/image")
+    public ResponseEntity<Object> downloadImageArmor(@PathVariable long id) throws SQLException {
+        Optional<Armor> op = armorService.findById(id);
+        if (op.isPresent() && op.get().getimageFile() != null) {
+            Blob image = op.get().getimageFile();
+            Resource file = new InputStreamResource(image.getBinaryStream());
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                    .contentLength(image.length()).body(file);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
     
     
