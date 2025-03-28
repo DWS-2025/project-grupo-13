@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile; 
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.repository.WeaponRepository;
 
 @Service
@@ -29,6 +30,11 @@ public class WeaponService {
             weapon.setimageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         this.save(weapon);
+    }
+
+    public void addCharacter(Character character, Weapon weapon){
+        weapon.getCharacters().add(character);
+        weaponRepository.save(weapon);
     }
     
 	//returns all weapons in a list
@@ -58,6 +64,7 @@ public class WeaponService {
 
         weaponRepository.save(oldWeapon);
     }
+
 
     //deletes a weapon
     public void delete(long id){

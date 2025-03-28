@@ -1,16 +1,16 @@
 package com.grupo13.grupo13.model;
-
-import org.springframework.web.context.annotation.SessionScope;
-
+import java.sql.Blob;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
-@SessionScope
+@Table(name = "game_characters") // Evita conflicto con palabra reservada
 public class Character {
 
     //attributes 
@@ -18,13 +18,15 @@ public class Character {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
-    private String desc;
+    private String description;
     private int strength;
     private int defense;
     private int healthPoints;
     private boolean weaponEquiped;
     private boolean armorEquiped;
-    private String imageName;
+
+    @Lob
+    private Blob imageFile;
 
     
 
@@ -37,6 +39,15 @@ public class Character {
     @ManyToOne
     private Armor armor;
 
+    //for the BBDD
+    protected Character(){}
+
+    //constructor
+    public Character(String desc, String name) {
+        this.description =  desc;
+        this.name = name;
+    }
+
     
     //get functions
     public Long getId() {
@@ -47,8 +58,8 @@ public class Character {
         return name;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
     public int getStrength() {
@@ -79,8 +90,8 @@ public class Character {
         return armor;
     }
         
-    public String getImageName() {
-        return imageName;
+    public Blob getImageFile() {
+        return imageFile;
     }
     
     //set function
@@ -92,8 +103,8 @@ public class Character {
         this.name = name;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String desc) {
+        this.description = desc;
     }
 
     public void setStrength(int strength) {
@@ -124,8 +135,16 @@ public class Character {
         this.armor = armor;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setImageFile(Blob imageName) {
+        this.imageFile = imageName;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

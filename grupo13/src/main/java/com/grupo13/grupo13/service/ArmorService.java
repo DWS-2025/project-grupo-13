@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.model.Armor;
+import com.grupo13.grupo13.model.Character;
 
 @Service
 public class ArmorService {
@@ -29,6 +30,11 @@ public class ArmorService {
             armor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         this.save(armor);
+    }
+
+    public void addCharacter(Character character, Armor armor){
+        armor.getCharacters().add(character);
+        armorRepository.save(armor);
     }
 
 	//returns all armors in a list
