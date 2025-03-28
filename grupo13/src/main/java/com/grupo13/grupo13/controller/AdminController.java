@@ -77,45 +77,28 @@ public class AdminController {
     }
 
     @PostMapping("/weapon/new")
-    public String newEquipment(Model model, Weapon weapon, @RequestParam MultipartFile weaponImage, @RequestParam String image) throws IOException {
-        if (weapon.getName().isBlank()||weapon.getDescription().isBlank()|| weaponImage.isEmpty() || image.isBlank()) {
+    public String newWeapon(Model model, Weapon weapon, @RequestParam MultipartFile weaponImage) throws IOException {
+        if (weapon.getName().isBlank()||weapon.getDescription().isBlank()|| weaponImage.isEmpty()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-        //recives the information to create a new weapon
-        /* 
-        String defenitiveImage;
-        image += ".jpg";
-        defenitiveImage = "imp_imgs/" + image;
 
-        weapon.setPicture(defenitiveImage);
-
-        equipmentService.save(weapon);
-
-        Path imagePath = IMAGES_FOLDER.resolve(image);
-        weaponImage.transferTo(imagePath);
-        */
+        weaponService.save(weapon);
+        weaponService.save(weapon, weaponImage);
 
         return "saved_weapon";
     }
 
     @PostMapping("/armor/new")
-    public String newEquipment(Model model, Armor armor, @RequestParam MultipartFile armorImage, @RequestParam String picture) throws IOException {
-        if (armor.getName().isBlank()||armor.getDescription().isBlank()|| armorImage.isEmpty() || picture.isBlank()) {
+    public String newArmor(Model model, Armor armor, @RequestParam MultipartFile armorImage) throws IOException {
+        if (armor.getName().isBlank()||armor.getDescription().isBlank()|| armorImage.isEmpty()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-        //recives the information to create a new armor
-        /* 
-        String defenitivePicture;
-        picture += ".jpg";
-        defenitivePicture = "imp_imgs/" + picture;
-        armor.setPicture(defenitivePicture);
-        equipmentService.save(armor);
+        
+        armorService.save(armor);
+        armorService.save(armor, armorImage);
 
-        Path imagePath = IMAGES_FOLDER.resolve(picture);
-        armorImage.transferTo(imagePath);       
-        */
         return "saved_armor";
     }
 

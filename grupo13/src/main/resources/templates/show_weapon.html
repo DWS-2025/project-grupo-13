@@ -2,15 +2,15 @@
 
 <div class="card" style="width: 18rem;">
     <div class="card-body">
-        <h5 class="card-title">{{equipment.name}}</h5>
-        <p class="card-text"><p>Intimidation: {{equipment.intimidation}}</p>
-        <p>Attack: {{equipment.attribute}}</p>
-        <p>Description: {{equipment.description}}</p>
-        <p>Price: {{equipment.price}}</p></p>
-        <a href="#" class="card-link"><form action="/equipment/{{id}}/delete" method="post">
+        <h5 class="card-title">{{weapon.name}}</h5>
+        <p class="card-text"><p>Intimidation: {{weapon.intimidation}}</p>
+        <p>Strength: {{weapon.strength}}</p>
+        <p>Description: {{weapon.description}}</p>
+        <p>Price: {{weapon.price}}</p></p>
+        <a href="#" class="card-link"><form action="/weapon/{{id}}/delete" method="post">
             <input type='submit' value='Delete weapon' />
         </form></a>
-        <a href="#" class="card-link"><a href="/equipment/{{id}}/edit">Edit weapon</a></a>
+        <a href="#" class="card-link"><a href="/weapon/{{id}}/edit">Edit weapon</a></a>
     </div>
 </div>
 
