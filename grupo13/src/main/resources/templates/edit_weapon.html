@@ -1,18 +1,20 @@
 {{>header}}
 <h1>Edit weapon</h1>
-<form action="/weapon/{{weapon.id}}/edit" method="post">
+<form action="/weapon/{{weapon.id}}/edit" method="post" enctype="multipart/form-data">
     <p>Name: </p>
     <input type='text' name='name' value="{{weapon.name}}"/>
     <p>Intimidation: </p>
     <input type='text' name='intimidation' value="{{weapon.intimidation}}"/>
     <p>Description:</p>
     <textarea name='description'>{{weapon.description}}</textarea>
-    <p>Attack: </p>
-    <input type='text' name='attribute' value="{{weapon.strength}}"/>
+    <p>Strength </p>
+    <input type='text' name='strength' value="{{weapon.strength}}"/>
     <p>Price: </p>
     <input type='text' name='price' value="{{weapon.price}}"/>
     <input type="hidden" name="picture" value="{{weapon.imageFile}}">
     <input type="hidden" name="style" value="0">
+    <p>Picture file:</p>
+    <input type='file' name='weaponImage' accept=".jpg, .jpeg, .gif" class="form-control" />
     <br><br>
     <input type='submit' value='Save' />
 </form>

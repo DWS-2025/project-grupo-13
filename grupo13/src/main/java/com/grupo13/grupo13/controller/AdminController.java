@@ -24,7 +24,7 @@ import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
 
-import jakarta.persistence.criteria.Path;
+
 
 
 @Controller
@@ -43,20 +43,8 @@ public class AdminController {
     @Autowired
     private CharacterService characterService;
 
-    @Autowired
-    private ArmorRepository armorRepository;
     //private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/imp_imgs");
-       public Blob localImageToBlob(String localFilePath) {
-                File imageFile = new File(localFilePath);
-                if (imageFile.exists()) {
-                        try {
-                                return BlobProxy.generateProxy(imageFile.toURI().toURL().openStream(), imageFile.length());
-                        } catch (IOException e) {
-                                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error at processing the image");
-                        }
-                }
-                return null;
-        }
+      
 
     @GetMapping("weapon/{id}")
     public String showWeapon(Model model, @PathVariable long id){
@@ -100,51 +88,24 @@ public class AdminController {
     }
 
     @PostMapping("/weapon/new")
-    public String newEquipment(Model model, Weapon weapon, @RequestParam MultipartFile weaponImage, @RequestParam String image) throws IOException {
-        if (weapon.getName().isBlank()||weapon.getDescription().isBlank()|| weaponImage.isEmpty() || image.isBlank()) {
+    public String newEquipment(Model model, Weapon weapon, @RequestParam MultipartFile weaponImage) throws IOException {
+        if (weapon.getName().isBlank()||weapon.getDescription().isBlank()|| weaponImage.isEmpty()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-        //recives the information to create a new weapon
-        /* 
-        String defenitiveImage;
-        image += ".jpg";
-        defenitiveImage = "imp_imgs/" + image;
-
-        weapon.setPicture(defenitiveImage);
-
-        equipmentService.save(weapon);
-
-        Path imagePath = IMAGES_FOLDER.resolve(image);
-        weaponImage.transferTo(imagePath);
-        */
-
+        weaponService.save(weapon,weaponImage);
         return "saved_weapon";
     }
 
     @PostMapping("/armor/new")
-    public String newEquipment(Model model, Armor armor, @RequestParam MultipartFile armorImage, @RequestParam String picture) throws IOException {
-        if (armor.getName().isBlank()||armor.getDescription().isBlank()|| armorImage.isEmpty() || picture.isBlank()) {
+    public String newEquipment(Model model, Armor armor, @RequestParam MultipartFile armorImage) throws IOException {
+        if (armor.getName().isBlank()||armor.getDescription().isBlank()|| armorImage.isEmpty()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-        String defenitivePicture;
-        picture += ".jpg";
-        defenitivePicture = "imp_imgs/" + picture;
-       
-        //recives the information to create a new armor
-        /* 
-        
-        armor.setPicture(defenitivePicture);
-        equipmentService.save(armor);
-
-            
-        */
-
-        
-        armor.setImageFile(localImageToBlob(defenitivePicture));
-        armorRepository.save(armor);
-        return "saved_armor";
+       armorService.save(armor, armorImage);
+         return"saved_armor";
+      
     }
 
     @PostMapping("/weapon/{id}/delete")
@@ -195,7 +156,7 @@ public class AdminController {
     }
     
     @PostMapping("/weapon/{id}/edit")
-	public String updateWeapon(Model model, @PathVariable long id, Weapon updatedWeapon){
+	public String updateWeapon(Model model, @PathVariable long id, Weapon updatedWeapon, @RequestParam MultipartFile weaponImage) throws IOException{
         
         if (updatedWeapon.getName().isBlank() || updatedWeapon.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
             model.addAttribute("message", "Some or all parameters were left blank");
@@ -206,7 +167,7 @@ public class AdminController {
 
         if(editedWeapon.isPresent()){
             Weapon oldWeapon = editedWeapon.get();
-            weaponService.update(oldWeapon, updatedWeapon);
+            weaponService.update(oldWeapon, updatedWeapon, weaponImage);
             return "redirect:/weapon/" + id;
         }else{
             model.addAttribute("message", "Could not manage, not found");
@@ -215,7 +176,7 @@ public class AdminController {
 	}
 
     @PostMapping("/armor/{id}/edit")
-	public String updateArmor(Model model, @PathVariable long id, Armor updatedArmor){
+	public String updateArmor(Model model, @PathVariable long id, Armor updatedArmor, @RequestParam MultipartFile armorImage) throws IOException{
         
         if (updatedArmor.getName().isBlank() || updatedArmor.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
             model.addAttribute("message", "Some or all parameters were left blank");
@@ -226,8 +187,8 @@ public class AdminController {
 
         if(editedArmor.isPresent()){
             Armor oldArmor = editedArmor.get();
-            armorService.update(oldArmor, updatedArmor);
-            return "redirect:/Armor/" + id;
+            armorService.update(oldArmor, updatedArmor, armorImage);
+            return "redirect:/weapon/" + id;
         }else{
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
