@@ -1,7 +1,12 @@
 package com.grupo13.grupo13.controller;
-import java.io.IOException; 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Blob;
 import java.util.Optional;
+
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,12 +14,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
+
+import jakarta.persistence.criteria.Path;
 
 
 @Controller
@@ -33,7 +43,20 @@ public class AdminController {
     @Autowired
     private CharacterService characterService;
 
+    @Autowired
+    private ArmorRepository armorRepository;
     //private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/imp_imgs");
+       public Blob localImageToBlob(String localFilePath) {
+                File imageFile = new File(localFilePath);
+                if (imageFile.exists()) {
+                        try {
+                                return BlobProxy.generateProxy(imageFile.toURI().toURL().openStream(), imageFile.length());
+                        } catch (IOException e) {
+                                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error at processing the image");
+                        }
+                }
+                return null;
+        }
 
     @GetMapping("weapon/{id}")
     public String showWeapon(Model model, @PathVariable long id){
@@ -105,17 +128,22 @@ public class AdminController {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-        //recives the information to create a new armor
-        /* 
         String defenitivePicture;
         picture += ".jpg";
         defenitivePicture = "imp_imgs/" + picture;
+       
+        //recives the information to create a new armor
+        /* 
+        
         armor.setPicture(defenitivePicture);
         equipmentService.save(armor);
 
-        Path imagePath = IMAGES_FOLDER.resolve(picture);
-        armorImage.transferTo(imagePath);       
+            
         */
+
+        
+        armor.setImageFile(localImageToBlob(defenitivePicture));
+        armorRepository.save(armor);
         return "saved_armor";
     }
 

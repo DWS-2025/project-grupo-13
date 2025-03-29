@@ -24,6 +24,7 @@ public class Armor{
     private int defense;
     private int price;
     private int style;
+    private String picture;
     
     @Lob
     private Blob imageFile;
