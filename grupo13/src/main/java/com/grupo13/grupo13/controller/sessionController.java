@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.controller;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.springframework.http.HttpHeaders;
@@ -11,11 +10,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
-
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +38,9 @@ import org.springframework.ui.Model;
 public class sessionController {
 
     // attributes
+    @Autowired
+    private ArmorRepository armorRepository;
+
     @Autowired
     private UserService userService;
 
@@ -108,7 +111,7 @@ public class sessionController {
     }
 
     @GetMapping("/list_objects")
-    public String iterationObj(Model model, HttpSession session) {
+    public String iterationObj(Model model, HttpSession session, Pageable page) {
 
         List<Weapon> equipmentListWeapon = weaponService.findAll();
         List<Armor> equipmentListArmor = armorService.findAll();
@@ -137,6 +140,16 @@ public class sessionController {
         model.addAttribute("currentW", currentInventoryWeapons);
         model.addAttribute("availableA", availableArmors);
         model.addAttribute("availableW", availableWeapons);
+
+        model.addAttribute("armor", armorRepository.findAll(page));
+        boolean hasPrev = page.getPageNumber() >= 1;
+        boolean hasNext = (page.getPageNumber()*page.getPageSize()) < armorRepository.count();
+
+        model.addAttribute("hasPrev", hasPrev);
+		model.addAttribute("prev", page.getPageNumber() - 1);
+		model.addAttribute("hasNext", hasNext);
+		model.addAttribute("next", page.getPageNumber() + 1);
+
         return "listing";
     }
 
