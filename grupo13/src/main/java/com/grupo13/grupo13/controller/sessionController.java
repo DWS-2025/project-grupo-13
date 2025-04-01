@@ -1,4 +1,5 @@
 package com.grupo13.grupo13.controller;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +37,7 @@ import org.springframework.ui.Model;
 @Controller
 public class sessionController {
 
-    //attributes
+    // attributes
     @Autowired
     private UserService userService;
 
@@ -58,14 +59,13 @@ public class sessionController {
         List<Armor> currentInventoryArmor = userService.currentUserInventoryArmor();
         Character character = userService.getCharacter();
 
-        //gets the character and its inventory for mustache
+        // gets the character and its inventory for mustache
         model.addAttribute("character", character);
         model.addAttribute("currentWeapon", currentInventoryWeapon);
         model.addAttribute("currentArmor", currentInventoryArmor);
-        model.addAttribute("user", userService.getLoggedUser());
+        model.addAttribute("user", userService.getLoggedUser().get());
 
-
-        //checks if the user has "logged", in the first fase is creating the character
+        // checks if the user has "logged", in the first fase is creating the character
         if (character == null) {
             return "index";
         } else {
@@ -77,33 +77,32 @@ public class sessionController {
     public String procesarFormulario(Model model, HttpSession session, @RequestParam String nameOfCharacter,
             @RequestParam String characterDesc,
             @RequestParam String imageName, @RequestParam MultipartFile characterImage) throws IOException {
-        
-                if (nameOfCharacter.isBlank() || characterDesc.isBlank() || imageName.isBlank()) {
-                    model.addAttribute("message", "Some or all parameters were left blank");
-                    return "sp_errors";
-                }
-        //creates the character
-        Character character = new Character();
-        character.setDesc(characterDesc);
-        character.setName(nameOfCharacter);
-        imageName += ".jpg";
-        character.setImageName(imageName);
 
-        //saves the character in the repository
-        characterService.save(character);
+        if (nameOfCharacter.isBlank() || characterDesc.isBlank() || imageName.isBlank()) {
+            model.addAttribute("message", "Some or all parameters were left blank");
+            return "sp_errors";
+        }
+        // creates the character
+        Character character = new Character(characterDesc, nameOfCharacter);
+
+        // saves the character in the repository
         userService.saveCharacter(character);
+        characterService.saveUser(character);
+        characterService.save(character, characterImage);
+        userService.save(userService.getLoggedUser().get());
 
-        //saves image in the correspondent folder
+        /* // saves image in the correspondent folder
         Files.createDirectories(IMAGES_FOLDER);
         Path imagePath = IMAGES_FOLDER.resolve(imageName);
         characterImage.transferTo(imagePath);
+        */
 
         model.addAttribute("character", character);
         List<Weapon> currentWeapon = userService.currentUserInventoryWeapon();
         List<Armor> currentArmor = userService.currentUserInventoryArmor();
         model.addAttribute("currentW", currentWeapon);
         model.addAttribute("currentA", currentArmor);
-        model.addAttribute("user", userService.getLoggedUser());
+        model.addAttribute("user", userService.getLoggedUser().get());
 
         return "character_view";
     }
@@ -119,9 +118,10 @@ public class sessionController {
         List<Weapon> currentInventoryWeapons = userService.currentUserInventoryWeapon();
         List<Armor> currentInventoryArmors = userService.currentUserInventoryArmor();
 
-        //gets the listing of the current equipment in the repository and the inventory
-        //creates a list of the equipment that the user doesnt have
-        //the html will present the inventory as purchased and the not purchased (available) equipments
+        // gets the listing of the current equipment in the repository and the inventory
+        // creates a list of the equipment that the user doesnt have
+        // the html will present the inventory as purchased and the not purchased
+        // (available) equipments
         for (Weapon equipmentWeapon : equipmentListWeapon) {
             if (!currentInventoryWeapons.contains(equipmentWeapon)) {
                 availableWeapons.add(equipmentWeapon);
@@ -132,7 +132,7 @@ public class sessionController {
                 availableArmors.add(equipmentArmor);
             }
         }
-        model.addAttribute("user", userService.getLoggedUser());
+        model.addAttribute("user", userService.getLoggedUser().get());
         model.addAttribute("currentA", currentInventoryArmors);
         model.addAttribute("currentW", currentInventoryWeapons);
         model.addAttribute("availableA", availableArmors);
@@ -145,12 +145,12 @@ public class sessionController {
 
         Optional<Weapon> eqOptional = weaponService.findById(id);
         if (eqOptional.isPresent()) {
-            //checks if the user has enough money or if it's homeless
+            // checks if the user has enough money or if it's homeless
             int money = userService.getMoney();
             if (money >= eqOptional.get().getPrice()) {
                 userService.saveWeapon(id);
                 return "redirect:/list_objects";
-            } else{
+            } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
             }
@@ -158,17 +158,19 @@ public class sessionController {
         model.addAttribute("message", "Could not purchase, doesnt exist");
         return "sp_errors";
     }
+
     @PostMapping("/purchaseArmor")
     public String purchaseArmor(@RequestParam long id, Model model) {
 
         Optional<Armor> eqOptional = armorService.findById(id);
         if (eqOptional.isPresent()) {
-            //checks if the user has enough money or if it's homeless
+            // checks if the user has enough money or if it's homeless
             int money = userService.getMoney();
             if (money >= eqOptional.get().getPrice()) {
                 userService.saveArmor(id);
+                armorService.save(eqOptional.get());
                 return "redirect:/list_objects";
-            } else{
+            } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
             }
@@ -177,59 +179,39 @@ public class sessionController {
         return "sp_errors";
     }
 
-    @GetMapping("/download_image")
-    public ResponseEntity<Object> downloadImage(Model model, HttpSession session) throws MalformedURLException {
-
-        Character character = userService.getCharacter();
-        Path imagePath = IMAGES_FOLDER.resolve(character.getImageName());
-        Resource image = new UrlResource(imagePath.toUri());
-        String contentType;
-
-        try { //gets the type of the image
-            contentType = Files.probeContentType(imagePath);
-            if (contentType == null) {
-                contentType = "application/octet-stream";
-            }
-        } catch (IOException e) {
-            contentType = "application/octet-stream";
-        }
-
-        //returns the image
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, contentType)
-                .body(image);
-    }
-
     @PostMapping("/equipWeapon")
     public String equipWeapon(@RequestParam long id, Model model) {
-        
+
         Character character = userService.getCharacter();
         Optional<Weapon> equipment = weaponService.findById(id);
 
-        if(equipment.isPresent()){ //if it exists
-        
-                characterService.equipWeapon(equipment.get(), character); //equips it, adding the necessary attributes
-            
+        if (equipment.isPresent()) { // if it exists
+
+            characterService.equipWeapon(equipment.get(), character); // equips it, adding the necessary attributes
+            weaponService.addCharacter(character, equipment.get());
+
             return "redirect:/";
 
-        }else{
+        } else {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
     }
+
     @PostMapping("/equipArmor")
     public String equipArmor(@RequestParam long id, Model model) {
-        
+
         Character character = userService.getCharacter();
         Optional<Armor> equipment = armorService.findById(id);
 
-        if(equipment.isPresent()){ //if it exists
-        
-                characterService.equipArmor(equipment.get(), character); //equips it, adding the necessary attributes
-            
+        if (equipment.isPresent()) { // if it exists
+
+            characterService.equipArmor(equipment.get(), character); // equips it, adding the necessary attributes
+            armorService.addCharacter(character, equipment.get());
+
             return "redirect:/";
 
-        }else{
+        } else {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
@@ -237,48 +219,49 @@ public class sessionController {
 
     @PostMapping("/unEquipWeapon")
     public String unEquipWeapon(@RequestParam long id, Model model) {
-        
+
         Character character = userService.getCharacter();
         Optional<Weapon> equipment = weaponService.findById(id);
 
-        if(equipment.isPresent()){
-      
-        characterService.unEquipWeapon(character, id);
-               
+        if (equipment.isPresent()) {
+
+            characterService.unEquipWeapon(character, id);
+
             return "redirect:/";
 
-        }else{
+        } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
         }
     }
+
     @PostMapping("/unEquipArmor")
     public String unEquipArmor(@RequestParam long id, Model model) {
-        
+
         Character character = userService.getCharacter();
         Optional<Armor> equipment = armorService.findById(id);
 
-        if(equipment.isPresent()){
-      
-        characterService.unEquipArmor(character, id);
-               
+        if (equipment.isPresent()) {
+
+            characterService.unEquipArmor(character, id);
+
             return "redirect:/";
 
-        }else{
+        } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
         }
     }
 
     @GetMapping("/image/{imageName}")
-    public ResponseEntity<Object> getImage(Model model, @PathVariable String imageName ) throws MalformedURLException {
-        
+    public ResponseEntity<Object> getImage(Model model, @PathVariable String imageName) throws MalformedURLException {
+
         Path IMP_IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images", "imp_imgs");
         Path imagePath = IMP_IMAGES_FOLDER.resolve(imageName);
         Resource image = new UrlResource(imagePath.toUri());
         String contentType;
 
-        try { //gets the type of the image
+        try { // gets the type of the image
             contentType = Files.probeContentType(imagePath);
             if (contentType == null) {
                 contentType = "application/octet-stream";
@@ -287,7 +270,7 @@ public class sessionController {
             contentType = "application/octet-stream";
         }
 
-        //returns the image
+        // returns the image
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(image);
@@ -305,6 +288,7 @@ public class sessionController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/Armor/{id}/image")
     public ResponseEntity<Object> downloadImageArmor(@PathVariable long id) throws SQLException {
         Optional<Armor> op = armorService.findById(id);
@@ -317,6 +301,18 @@ public class sessionController {
             return ResponseEntity.notFound().build();
         }
     }
-    
-    
+
+    @GetMapping("/character/{id}/image")
+    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
+        Optional<Character> op = characterService.findById(id);
+        if (op.isPresent() && op.get().getImageFile() != null) {
+            Blob image = op.get().getImageFile();
+            Resource file = new InputStreamResource(image.getBinaryStream());
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                    .contentLength(image.length()).body(file);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
