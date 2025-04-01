@@ -1,6 +1,7 @@
 package com.grupo13.grupo13.controller;
-import java.io.IOException; 
+import java.io.IOException;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,13 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
-
 
 @Controller
 public class AdminController {
@@ -34,7 +35,7 @@ public class AdminController {
     private CharacterService characterService;
 
     //private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/imp_imgs");
-
+      
     @GetMapping("weapon/{id}")
     public String showWeapon(Model model, @PathVariable long id){
         Optional<Weapon> weapon = weaponService.findById(id);
@@ -150,7 +151,7 @@ public class AdminController {
     }
     
     @PostMapping("/weapon/{id}/edit")
-	public String updateWeapon(Model model, @PathVariable long id, Weapon updatedWeapon){
+	public String updateWeapon(Model model, @PathVariable long id, Weapon updatedWeapon, @RequestParam MultipartFile weaponImage) throws IOException{
         
         if (updatedWeapon.getName().isBlank() || updatedWeapon.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
             model.addAttribute("message", "Some or all parameters were left blank");
@@ -161,7 +162,7 @@ public class AdminController {
 
         if(editedWeapon.isPresent()){
             Weapon oldWeapon = editedWeapon.get();
-            weaponService.update(oldWeapon, updatedWeapon);
+            weaponService.update(oldWeapon, updatedWeapon, weaponImage);
             return "redirect:/weapon/" + id;
         }else{
             model.addAttribute("message", "Could not manage, not found");
@@ -170,7 +171,7 @@ public class AdminController {
 	}
 
     @PostMapping("/armor/{id}/edit")
-	public String updateArmor(Model model, @PathVariable long id, Armor updatedArmor){
+	public String updateArmor(Model model, @PathVariable long id, Armor updatedArmor, @RequestParam MultipartFile armorImage) throws IOException{
         
         if (updatedArmor.getName().isBlank() || updatedArmor.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
             model.addAttribute("message", "Some or all parameters were left blank");
@@ -181,8 +182,8 @@ public class AdminController {
 
         if(editedArmor.isPresent()){
             Armor oldArmor = editedArmor.get();
-            armorService.update(oldArmor, updatedArmor);
-            return "redirect:/Armor/" + id;
+            armorService.update(oldArmor, updatedArmor, armorImage);
+            return "redirect:/armor/" + id;
         }else{
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";

@@ -53,7 +53,11 @@ public class ArmorService {
     }
 	
     //updates an armor when edited
-    public void update(Armor oldArmor, Armor updatedArmor){
+    public void update(Armor oldArmor, Armor updatedArmor, MultipartFile imageFile) throws IOException{
+        if(!imageFile.isEmpty()){
+            oldArmor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+        }
+
         oldArmor.setName(updatedArmor.getName());
         oldArmor.setDescription(updatedArmor.getDescription());
         oldArmor.setDefense(updatedArmor.getDefense());

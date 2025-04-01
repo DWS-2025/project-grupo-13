@@ -53,10 +53,14 @@ public class WeaponService {
     }
 	
     //updates a weapon when edited
-    public void update(Weapon oldWeapon, Weapon updatedWeapon){
+    public void update(Weapon oldWeapon, Weapon updatedWeapon, MultipartFile imageFile) throws IOException{
+        if(!imageFile.isEmpty()){
+            oldWeapon.setimageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+        }
+
         oldWeapon.setName(updatedWeapon.getName());
         oldWeapon.setDescription(updatedWeapon.getDescription());
-            oldWeapon.setstrength(updatedWeapon.getstrength());
+        oldWeapon.setstrength(updatedWeapon.getstrength());
         oldWeapon.setPrice(updatedWeapon.getPrice());
         oldWeapon.setIntimidation(updatedWeapon.getIntimidation());
 
