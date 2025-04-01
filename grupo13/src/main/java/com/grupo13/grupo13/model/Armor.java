@@ -1,7 +1,6 @@
 package com.grupo13.grupo13.model;
 import java.sql.Blob;
 import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +23,6 @@ public class Armor{
     private int defense;
     private int price;
     private int style;
-    
     
     @Lob
     private Blob imageFile;

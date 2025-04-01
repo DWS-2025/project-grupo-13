@@ -188,7 +188,7 @@ public class AdminController {
         if(editedArmor.isPresent()){
             Armor oldArmor = editedArmor.get();
             armorService.update(oldArmor, updatedArmor, armorImage);
-            return "redirect:/weapon/" + id;
+            return "redirect:/armor/" + id;
         }else{
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
