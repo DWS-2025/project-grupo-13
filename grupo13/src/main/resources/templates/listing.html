@@ -79,8 +79,16 @@
 					</div>
 			{{/availableW}}
 				
+			<div>
+				<nobr>
+					{{#hasPrev}}<a href="/?page={{prev}}">Prev</a>&nbsp;&nbsp;&nbsp;{{/hasPrev}}
+					{{#hasNext}}<a href="/?page={{next}}">Next</a>{{/hasNext}}
+				</nobr>
+			</div>
 			<body class="bg-dark" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('image/test_bg.jpg') no-repeat center center / cover;">
 			</body>
 		</div>
+		
+
 
 {{>footer}}

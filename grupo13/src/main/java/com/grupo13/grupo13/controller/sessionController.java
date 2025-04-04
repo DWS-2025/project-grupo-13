@@ -39,9 +39,6 @@ public class sessionController {
 
     // attributes
     @Autowired
-    private ArmorRepository armorRepository;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -111,7 +108,7 @@ public class sessionController {
     }
 
     @GetMapping("/list_objects")
-    public String iterationObj(Model model, HttpSession session, Pageable page) {
+    public String iterationObj(Model model, HttpSession session) {
 
         List<Weapon> equipmentListWeapon = weaponService.findAll();
         List<Armor> equipmentListArmor = armorService.findAll();
@@ -140,16 +137,7 @@ public class sessionController {
         model.addAttribute("currentW", currentInventoryWeapons);
         model.addAttribute("availableA", availableArmors);
         model.addAttribute("availableW", availableWeapons);
-
-        model.addAttribute("armor", armorRepository.findAll(page));
-        boolean hasPrev = page.getPageNumber() >= 1;
-        boolean hasNext = (page.getPageNumber()*page.getPageSize()) < armorRepository.count();
-
-        model.addAttribute("hasPrev", hasPrev);
-		model.addAttribute("prev", page.getPageNumber() - 1);
-		model.addAttribute("hasNext", hasNext);
-		model.addAttribute("next", page.getPageNumber() + 1);
-
+        
         return "listing";
     }
 

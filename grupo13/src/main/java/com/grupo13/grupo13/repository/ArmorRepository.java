@@ -8,6 +8,5 @@ import com.grupo13.grupo13.model.Armor;
 
 public interface ArmorRepository extends JpaRepository<Armor, Long>{
 
-    Page<Armor> findByTitle(String title, Pageable page);
 
 }  
