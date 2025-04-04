@@ -1,6 +1,9 @@
 package com.grupo13.grupo13.model;
 import java.sql.Blob;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +28,7 @@ public class Armor{
     private int style;
     
     @Lob
+    @JsonIgnore
     private Blob imageFile;
 
     @OneToMany (mappedBy = "armor")
