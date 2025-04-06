@@ -1,83 +1,46 @@
 {{>header}}
-
 	<h1 style="color:rgb(0, 0, 0); text-align: center; font-weight: bold; font-family: Arial, sans-serif;">Store</h1>
-
 		<div class="row row-cols-auto g-4 justify-content-center">
-			{{#currentA}}
+			{{#itemList}}			
 			<div class="col">
 				<form action="/purchase" method="post" enctype="multipart/form-data">
 					<div class="card" style="width:18rem;">
-						<img src="/Armor/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+						{{#isArmor}}
+						<img src="/Armor/{{item.id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+						{{/isArmor}}
+						{{#isWeapon}}
+						<img src="/Weapon/{{item.id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+						{{/isWeapon}}
 						<div class="card-body">
 							<h5 class="card-title">{{name}}</h5>
 							<p class="card-text">{{description}}</p>
+							{{#isArmor}}
 							<h6 class="card-style">Defense: {{defense}}</h6>
 							<h6 class="card-style">Style: {{style}}</h6>
-							<p style="color: green; font-weight: bold;">Comprado</p>
-						</div>
-					</div>
-				</form>
-			</div>
-			{{/currentA}}
-			{{#currentW}}
-			<div class="col">
-				<form action="/purchase" method="post" enctype="multipart/form-data">
-					<div class="card" style="width:18rem;">
-						<img src="/Weapon/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
-						<div class="card-body">
-							<h5 class="card-title">{{name}}</h5>
-							<p class="card-text">{{description}}</p>
+							{{/isArmor}}		
+						    
+							{{#isWeapon}}
 							<h6 class="card-intimidation">Damage: {{strength}}</h6>
 							<h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
-							<p style="color: green; font-weight: bold;">Comprado</p>
+							{{/isWeapon}}
+						
+							{{#bought}}
+							<p style="color: green; font-weight: bold;">Bought</p>
+							{{/bought}}
+							
+							{{^bought}}
+							<!--Hidden inputs to avoid sending the data of every object-->
+							<input type="hidden" name="id" value="{{item.id}}">
+							<!--end of hidden inputs-->
+							<input type='submit' value='Add'>
+							{{/bought}}
+							
 						</div>
 					</div>
 				</form>
-			</div>
-			{{/currentW}}
+			</div>			
+			{{/itemList}}
 
-			{{#availableA}}
-			<div class="col">
-				<form action="/purchaseArmor" method="post" enctype="multipart/form-data">
-					<div class="card" style="width:18rem;">
-						<img src="/Armor/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
-						<div class="card-body">
-							<h5 class="card-title">{{name}}</h5>
-							<p class="card-text">{{description}}</p>
-							<h6 class="card-style">Defense: {{defense}}</h6>
-							<h6 class="card-style">Style: {{style}}</h6>
-							<h6 class="card-price">Price: {{price}}</h6>
-							<!-- Hidden inputs to avoid sending the data of every object-->
-							<input type="hidden" name="id" value="{{id}}">
-							<!--end of hidden inputs-->
-							<input type='submit' value='Añadir'>
-					
-						</div>
-					</div>
-					</form>
-					</div>
-			{{/availableA}}
-			{{#availableW}}
-			<div class="col">
-				<form action="/purchaseWeapon" method="post" enctype="multipart/form-data">
-					<div class="card" style="width:18rem;">
-						<img src="/Weapon/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
-						<div class="card-body">
-							<h5 class="card-title">{{name}}</h5>
-							<p class="card-text">{{description}}</p>
-							<h6 class="card-intimidation">Damage: {{strength}}</h6>
-							<h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
-							<h6 class="card-price">Price: {{price}}</h6>
-							<!-- Hidden inputs to avoid sending the data of every object-->
-							<input type="hidden" name="id" value="{{id}}">
-							<!--end of hidden inputs-->
-							<input type='submit' value='Añadir'>
-					
-						</div>
-					</div>
-					</form>
-					</div>
-			{{/availableW}}
 				
 			<div>
 				<nobr>

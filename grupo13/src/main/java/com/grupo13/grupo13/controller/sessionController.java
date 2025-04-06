@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -112,9 +114,9 @@ public class sessionController {
     }
 
     @GetMapping("/list_objects")
-    public String iterationObj(Model model, @PageableDefault(size = 1) Pageable page) {
+    public String iterationObj(Model model, @PageableDefault(size = 2) Pageable page) {
 
-        Page<Weapon> weaponPage = weaponService.findAll(page);
+        //Page<Weapon> weaponPage = weaponService.findAll(page);
         ArrayList<Weapon> availableWeapons = new ArrayList<>();
         List<Weapon> currentInventoryWeapons = userService.currentUserInventoryWeapon();
         List<Weapon> equipmentListWeapon = weaponService.findAll();
@@ -128,8 +130,7 @@ public class sessionController {
                 availableWeapons.add(equipmentWeapon);
             }
         }
-
-        /* 
+       
         ArrayList<Armor> availableArmors = new ArrayList<>();
         List<Armor> currentInventoryArmors = userService.currentUserInventoryArmor();
         List<Armor> equipmentListArmor = armorService.findAll();
@@ -139,37 +140,49 @@ public class sessionController {
                 availableArmors.add(equipmentArmor);
             }
         }
+      
+        List<ItemDto> fullList = convertListToDtoA(currentInventoryArmors);
+        List<ItemDto> fullList1 = convertListToDtoA(availableArmors);
+        List<ItemDto> fullList2 = convertListToDtoW(currentInventoryWeapons);
+        List<ItemDto> fullList3 = convertListToDtoW(availableWeapons);
+        fullList.addAll(fullList1);
+        fullList.addAll(fullList2);
+        fullList.addAll(fullList3);
 
-        Page<Armor> armorPage = armorService.findAll(page);
-        */
-
-        List<Object> fullList = new ArrayList<>();
-        /* 
-        armorPage.getContent().forEach(armor -> 
-            fullList.add(new ItemDto(armor.getName(), "ARMOR", armor)));
-        */
-        weaponPage.getContent().forEach(weapon -> 
-            fullList.add(new ItemDto(weapon.getName(), "WEAPON", weapon)));
-
-        
-        Page<Object> finalPage = new PageImpl<>(fullList,page,fullList.size());
+        Page<ItemDto> fullPage = new PageImpl<>(fullList, page, fullList.size());
 
         model.addAttribute("user", userService.getLoggedUser().get());
-        //model.addAttribute("currentA", currentInventoryArmors);
-        model.addAttribute("currentW", currentInventoryWeapons);
-        //model.addAttribute("availableA", availableArmors);
-        model.addAttribute("availableW", weaponPage);
+        model.addAttribute("itemList", fullPage);
+        //model.addAttribute("availableW", weaponPage);
         //model.addAttribute("availableA", armorPage);
 
         //buttons
         boolean hasPrev = page.getPageNumber() >=1;
-        boolean hasNext = (availableWeapons.size() - 1 > (page.getPageSize()*page.getPageNumber()));
+        boolean hasNext = (fullList.size() - 2 > (page.getPageSize()*page.getPageNumber()));
         model.addAttribute("hasPrev", hasPrev);
         model.addAttribute("prev", page.getPageNumber() - 1);
         model.addAttribute("hasNext", hasNext);
         model.addAttribute("next", page.getPageNumber() + 1);
         
         return "listing";
+    }
+
+    public ItemDto convertToDtoW(Weapon weapon){
+        return new ItemDto(weapon.getName(), weapon.getDescription(),weapon.getstrength(),weapon.getPrice(),weapon.getIntimidation(),
+                "Weapon",userService.getLoggedUser().get().hasWeapon(weapon),weapon);
+    }
+
+    public ItemDto convertToDtoA(Armor armor){
+        return new ItemDto(armor.getName(), armor.getDescription(),armor.getDefense(),armor.getPrice(),armor.getStyle(),
+                "Armor",userService.getLoggedUser().get().hasArmor(armor),armor);
+    }
+
+    public List<ItemDto> convertListToDtoW(List<Weapon> weapons){
+        return weapons.stream().map(this::convertToDtoW).collect(Collectors.toList());
+    }
+
+    public List<ItemDto> convertListToDtoA(List<Armor> armors){
+        return armors.stream().map(this::convertToDtoA).collect(Collectors.toList());
     }
 
     @PostMapping("/purchaseWeapon")
