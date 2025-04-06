@@ -5,6 +5,7 @@ import java.net.URI;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,8 +26,6 @@ import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.WeaponService;
-
-import org.springframework.core.io.Resource;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
