@@ -115,38 +115,12 @@ public class sessionController {
     @GetMapping("/list_objects")
     public String iterationObj(Model model, @PageableDefault(size = 5) Pageable page) {
 
-        //Page<Weapon> weaponPage = weaponService.findAll(page);
-        ArrayList<Weapon> availableWeapons = new ArrayList<>();
-        List<Weapon> currentInventoryWeapons = userService.currentUserInventoryWeapon();
-        List<Weapon> equipmentListWeapon = weaponService.findAll();
-
-        // gets the listing of the current equipment in the repository and the inventory
-        // creates a list of the equipment that the user doesnt have
-        // the html will present the inventory as purchased and the not purchased
-        // (available) equipments
-        for (Weapon equipmentWeapon : equipmentListWeapon) {
-            if (!currentInventoryWeapons.contains(equipmentWeapon)) {
-                availableWeapons.add(equipmentWeapon);
-            }
-        }
-       
-        ArrayList<Armor> availableArmors = new ArrayList<>();
-        List<Armor> currentInventoryArmors = userService.currentUserInventoryArmor();
-        List<Armor> equipmentListArmor = armorService.findAll();
-
-        for (Armor equipmentArmor : equipmentListArmor) {
-            if (!currentInventoryArmors.contains(equipmentArmor)) {
-                availableArmors.add(equipmentArmor);
-            }
-        }
+        List<Weapon> weapons = weaponService.findAll();
+        List<Armor> armors = armorService.findAll();
       
-        List<ItemDto> fullList = convertListToDtoA(currentInventoryArmors);
-        List<ItemDto> fullList1 = convertListToDtoA(availableArmors);
-        List<ItemDto> fullList2 = convertListToDtoW(currentInventoryWeapons);
-        List<ItemDto> fullList3 = convertListToDtoW(availableWeapons);
+        List<ItemDto> fullList = convertListToDtoA(armors);
+        List<ItemDto> fullList1 = convertListToDtoW(weapons);
         fullList.addAll(fullList1);
-        fullList.addAll(fullList2);
-        fullList.addAll(fullList3);
 
         Page<ItemDto> fullPage = new PageImpl<>(fullList,PageRequest.of(page.getPageNumber(), page.getPageSize()),
                 fullList.size());
