@@ -618,6 +618,26 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Request all weapons",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/weapons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"weapons"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+ 
+</head>
+<body>
+
+  <ul id="weapon-list"></ul>
+
+  <script>
+    // load weapons list
+    fetch("http://localhost:8080/api/weapons")
+      .then(response => response.json())
+      .then(weapons => {
+        const list = document.getElementById("weapon-list");
+        weapons.forEach(weapon => {
+          const item = document.createElement("li");
+          item.textContent = `${weapon.name} (Damage: ${weapon.strength})`;
+          list.appendChild(item);
+        });
+      })
+      .catch(error => console.error("error", error));
+  </script>
+
+<script>
+    // Cargar lista de armas desde el backend
+    fetch("http://localhost:8080/api/armors")
+      .then(response => response.json())
+      .then(weapons => {
+        const list = document.getElementById("weapon-list");
+        weapons.forEach(armor => {
+          const item = document.createElement("li");
+          item.textContent = `${armor.name} (defense: ${armor.defense})`;
+          list.appendChild(item);
+        });
+      })
+      .catch(error => console.error("error", error));
+  </script>
+</body>
+</html>

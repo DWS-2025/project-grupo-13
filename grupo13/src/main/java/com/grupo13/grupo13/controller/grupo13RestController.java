@@ -15,10 +15,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.net.URI;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.grupo13.grupo13.dto.WeaponDTO;
 
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
@@ -29,6 +34,8 @@ import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.WeaponService;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 
@@ -55,10 +62,13 @@ public class grupo13RestController {
 
 // WEAPONS AND ARMORS _________________________________________________________________________________________________________
 	//SHOW ALL -------------------------------------------------
+
 	@GetMapping("/weapons")
-	public Collection<Weapon> getWeapons() {
-	
-		return weaponService.findAll();
+	public List<WeaponDTO> getWeapons() {
+		// each weapon turns into weaponDTO
+		return weaponService.findAll().stream()
+				.map(WeaponDTO::new) // using constructor for each one
+				.collect(Collectors.toList());
 	}
     @GetMapping("/armors")
 	public Collection<Armor> getArmors() {

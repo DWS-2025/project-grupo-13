@@ -137,7 +137,7 @@ public class sessionController {
         model.addAttribute("currentW", currentInventoryWeapons);
         model.addAttribute("availableA", availableArmors);
         model.addAttribute("availableW", availableWeapons);
-        return "listing";
+        return "weplist";
     }
 
     @PostMapping("/purchaseWeapon")
