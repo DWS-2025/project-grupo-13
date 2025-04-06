@@ -1,5 +1,9 @@
 package com.grupo13.grupo13.model;
 import java.sql.Blob;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,8 +28,10 @@ public class Character {
     private int healthPoints;
     private boolean weaponEquiped;
     private boolean armorEquiped;
+    private String imageName;
 
     @Lob
+    @JsonIgnore
     private Blob imageFile;
 
     
@@ -145,6 +151,14 @@ public class Character {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
 }
