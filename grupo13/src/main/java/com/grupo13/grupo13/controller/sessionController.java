@@ -15,13 +15,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.ItemDto;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.model.Armor;
@@ -108,15 +112,12 @@ public class sessionController {
     }
 
     @GetMapping("/list_objects")
-    public String iterationObj(Model model, HttpSession session) {
+    public String iterationObj(Model model, @PageableDefault(size = 1) Pageable page) {
 
-        List<Weapon> equipmentListWeapon = weaponService.findAll();
-        List<Armor> equipmentListArmor = armorService.findAll();
-
+        Page<Weapon> weaponPage = weaponService.findAll(page);
         ArrayList<Weapon> availableWeapons = new ArrayList<>();
-        ArrayList<Armor> availableArmors = new ArrayList<>();
         List<Weapon> currentInventoryWeapons = userService.currentUserInventoryWeapon();
-        List<Armor> currentInventoryArmors = userService.currentUserInventoryArmor();
+        List<Weapon> equipmentListWeapon = weaponService.findAll();
 
         // gets the listing of the current equipment in the repository and the inventory
         // creates a list of the equipment that the user doesnt have
@@ -127,16 +128,46 @@ public class sessionController {
                 availableWeapons.add(equipmentWeapon);
             }
         }
+
+        /* 
+        ArrayList<Armor> availableArmors = new ArrayList<>();
+        List<Armor> currentInventoryArmors = userService.currentUserInventoryArmor();
+        List<Armor> equipmentListArmor = armorService.findAll();
+
         for (Armor equipmentArmor : equipmentListArmor) {
             if (!currentInventoryArmors.contains(equipmentArmor)) {
                 availableArmors.add(equipmentArmor);
             }
         }
+
+        Page<Armor> armorPage = armorService.findAll(page);
+        */
+
+        List<Object> fullList = new ArrayList<>();
+        /* 
+        armorPage.getContent().forEach(armor -> 
+            fullList.add(new ItemDto(armor.getName(), "ARMOR", armor)));
+        */
+        weaponPage.getContent().forEach(weapon -> 
+            fullList.add(new ItemDto(weapon.getName(), "WEAPON", weapon)));
+
+        
+        Page<Object> finalPage = new PageImpl<>(fullList,page,fullList.size());
+
         model.addAttribute("user", userService.getLoggedUser().get());
-        model.addAttribute("currentA", currentInventoryArmors);
+        //model.addAttribute("currentA", currentInventoryArmors);
         model.addAttribute("currentW", currentInventoryWeapons);
-        model.addAttribute("availableA", availableArmors);
-        model.addAttribute("availableW", availableWeapons);
+        //model.addAttribute("availableA", availableArmors);
+        model.addAttribute("availableW", weaponPage);
+        //model.addAttribute("availableA", armorPage);
+
+        //buttons
+        boolean hasPrev = page.getPageNumber() >=1;
+        boolean hasNext = (availableWeapons.size() - 1 > (page.getPageSize()*page.getPageNumber()));
+        model.addAttribute("hasPrev", hasPrev);
+        model.addAttribute("prev", page.getPageNumber() - 1);
+        model.addAttribute("hasNext", hasNext);
+        model.addAttribute("next", page.getPageNumber() + 1);
         
         return "listing";
     }

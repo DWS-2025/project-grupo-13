@@ -6,6 +6,9 @@ import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile; 
 import com.grupo13.grupo13.model.Weapon;
@@ -38,8 +41,12 @@ public class WeaponService {
     }
     
 	//returns all weapons in a list
-    public List<Weapon> findAll(){
+    public List<Weapon> findAll() {
         return weaponRepository.findAll();
+    }
+
+    public Page<Weapon> findAll(Pageable pageable) {
+        return weaponRepository.findAll(pageable);
     }
 
 	//searches a weapon by its id

@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,8 +40,12 @@ public class ArmorService {
     }
 
 	//returns all armors in a list
-    public List<Armor> findAll(){
+    public List<Armor> findAll() {
         return armorRepository.findAll();
+    }
+
+    public Page<Armor> findAll(Pageable pageable) {
+        return armorRepository.findAll(pageable);
     }
 
 	//searches an armor by its id

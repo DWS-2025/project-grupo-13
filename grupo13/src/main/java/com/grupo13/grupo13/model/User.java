@@ -86,6 +86,22 @@ public class User {
         this.inventoryArmor = inventoryArmor;
     }
 
+    boolean hasWeapon(Weapon weapon){    
+        for (Weapon equipmentWeapon : this.inventoryWeapon) {
+            if (this.inventoryWeapon.contains(equipmentWeapon)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    boolean hasArmor(Armor armor){    
+        for (Armor equipmentArmor : this.inventoryArmor) {
+            if (this.inventoryArmor.contains(equipmentArmor)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
