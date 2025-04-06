@@ -8,6 +8,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
+=======
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+>>>>>>> 43feefd
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile; 
 import com.grupo13.grupo13.model.Weapon;

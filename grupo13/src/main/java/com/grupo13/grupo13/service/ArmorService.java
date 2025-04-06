@@ -6,22 +6,19 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.grupo13.grupo13.repository.ArmorRepository;
+import org.springframework.web.multipart.MultipartFile; 
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.repository.ArmorRepository;
 
 @Service
 public class ArmorService {
