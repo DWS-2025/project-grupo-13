@@ -114,7 +114,7 @@ public class sessionController {
     }
 
     @GetMapping("/list_objects")
-    public String iterationObj(Model model, @PageableDefault(size = 2) Pageable page) {
+    public String iterationObj(Model model, @PageableDefault(size = 5) Pageable page) {
 
         //Page<Weapon> weaponPage = weaponService.findAll(page);
         ArrayList<Weapon> availableWeapons = new ArrayList<>();
@@ -149,16 +149,15 @@ public class sessionController {
         fullList.addAll(fullList2);
         fullList.addAll(fullList3);
 
-        Page<ItemDto> fullPage = new PageImpl<>(fullList, page, fullList.size());
+        Page<ItemDto> fullPage = new PageImpl<>(fullList,PageRequest.of(page.getPageNumber(), page.getPageSize()),
+                fullList.size());
 
         model.addAttribute("user", userService.getLoggedUser().get());
         model.addAttribute("itemList", fullPage);
-        //model.addAttribute("availableW", weaponPage);
-        //model.addAttribute("availableA", armorPage);
 
         //buttons
         boolean hasPrev = page.getPageNumber() >=1;
-        boolean hasNext = (fullList.size() - 2 > (page.getPageSize()*page.getPageNumber()));
+        boolean hasNext = (fullList.size() > (page.getPageSize()*(page.getPageNumber() + 1)));
         model.addAttribute("hasPrev", hasPrev);
         model.addAttribute("prev", page.getPageNumber() - 1);
         model.addAttribute("hasNext", hasNext);

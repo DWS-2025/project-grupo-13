@@ -47,13 +47,6 @@ public class ItemDto {
         this.isArmor = true;
     }
 
-    public ItemDto(String name, String type, Weapon item, boolean bought) {
-        this.name = name;
-        this.type = type;
-        this.item = item;
-        this.bought = bought;
-    }
-
     //getters
     public String getName() {
         return name;
