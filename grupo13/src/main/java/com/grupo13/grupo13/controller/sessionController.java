@@ -53,7 +53,6 @@ public class sessionController {
 
     @Autowired
     private CharacterService characterService;
-    private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
 
     @GetMapping("/")
     public String index(Model model, HttpSession session) {

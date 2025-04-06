@@ -1,7 +1,6 @@
 package com.grupo13.grupo13.model;
 import java.sql.Blob;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
