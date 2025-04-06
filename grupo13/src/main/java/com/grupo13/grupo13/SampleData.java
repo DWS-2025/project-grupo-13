@@ -16,7 +16,6 @@ import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.repository.WeaponRepository;
-import com.grupo13.grupo13.service.WeaponService;
 
 import jakarta.annotation.PostConstruct;
 
@@ -29,8 +28,7 @@ public class SampleData {
 
         @Autowired
         private WeaponRepository weaponRepository;
-        @Autowired
-        private WeaponService weaponService;
+
 
         @Autowired
         private ArmorRepository armorRepository;
