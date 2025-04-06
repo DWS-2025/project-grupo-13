@@ -3,7 +3,17 @@
 		<div class="row row-cols-auto g-4 justify-content-center">
 			{{#itemList}}			
 			<div class="col">
+				{{#bought}}
 				<form action="/purchase" method="post" enctype="multipart/form-data">
+				{{/bought}}
+				{{^bought}}
+				{{#isArmor}}
+				<form action="/purchaseArmor" method="post" enctype="multipart/form-data">
+				{{/isArmor}}
+				{{#isWeapon}}
+				<form action="/purchaseWeapon" method="post" enctype="multipart/form-data">
+				{{/isWeapon}}
+				{{/bought}}
 					<div class="card" style="width:18rem;">
 						{{#isArmor}}
 						<img src="/Armor/{{item.id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
