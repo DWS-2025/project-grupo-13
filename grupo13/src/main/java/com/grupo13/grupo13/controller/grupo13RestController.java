@@ -110,6 +110,7 @@ public class grupo13RestController {
 		return ResponseEntity.created(location).body(armor);
 	}
 
+	/*
 	@PostMapping("/{id}/image")
 	public ResponseEntity<Object> createWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
@@ -122,6 +123,7 @@ public class grupo13RestController {
 
 	}
 
+
 	@PostMapping("/{id}/image")
 	public ResponseEntity<Object> createArmorImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
@@ -133,6 +135,7 @@ public class grupo13RestController {
 		return ResponseEntity.created(location).build();
 
 	}
+	*/
 
 	// UPDATE -------------------------------------------------
 
