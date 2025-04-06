@@ -1,14 +1,18 @@
 package com.grupo13.grupo13.service;
-
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile; 
 import com.grupo13.grupo13.model.Weapon;
@@ -118,4 +122,36 @@ public class WeaponService {
 	}
 
     */
+
+    public Resource getImageFile(long id) throws SQLException  {
+        Weapon weapon = weaponRepository.findById(id).orElseThrow();
+
+		if (weapon.getimageFile() != null) {
+			return new InputStreamResource(weapon.getimageFile().getBinaryStream());
+		} else {
+			throw new NoSuchElementException();
+		}
+    }
+
+    public void replaceImage(long id, InputStream inputStream, long size) {
+
+		Weapon weapon = weaponRepository.findById(id).orElseThrow();
+
+		if(weapon.getImageName() == null){
+			throw new NoSuchElementException();
+		}
+
+		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
+
+		weaponRepository.save(weapon);
+	}
+
+    public void createPostImage(long id, URI location, InputStream inputStream, long size) {
+
+		Weapon weapon = weaponRepository.findById(id).orElseThrow();
+
+		weapon.setImageName(location.toString());
+		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
+		weaponRepository.save(weapon);
+	}
 }

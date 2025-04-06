@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.grupo13.grupo13.model.Character;
-import com.grupo13.grupo13.model.User;
 
 
 public interface CharacterRepository  extends JpaRepository<Character, Long>{
