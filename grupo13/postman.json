@@ -313,7 +313,40 @@
 			"response": []
 		},
 		{
-			"name": "edit wood sword (unfinished)",
+			"name": "delete weapon (iron longsword)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}weapon/2/delete",
+					"host": [
+						"{{base_url}}weapon"
+					],
+					"path": [
+						"2",
+						"delete"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "edit wood sword",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -334,7 +367,7 @@
 							"type": "text"
 						},
 						{
-							"key": "descripcion",
+							"key": "description",
 							"value": "edit2",
 							"type": "text"
 						},
@@ -352,11 +385,6 @@
 							"key": "weaponImage",
 							"type": "file",
 							"src": "postman-cloud:///1f011f56-4cd9-4620-bc83-7c8dc08c759f"
-						},
-						{
-							"key": "image",
-							"value": "com.mysql.cj.jdbc.Blob@144ba8f1",
-							"type": "text"
 						}
 					]
 				},
@@ -364,6 +392,62 @@
 					"raw": "{{base_url}}weapon/1/edit",
 					"host": [
 						"{{base_url}}weapon"
+					],
+					"path": [
+						"1",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit wood armor",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "test1",
+							"type": "text"
+						},
+						{
+							"key": "style",
+							"value": "111",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "test2",
+							"type": "text"
+						},
+						{
+							"key": "defense",
+							"value": "222",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "333",
+							"type": "text"
+						},
+						{
+							"key": "armorImage",
+							"type": "file",
+							"src": "postman-cloud:///1f011f41-d769-4b10-add4-3d477c75df85"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}armor/1/edit",
+					"host": [
+						"{{base_url}}armor"
 					],
 					"path": [
 						"1",
@@ -401,6 +485,33 @@
 			"response": []
 		},
 		{
+			"name": "buy wood sword",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}purchaseWeapon",
+					"host": [
+						"{{base_url}}purchaseWeapon"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "equip wood armor",
 			"request": {
 				"auth": {
@@ -428,7 +539,34 @@
 			"response": []
 		},
 		{
-			"name": "unequip wood armor Copy",
+			"name": "equip wood sword",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}equipWeapon",
+					"host": [
+						"{{base_url}}equipWeapon"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unequip wood armor",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -455,7 +593,7 @@
 			"response": []
 		},
 		{
-			"name": "buy wood sword",
+			"name": "unequip wood sword",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -473,9 +611,9 @@
 					]
 				},
 				"url": {
-					"raw": "{{base_url}}purchaseWeapon",
+					"raw": "{{base_url}}unEquipWeapon",
 					"host": [
-						"{{base_url}}purchaseWeapon"
+						"{{base_url}}unEquipWeapon"
 					]
 				}
 			},
