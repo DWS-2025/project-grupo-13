@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -29,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.ItemDto;
 import com.grupo13.grupo13.model.Weapon;
-import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
