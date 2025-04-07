@@ -65,33 +65,33 @@ public class grupo13RestController {
 
 	// SHOW 1 -------------------------------------------------
 	@GetMapping("/weapon/{id}")
-	public Weapon getWeapon(@RequestParam long id) {
+	public Weapon getWeapon(@PathVariable long id) {
 		return weaponService.findById(id).get(); 
 	}
 	
 	@GetMapping("/weapon/{id}/image")
 	public ResponseEntity<Object> getWeaponImage(@PathVariable long id) throws SQLException, IOException {
-		Resource postImage = weaponService.getImageFile(id);
+		Resource weaponImage = weaponService.getImageFile(id);
 
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-				.body(postImage);
+				.body(weaponImage);
 	}
 
 	@GetMapping("/armor/{id}")
-	public Armor getArmor(@RequestParam long id) {
+	public Armor getArmor(@PathVariable long id) {
 		return armorService.findById(id).get(); 
 	}
 
 	@GetMapping("/armor/{id}/image")
 	public ResponseEntity<Object> getArmorImage(@PathVariable long id) throws SQLException, IOException {
-		Resource postImage = armorService.getImageFile(id);
+		Resource armorImage = armorService.getImageFile(id);
 
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-				.body(postImage);
+				.body(armorImage);
 	}
 
 	// CREATE -------------------------------------------------
