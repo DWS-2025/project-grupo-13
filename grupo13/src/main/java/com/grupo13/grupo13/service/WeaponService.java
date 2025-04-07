@@ -35,6 +35,8 @@ public class WeaponService {
         if(!imageFile.isEmpty()){
             weapon.setimageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
+        weapon.setImageName("/Weapon/" + weapon.getId() + "/image");
+
         this.save(weapon);
     }
 
@@ -63,22 +65,23 @@ public class WeaponService {
     }
 	
     //updates a weapon when edited
-    public void update(Weapon oldWeapon, Weapon updatedWeapon, MultipartFile imageFile) throws IOException{
-        if(!imageFile.isEmpty()){
-            oldWeapon.setimageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+    public void update(Long oldWeaponid, Weapon updatedWeapon){
+        Optional<Weapon> oldWeaponOp = findById(oldWeaponid);
+        
+        if (oldWeaponOp.isPresent()) {
+            Weapon oldWeapon = oldWeaponOp.get();
+
+            oldWeapon.setName(updatedWeapon.getName());
+            oldWeapon.setDescription(updatedWeapon.getDescription());
+            oldWeapon.setstrength(updatedWeapon.getstrength());
+            oldWeapon.setPrice(updatedWeapon.getPrice());
+            oldWeapon.setIntimidation(updatedWeapon.getIntimidation());
+
+            oldWeapon.getCharacters().forEach(character -> character.setStrength(updatedWeapon.getstrength()));
+
+            weaponRepository.save(oldWeapon);
         }
-
-        oldWeapon.setName(updatedWeapon.getName());
-        oldWeapon.setDescription(updatedWeapon.getDescription());
-        oldWeapon.setstrength(updatedWeapon.getstrength());
-        oldWeapon.setPrice(updatedWeapon.getPrice());
-        oldWeapon.setIntimidation(updatedWeapon.getIntimidation());
-
-        oldWeapon.getCharacters().forEach(character -> character.setStrength(updatedWeapon.getstrength()));
-
-        weaponRepository.save(oldWeapon);
     }
-
 
     //deletes a weapon
     public void delete(long id){
@@ -88,39 +91,16 @@ public class WeaponService {
             //deletes from users inventory
             weapon.getUsers().forEach(user -> user.getInventoryWeapon().remove(weapon));
 
-            //falta el eliminar del personaje
+            for(Character character : weapon.getCharacters()){
+                character.setWeapon(null);
+        		character.setStrength(0);
+        		character.setWeaponEquiped(false);
+            }
+            weaponRepository.deleteById(id);
         }
     }
 
-    
-    /*	
-	//deletes an equipment
-	public void delete(long id) {
-
-		if (findById(id).isPresent()) {
-			Equipment equipment = findById(id).get();
-			//deletes from users inventory
-			for (User user : equipment.getUsers()) {            for each
-				user.getInventory().remove(equipment);
-			}
-			//deletes from characters equipped
-			for(Character character : equipment.getCharacters()){
-				if (isWeapon(equipment)) {
-					character.setWeapon(null);
-        			character.setStrength(0);
-        			character.setWeaponEquiped(false);
-				}else{
-					character.setArmor(null);
-        			character.setDefense(0);
-        			character.setArmorEquiped(false);
-				}
-			}
-			equipmentRepository.deleteById(id);
-		}
-
-	}
-
-    */
+ 
 
     public Resource getImageFile(long id) throws SQLException  {
         Weapon weapon = weaponRepository.findById(id).orElseThrow();
@@ -145,7 +125,7 @@ public class WeaponService {
 		weaponRepository.save(weapon);
 	}
 
-    public void createPostImage(long id, URI location, InputStream inputStream, long size) {
+    public void createWeaponImage(long id, URI location, InputStream inputStream, long size) {
 
 		Weapon weapon = weaponRepository.findById(id).orElseThrow();
 

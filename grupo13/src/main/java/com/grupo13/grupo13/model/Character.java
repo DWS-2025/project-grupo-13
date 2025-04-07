@@ -33,8 +33,6 @@ public class Character {
     @JsonIgnore
     private Blob imageFile;
 
-    
-
     @OneToOne(mappedBy = "character")
     private User user;
 

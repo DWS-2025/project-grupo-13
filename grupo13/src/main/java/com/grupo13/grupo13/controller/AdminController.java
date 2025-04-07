@@ -161,8 +161,12 @@ public class AdminController {
         Optional<Weapon> editedWeapon = weaponService.findById(id);
 
         if(editedWeapon.isPresent()){
-            Weapon oldWeapon = editedWeapon.get();
-            weaponService.update(oldWeapon, updatedWeapon, weaponImage);
+            weaponService.update(id, updatedWeapon);
+
+            if(!weaponImage.isEmpty()){
+                weaponService.replaceImage(id, weaponImage.getInputStream(), weaponImage.getSize());
+            }
+
             return "redirect:/weapon/" + id;
         }else{
             model.addAttribute("message", "Could not manage, not found");
@@ -181,8 +185,11 @@ public class AdminController {
         Optional<Armor> editedArmor = armorService.findById(id);
 
         if(editedArmor.isPresent()){
-            Armor oldArmor = editedArmor.get();
-            armorService.update(oldArmor, updatedArmor, armorImage);
+            if(!armorImage.isEmpty()){
+                weaponService.replaceImage(id, armorImage.getInputStream(), armorImage.getSize());
+            }
+
+            armorService.update(id, updatedArmor);
             return "redirect:/armor/" + id;
         }else{
             model.addAttribute("message", "Could not manage, not found");
