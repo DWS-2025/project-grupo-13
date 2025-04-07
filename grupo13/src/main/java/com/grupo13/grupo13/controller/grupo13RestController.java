@@ -99,6 +99,8 @@ public class grupo13RestController {
 	@PostMapping("/weapons")
 	public ResponseEntity<Weapon> createWeapon(@RequestBody Weapon weapon) {
 
+		weaponService.save(weapon);
+
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(weapon.getId()).toUri();
 
 		return ResponseEntity.created(location).body(weapon);
@@ -106,6 +108,8 @@ public class grupo13RestController {
 
 	@PostMapping("/armors")
 	public ResponseEntity<Armor> createArmor(@RequestBody Armor armor) {
+
+		armorService.save(armor);
 
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(armor.getId()).toUri();
 

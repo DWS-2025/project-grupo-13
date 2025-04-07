@@ -1,4 +1,4 @@
-package mapper;
+package com.grupo13.grupo13.mapper;
 
 import java.util.List;
 
@@ -16,5 +16,5 @@ public interface UserMapper {
     List<UserBasicDTO> toDTOs(List<User> users);
     
     @Mapping(target = "character", ignore = true)
-    User toDomain(UserBasicDTO userDTO);         
+    User toDomain(UserDTO userDTO);         
 }
