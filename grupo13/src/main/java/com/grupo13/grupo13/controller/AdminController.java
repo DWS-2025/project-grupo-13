@@ -1,7 +1,6 @@
 package com.grupo13.grupo13.controller;
 import java.io.IOException;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.service.ArmorService;
@@ -75,6 +73,7 @@ public class AdminController {
         model.addAttribute("character", userService.getCharacter());
 
         return "equipment_manager";
+
     }
 
     @PostMapping("/weapon/new")
@@ -88,6 +87,7 @@ public class AdminController {
         weaponService.save(weapon, weaponImage);
 
         return "saved_weapon";
+
     }
 
     @PostMapping("/armor/new")
@@ -101,6 +101,7 @@ public class AdminController {
         armorService.save(armor, armorImage);
 
         return "saved_armor";
+
     }
 
     @PostMapping("/weapon/{id}/delete")
@@ -108,6 +109,7 @@ public class AdminController {
         weaponService.deleteById(id);
         
         return "deleted_weapon";
+
     }
 
     @PostMapping("/armor/{id}/delete")
@@ -115,6 +117,7 @@ public class AdminController {
         armorService.deleteById(id);
         
         return "deleted_armor";
+
     }
     
     @GetMapping("/weapon/{id}/edit")
@@ -128,6 +131,7 @@ public class AdminController {
         }else{
             return "error";
         }
+
     }
 
     @GetMapping("/armor/{id}/edit")
@@ -142,12 +146,14 @@ public class AdminController {
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
         }
+
     }
     
     @GetMapping("/delete_Character")
     public String getMethodName(Model model) {
         characterService.delete(userService.getCharacter());
         return "deleted_character";
+
     }
     
     @PostMapping("/weapon/{id}/edit")
@@ -172,6 +178,7 @@ public class AdminController {
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
         }
+
 	}
 
     @PostMapping("/armor/{id}/edit")
@@ -195,6 +202,7 @@ public class AdminController {
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
         }
+        
 	}
     
 }

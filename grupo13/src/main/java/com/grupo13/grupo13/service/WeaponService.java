@@ -40,6 +40,7 @@ public class WeaponService {
         this.save(weapon);
     }
 
+    //makes the weapon register that it is had by the character given
     public void addCharacter(Character character, Weapon weapon){
         weapon.getCharacters().add(character);
         weaponRepository.save(weapon);
@@ -50,6 +51,7 @@ public class WeaponService {
         return weaponRepository.findAll();
     }
 
+    //returns a page with all the weapons
     public Page<Weapon> findAll(Pageable pageable) {
         return weaponRepository.findAll(pageable);
     }
@@ -99,9 +101,8 @@ public class WeaponService {
             weaponRepository.deleteById(id);
         }
     }
-
- 
-
+    
+    //returns the image of the id given
     public Resource getImageFile(long id) throws SQLException  {
         Weapon weapon = weaponRepository.findById(id).orElseThrow();
 
@@ -112,6 +113,7 @@ public class WeaponService {
 		}
     }
 
+    //change the image of the id given
     public void replaceImage(long id, InputStream inputStream, long size) {
 
 		Weapon weapon = weaponRepository.findById(id).orElseThrow();
@@ -133,4 +135,5 @@ public class WeaponService {
 		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
 		weaponRepository.save(weapon);
 	}
+
 }

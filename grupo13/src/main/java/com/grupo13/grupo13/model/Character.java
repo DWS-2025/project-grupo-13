@@ -1,8 +1,6 @@
 package com.grupo13.grupo13.model;
 import java.sql.Blob;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -42,7 +40,7 @@ public class Character {
     @ManyToOne
     private Armor armor;
 
-    //for the BBDD
+    //for the DB
     protected Character(){}
 
     //constructor
@@ -51,7 +49,6 @@ public class Character {
         this.name = name;
     }
 
-    
     //get functions
     public Long getId() {
         return id;

@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.service;
-
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    //adds the user 
     public void save(User user) {
         userRepository.save(user);
     }
@@ -44,6 +44,8 @@ public class UserService {
         }
         return false;
     }
+
+    //returns if the user has an armor given by an id
     public boolean hasArmor(long id) {
         User user = getLoggedUser().get();
         Optional<Armor> equipment = armorService.findById(id);
@@ -52,6 +54,7 @@ public class UserService {
         }
         return false;
     }
+
     //returns the money os the current user
     public int getMoney() {
         return getLoggedUser().get().getMoney();
@@ -63,6 +66,8 @@ public class UserService {
         
         return user.getInventoryWeapon();
     }
+
+    //returns a list with the armors that the user has
     public List<Armor> currentUserInventoryArmor() {
         User user = getLoggedUser().get();
         return user.getInventoryArmor();
@@ -84,6 +89,7 @@ public class UserService {
         }
     }
 
+    //save an armor
     public void saveArmor(long id) {
         User user = getLoggedUser().get();
         if (!hasArmor(id)) {

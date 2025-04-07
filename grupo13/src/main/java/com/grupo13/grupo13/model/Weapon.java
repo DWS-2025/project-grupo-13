@@ -1,11 +1,8 @@
 package com.grupo13.grupo13.model;
-
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +15,7 @@ import jakarta.persistence.OneToMany;
 public class Weapon {
 
     //user - weapon --> N:M,   character - weapon --> 1:N (OneToMany)(cascade NO)
-    //bidireccional las dos
+    //both of them are bidirectional
 
     //primary key
     @Id
@@ -43,7 +40,7 @@ public class Weapon {
     @ManyToMany(mappedBy = "inventoryWeapon") 
     private List<User> users;
 
-    //for the BBDD
+    //for the DB
     protected Weapon(){}
 
     //constructor
@@ -136,4 +133,5 @@ public class Weapon {
     public void setImageName(String imageName){
         this.imageName = imageName;
     }
+
 }

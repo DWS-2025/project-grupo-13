@@ -7,17 +7,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -73,21 +69,20 @@ public class sessionController {
         } else {
             return "character_view";
         }
+
     }
 
     @PostMapping("/formProcess")
     public String procesarFormulario(Model model, HttpSession session, @RequestParam String nameOfCharacter,
-            @RequestParam String characterDesc, @RequestParam MultipartFile characterImage) throws IOException {
+            @RequestParam String characterDesc,
+            @RequestParam String imageName, @RequestParam MultipartFile characterImage) throws IOException {
 
-        if (nameOfCharacter.isBlank() || characterDesc.isBlank()) {
+        if (nameOfCharacter.isBlank() || characterDesc.isBlank() || imageName.isBlank()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
         // creates the character
         Character character = new Character(characterDesc, nameOfCharacter);
-
-        
-
 
         // saves the character in the repository
         userService.saveCharacter(character);
@@ -109,8 +104,10 @@ public class sessionController {
         model.addAttribute("user", userService.getLoggedUser().get());
 
         return "character_view";
+
     }
 
+    //used to show the weapons on the shop
     @GetMapping("/list_weapons")
     public String showWeapons(Model model, @PageableDefault(size = 3) Pageable page) {
 
@@ -131,11 +128,11 @@ public class sessionController {
         return "listing_weapons";
     }
 
+    //used to show the armors on the shop
     @GetMapping("/list_armors")
     public String showArmors(Model model, @PageableDefault(size = 2) Pageable page) {
         
-        Page<Armor> armors = armorService.findAll(page); ;
-        
+        Page<Armor> armors = armorService.findAll(page); 
         model.addAttribute("user", userService.getLoggedUser().get());
         model.addAttribute("armor", armors);
 
@@ -149,32 +146,15 @@ public class sessionController {
         model.addAttribute("size", page.getPageSize());
         
         return "listing_armors";
-    }
-    /* 
-    public ItemDto convertToDtoW(Weapon weapon){
-        return new ItemDto(weapon.getName(), weapon.getDescription(),weapon.getstrength(),weapon.getPrice(),weapon.getIntimidation(),
-                "Weapon",userService.getLoggedUser().get().hasWeapon(weapon),weapon);
+
     }
 
-    public ItemDto convertToDtoA(Armor armor){
-        return new ItemDto(armor.getName(), armor.getDescription(),armor.getDefense(),armor.getPrice(),armor.getStyle(),
-                "Armor",userService.getLoggedUser().get().hasArmor(armor),armor);
-    }
-
-    public List<ItemDto> convertListToDtoW(List<Weapon> weapons){
-        return weapons.stream().map(this::convertToDtoW).collect(Collectors.toList());
-    }
-
-    public List<ItemDto> convertListToDtoA(List<Armor> armors){
-        return armors.stream().map(this::convertToDtoA).collect(Collectors.toList());
-    }
-    */
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
 
         Optional<Weapon> eqOptional = weaponService.findById(id);
         if (eqOptional.isPresent()) {
-            // checks if the user has enough money or if it's homeless
+            // checks if the user has enough money or not
             int money = userService.getMoney();
             if (money >= eqOptional.get().getPrice()) {
                 userService.saveWeapon(id);
@@ -186,6 +166,7 @@ public class sessionController {
         }
         model.addAttribute("message", "Could not purchase, doesnt exist");
         return "sp_errors";
+
     }
 
     @PostMapping("/purchaseArmor")
@@ -193,7 +174,7 @@ public class sessionController {
 
         Optional<Armor> eqOptional = armorService.findById(id);
         if (eqOptional.isPresent()) {
-            // checks if the user has enough money or if it's homeless
+            // checks if the user has enough money or not
             int money = userService.getMoney();
             if (money >= eqOptional.get().getPrice()) {
                 userService.saveArmor(id);
@@ -206,6 +187,7 @@ public class sessionController {
         }
         model.addAttribute("message", "Could not purchase, doesnt exist");
         return "sp_errors";
+
     }
 
     @PostMapping("/equipWeapon")
@@ -225,6 +207,7 @@ public class sessionController {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
+
     }
 
     @PostMapping("/equipArmor")
@@ -244,6 +227,7 @@ public class sessionController {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
+
     }
 
     @PostMapping("/unEquipWeapon")
@@ -252,9 +236,9 @@ public class sessionController {
         Character character = userService.getCharacter();
         Optional<Weapon> equipment = weaponService.findById(id);
 
-        if (equipment.isPresent()) {
+        if (equipment.isPresent()) { // if it exists
 
-            characterService.unEquipWeapon(character, id);
+            characterService.unEquipWeapon(character, id); // unequips it
 
             return "redirect:/";
 
@@ -262,6 +246,7 @@ public class sessionController {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
         }
+
     }
 
     @PostMapping("/unEquipArmor")
@@ -270,9 +255,9 @@ public class sessionController {
         Character character = userService.getCharacter();
         Optional<Armor> equipment = armorService.findById(id);
 
-        if (equipment.isPresent()) {
+        if (equipment.isPresent()) { // if it exists
 
-            characterService.unEquipArmor(character, id);
+            characterService.unEquipArmor(character, id); // unequips it
 
             return "redirect:/";
 
@@ -280,6 +265,7 @@ public class sessionController {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
         }
+
     }
 
     @GetMapping("/image/{imageName}")
@@ -303,6 +289,7 @@ public class sessionController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(image);
+
     }
 
     @GetMapping("/Weapon/{id}/image")
@@ -316,6 +303,7 @@ public class sessionController {
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
     @GetMapping("/Armor/{id}/image")
@@ -329,6 +317,7 @@ public class sessionController {
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
     @GetMapping("/character/{id}/image")
@@ -342,6 +331,7 @@ public class sessionController {
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
 }

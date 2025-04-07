@@ -1,4 +1,5 @@
 {{>header}}
+
 	<h1 style="color:rgb(0, 0, 0); text-align: center; font-weight: bold; font-family: Arial, sans-serif;">Store</h1>
 		<div class="row row-cols-auto g-4 justify-content-center">
 			{{#weapon}}			
@@ -21,17 +22,13 @@
 				</form>
 			</div>			
 			{{/weapon}}
-
 			<div>
 				<nobr>
 					{{#hasPrev}}<a class="btn-next-prev" href="/list_weapons?page={{prev}}&size={{size}}">Prev</a>{{/hasPrev}}
 					{{#hasNext}}<a class="btn-next-prev" href="/list_weapons?page={{next}}&size={{size}}">Next</a>{{/hasNext}}
 				</nobr>
 			</div>
-			<body class="bg-dark" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('image/test_bg.jpg') no-repeat center center / cover;">
-			</body>
+			<body class="bg-dark" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('image/test_bg.jpg') no-repeat center center / cover;"></body>
 		</div>
-		
-
 
 {{>footer}}

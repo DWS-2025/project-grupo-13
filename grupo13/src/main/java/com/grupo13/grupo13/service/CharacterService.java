@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.service;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -7,19 +6,16 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.CharacterRepository;
-
 
 @Service
 public class CharacterService {
@@ -132,10 +128,12 @@ public class CharacterService {
         characterRepository.deleteById(character.getId());
     }
 
+    //deletes the user it gets
     public void deleteById(long id) {
         characterRepository.deleteById(id);
     }
 
+    //returns the image from the id it gets
     public Resource getImageFile(long id) throws SQLException  {
         Character character = characterRepository.findById(id).orElseThrow();
 
@@ -146,6 +144,7 @@ public class CharacterService {
 		}
     }
 
+    //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
 
 		Character character = characterRepository.findById(id).orElseThrow();
@@ -155,7 +154,6 @@ public class CharacterService {
 		}
 
 		character.setImageFile(BlobProxy.generateProxy(inputStream, size));
-
 		characterRepository.save(character);
 	}
 

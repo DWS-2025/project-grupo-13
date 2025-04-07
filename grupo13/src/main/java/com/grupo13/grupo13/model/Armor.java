@@ -1,9 +1,7 @@
 package com.grupo13.grupo13.model;
 import java.sql.Blob;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,7 +36,7 @@ public class Armor{
     @ManyToMany (mappedBy = "inventoryArmor")
     private List<User> users;
 
-    //for the BBDD
+    //for the DB
     protected Armor(){}
 
     //constructor

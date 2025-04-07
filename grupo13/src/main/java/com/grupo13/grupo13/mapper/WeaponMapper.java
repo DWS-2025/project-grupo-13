@@ -1,9 +1,6 @@
-package mapper;
-
+package com.grupo13.grupo13.mapper;
 import java.util.List;
-
 import org.mapstruct.Mapper;
-
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.model.Weapon;

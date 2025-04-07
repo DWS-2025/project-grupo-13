@@ -40,6 +40,7 @@ public class ArmorService {
         this.save(armor);
     }
 
+    //makes the armor register that it is had by the character given
     public void addCharacter(Character character, Armor armor){
         armor.getCharacters().add(character);
         armorRepository.save(armor);
@@ -50,6 +51,7 @@ public class ArmorService {
         return armorRepository.findAll();
     }
 
+    //returns a page with all the armors
     public Page<Armor> findAll(Pageable pageable) {
         return armorRepository.findAll(pageable);
     }
@@ -83,8 +85,8 @@ public class ArmorService {
         }
     }
 
-      //deletes an armor
-      public void delete(long id){
+    //deletes an armor
+    public void delete(long id){
         if(findById(id).isPresent()){
             Armor armor = findById(id).get();
             
@@ -95,10 +97,10 @@ public class ArmorService {
 					character.setWeapon(null);
         			character.setStrength(0);
         			character.setWeaponEquiped(false);
-				}
 			}
-            armorRepository.deleteById(id);
-        }
+		}
+        armorRepository.deleteById(id);
+    }
     
     
     /*	
@@ -129,7 +131,7 @@ public class ArmorService {
 	}
 
     */
-    
+    //returns the image for the id it gets
     public Resource getImageFile(long id) throws SQLException  {
         Armor armor = armorRepository.findById(id).orElseThrow();
 
@@ -140,6 +142,7 @@ public class ArmorService {
 		}
     }
 
+    //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
 
 		Armor armor = armorRepository.findById(id).orElseThrow();
@@ -149,7 +152,6 @@ public class ArmorService {
 		}
 
 		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
-
 		armorRepository.save(armor);
 	}
 
@@ -161,4 +163,5 @@ public class ArmorService {
 		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		armorRepository.save(armor);
 	}
+
 }

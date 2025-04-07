@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.DTOs;
-
 import java.util.List;
 
 public record ArmorDTO(
@@ -7,8 +6,10 @@ public record ArmorDTO(
     String name,
     String description,
     int defense,
+    int style,
     int price,
     List<UserBasicDTO> users,
-    List<CharacterBasicDTO> characters
+    List<CharacterBasicDTO> characters,
+    String imageName
 ) {}
 

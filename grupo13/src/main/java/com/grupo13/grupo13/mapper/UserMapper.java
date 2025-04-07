@@ -1,10 +1,7 @@
-package mapper;
-
+package com.grupo13.grupo13.mapper;
 import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import com.grupo13.grupo13.DTOs.UserBasicDTO;
 import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.model.User;

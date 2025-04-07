@@ -1,9 +1,7 @@
 package com.grupo13.grupo13.controller;
-
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -15,21 +13,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.Collection;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-
-
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.WeaponService;
-
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 @RestController
@@ -124,7 +117,6 @@ public class grupo13RestController {
 
 	}
 
-
 	@PostMapping("/armor/{id}/image")
 	public ResponseEntity<Object> createArmorImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
@@ -138,8 +130,6 @@ public class grupo13RestController {
 	}
 
 	// UPDATE -------------------------------------------------
-
-	
 	  @PutMapping("/weapon/{id}")
 	public Weapon replaceWeapon(@PathVariable long id, @RequestBody Weapon updatedWeapon) {
 
@@ -215,7 +205,6 @@ public class grupo13RestController {
 	}
 
 	// CREATE -------------------------------------------------
-
 	@PostMapping("/characters")
 	public ResponseEntity<Character> createCharacter(@RequestBody Character character) {
 
@@ -257,4 +246,5 @@ public class grupo13RestController {
 
 		return ResponseEntity.noContent().build();
 	}
+	
 }
