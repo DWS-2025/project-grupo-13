@@ -68,10 +68,9 @@ public class grupo13RestController {
 	// SHOW 1 -------------------------------------------------
 	@GetMapping("/weapon/{id}")
 	public Weapon getWeapon(@RequestParam long id) {
-		return weaponService.findById(id).get(); // funciona, pero necesita de DTOS, al menos este siosi, si no se
-													// hacen referencias circulares
+		return weaponService.findById(id).get(); 
 	}
-
+	
 	@GetMapping("/weapon/{id}/image")
 	public ResponseEntity<Object> getWeaponImage(@PathVariable long id) throws SQLException, IOException {
 		Resource postImage = weaponService.getImageFile(id);
@@ -84,8 +83,7 @@ public class grupo13RestController {
 
 	@GetMapping("/armor/{id}")
 	public Armor getArmor(@RequestParam long id) {
-		return armorService.findById(id).get(); // funciona, pero necesita de DTOS, al menos este siosi, si no se
-												// hacen referencias circulares
+		return armorService.findById(id).get(); 
 	}
 
 	@GetMapping("/armor/{id}/image")
@@ -116,55 +114,51 @@ public class grupo13RestController {
 		return ResponseEntity.created(location).body(armor);
 	}
 
-	/*
-	@PostMapping("/{id}/image")
+	
+	@PostMapping("/weapon/{id}/image")
 	public ResponseEntity<Object> createWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
 
 		URI location = fromCurrentRequest().build().toUri();
 
-		weaponService.createPostImage(id, location, imageFile.getInputStream(), imageFile.getSize());
+		weaponService.createWeaponImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 
 		return ResponseEntity.created(location).build();
 
 	}
 
 
-	@PostMapping("/{id}/image")
+	@PostMapping("/armor/{id}/image")
 	public ResponseEntity<Object> createArmorImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
 
 		URI location = fromCurrentRequest().build().toUri();
 
-		armorService.createPostImage(id, location, imageFile.getInputStream(), imageFile.getSize());
+		armorService.createArmorImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 
 		return ResponseEntity.created(location).build();
 
 	}
-	*/
 
 	// UPDATE -------------------------------------------------
 
-	/*
-	 * @PutMapping("/weapon/{id}")
-	 * public Weapon replaceWeapon(@PathVariable long id, @RequestBody Weapon
-	 * updatedWeapon) {
-	 * 
-	 * 
-	 * weaponService.update(weaponService.findById(id).get(), updatedWeapon);
-	 * 
-	 * return updatedWeapon;
-	 * }
-	 * 
-	 * @PutMapping("/armor/{id}")
-	 * public Armor replaceArmor (@PathVariable long id, @RequestBody Armor
-	 * updatedArmor) {
-	 * 
-	 * armorService.update(armorService.findById(id).get(), updatedArmor);
-	 * 
-	 * return updatedArmor;
-	 * }
-	 */
+	
+	  @PutMapping("/weapon/{id}")
+	public Weapon replaceWeapon(@PathVariable long id, @RequestBody Weapon updatedWeapon) {
+
+		weaponService.update(id, updatedWeapon);
+
+		return updatedWeapon;
+	}
+
+	@PutMapping("/armor/{id}")
+	public Armor replaceArmor(@PathVariable long id, @RequestBody Armor updatedArmor) {
+
+		armorService.update(id, updatedArmor);
+
+		return updatedArmor;
+	}
+
 	@PutMapping("weapon/{id}/image")
 	public ResponseEntity<Object> replaceWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
@@ -208,7 +202,7 @@ public class grupo13RestController {
 
 	// SHOW 1 -------------------------------------------------
 	@GetMapping("/character/{id}")
-	public Character getCharacter(@RequestParam long id) {
+	public Character getCharacter(@PathVariable long id) {
 		return characterService.findById(id).get(); // funciona, pero necesita de DTOS, al menos este siosi, si no se
 													// hacen referencias circulares
 	}
@@ -235,13 +229,13 @@ public class grupo13RestController {
 		return ResponseEntity.created(location).body(character);
 	}
 
-	@PostMapping("/{id}/image")
+	@PostMapping("/character/{id}/image")
 	public ResponseEntity<Object> createCharacterImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
 
 		URI location = fromCurrentRequest().build().toUri();
 
-		characterService.createPostImage(id, location, imageFile.getInputStream(), imageFile.getSize());
+		characterService.createCharacterImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 
 		return ResponseEntity.created(location).build();
 
