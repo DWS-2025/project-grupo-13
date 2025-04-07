@@ -8,7 +8,7 @@ public record ArmorDTO(
     String description,
     int defense,
     int price,
-    List<UserDTO> users,
-    List<CharacterDTO> characters
+    List<UserBasicDTO> users,
+    List<CharacterBasicDTO> characters
 ) {}
 

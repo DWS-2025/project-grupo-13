@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
-import com.grupo13.grupo13.model.Weapon;
 
 @Service
 public class ArmorService {

@@ -16,5 +16,5 @@ public interface UserMapper {
     List<UserBasicDTO> toDTOs(List<User> users);
     
     @Mapping(target = "character", ignore = true)
-    User toDomain(UserBasicDTO userDTO);            //falta basicDTO de armor y weapon
+    User toDomain(UserBasicDTO userDTO);         
 }

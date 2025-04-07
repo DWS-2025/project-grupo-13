@@ -2,7 +2,6 @@ package com.grupo13.grupo13.controller;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

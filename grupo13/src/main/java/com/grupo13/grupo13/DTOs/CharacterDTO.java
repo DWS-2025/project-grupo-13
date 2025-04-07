@@ -1,8 +1,5 @@
 package com.grupo13.grupo13.DTOs;
 
-import com.grupo13.grupo13.model.Armor;
-import com.grupo13.grupo13.model.Weapon;
-
 public record CharacterDTO(
         long id,
         String name,
@@ -14,6 +11,6 @@ public record CharacterDTO(
         boolean armorEquiped,
         String imageName,
         UserBasicDTO user,
-        Weapon weapon,          // mirar si da referencia circular
-        Armor armor) {          // mirar si da referencia circular
+        WeaponBasicDTO weapon,          
+        ArmorBasicDTO armor) {          
 }
