@@ -43,4 +43,25 @@ Usuario con permisos elevados, puede acceder al `/admin` para crear objetos o mo
 ## Diagrama de la BBDD
 ![Diagrama de base de datos](grupo13/images/diagrama.png)
 
+## Trabajo de cada integrante
+### Pablo
+Eliminacion de herencia en equipment, traspaso de varias clases a BBDD, readme.md, consultas dinámicas js en equipment manager del /admin, consultas en postman, correción de errores
+#### 5 archivos más modificados:
+`AdminController.java`, `editArmor.html`, `weaponService.java`, `eqmanager.js`,`readme.txt`.
 
+#### 5 commits destacados
+ELIMINACION DE HERENCIA (BRANCH ELIMINADA)
+
+https://github.com/DWS-2025/project-grupo-13/commit/1397ea401d59cbd9361fb1879256d7f1258f8095
+
+https://github.com/DWS-2025/project-grupo-13/commit/5e83b41b63eb1a8dc3306829b6a1bc7ef3b89f58
+
+https://github.com/DWS-2025/project-grupo-13/commit/4acfd93e62a96c380ea046ffd31f6416a2755cac
+
+https://github.com/DWS-2025/project-grupo-13/commit/a00edba25a4756915fcc4d665fb7b8c34d063256
+
+### Andrea
+
+### Lucas
+
+### Eduardo
