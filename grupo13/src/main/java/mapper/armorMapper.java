@@ -1,8 +1,11 @@
-import org.mapstruct.Mapper;
-package com.grupo13.grupo13.dto;
+package mapper;
+
 import java.util.Collection;
 import java.util.List;
 
+import org.mapstruct.Mapper;
+
+import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.model.Armor;
 
 @Mapper(componentModel = "spring")
