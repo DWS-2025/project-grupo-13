@@ -16,7 +16,7 @@
 - **Armor**
 
 ## Relaciones:
-- **User - Character:** 1/N  
+- **User - Character:** 1/1  
 - **User - Weapon:** 1/N  
 - **User - Armor:** 1/N  
 - **Character - Weapon:** 1/1  
