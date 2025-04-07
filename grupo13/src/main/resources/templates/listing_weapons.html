@@ -1,0 +1,35 @@
+{{>header}}
+	<h1 style="color:rgb(0, 0, 0); text-align: center; font-weight: bold; font-family: Arial, sans-serif;">Store</h1>
+		<div class="row row-cols-auto g-4 justify-content-center">
+			{{#weapon}}			
+			<div class="col">
+				<form action="/purchaseWeapon" method="post" enctype="multipart/form-data">
+				<div class="card" style="width:18rem;">
+					<img src="/Weapon/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+					<div class="card-body">
+						<h5 class="card-title">{{name}}</h5>
+						<p class="card-text">{{description}}</p>
+						<h6 class="card-damage">Damage: {{strength}}</h6>
+						<h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
+						<!--Hidden inputs to avoid sending the data of every object-->
+						<input type="hidden" name="id" value="{{id}}">
+						<!--end of hidden inputs-->
+						<input type='submit' value='Add'>
+					</div>
+				</div>
+				</form>
+			</div>			
+			{{/weapon}}				
+			<div>
+				<nobr>
+					{{#hasPrev}}<a href="/list_weapons?page={{prev}}">Prev</a>{{/hasPrev}}
+					{{#hasNext}}<a href="/list_weapons?page={{next}}">Next</a>{{/hasNext}}
+				</nobr>
+			</div>
+			<body class="bg-dark" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('image/test_bg.jpg') no-repeat center center / cover;">
+			</body>
+		</div>
+		
+
+
+{{>footer}}

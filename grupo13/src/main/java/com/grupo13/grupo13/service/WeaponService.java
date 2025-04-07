@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -18,10 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.repository.WeaponRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-
 
 @Service
 public class WeaponService {

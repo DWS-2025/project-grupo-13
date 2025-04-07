@@ -35,16 +35,21 @@
 
 <body>
     <ul class="header">
-        <a class="element-header" aria-current="page" href="/list_objects">Shop</a>
+        <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Shop</a>
+        <ul class="dropdown-menu">
+          <li><a class="element-header" href="/list_weapons">Buy weapons</a></li>
+          <li><a class="element-header" href="/list_armors">Buy armors</a></li>
+        </ul>
         <a class="element-header" href="/">Character</a>
         <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Admin</a>
+          Admin</a>
         <ul class="dropdown-menu">
-            <li><a class="element-header" href="/equipment_manager">Manage equipment</a></li>
-            <li><a class="element-header" href="new_armor.html">Create new armor</a></li>
-            <li><a class="element-header" href="new_weapon.html">Create new weapon</a></li>
+          <li><a class="element-header" href="/equipment_manager">Manage equipment</a></li>
+          <li><a class="element-header" href="/new_armor.html">Create new armor</a></li>
+          <li><a class="element-header" href="/new_weapon.html">Create new weapon</a></li>
         </ul>
-    </ul>
+      </ul>
     <div class="site-content" style="width: 95%; margin:auto">
 
         <form action="/armor/new" method="post" enctype="multipart/form-data">

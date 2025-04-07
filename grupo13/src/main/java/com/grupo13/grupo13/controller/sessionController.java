@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
-import com.grupo13.grupo13.model.ItemDto;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.service.ArmorService;
@@ -110,33 +109,44 @@ public class sessionController {
         return "character_view";
     }
 
-    @GetMapping("/list_objects")
-    public String iterationObj(Model model, @PageableDefault(size = 5) Pageable page) {
+    @GetMapping("/list_weapons")
+    public String showWeapons(Model model, @PageableDefault(size = 3) Pageable page) {
 
-        List<Weapon> weapons = weaponService.findAll();
-        List<Armor> armors = armorService.findAll();
-      
-        List<ItemDto> fullList = convertListToDtoA(armors);
-        List<ItemDto> fullList1 = convertListToDtoW(weapons);
-        fullList.addAll(fullList1);
-
-        Page<ItemDto> fullPage = new PageImpl<>(fullList,PageRequest.of(page.getPageNumber(), page.getPageSize()),
-                fullList.size());
+        Page<Weapon> weapons = weaponService.findAll(page);        
 
         model.addAttribute("user", userService.getLoggedUser().get());
-        model.addAttribute("itemList", fullPage);
+        model.addAttribute("weapon", weapons);
 
         //buttons
-        boolean hasPrev = page.getPageNumber() >=1;
-        boolean hasNext = (fullList.size() > (page.getPageSize()*(page.getPageNumber() + 1)));
+        boolean hasPrev = page.hasPrevious();
+        boolean hasNext = (page.getPageNumber()+1)*page.getPageSize() < weapons.getTotalElements();
         model.addAttribute("hasPrev", hasPrev);
         model.addAttribute("prev", page.getPageNumber() - 1);
         model.addAttribute("hasNext", hasNext);
         model.addAttribute("next", page.getPageNumber() + 1);
         
-        return "listing";
+        return "listing_weapons";
     }
 
+    @GetMapping("/list_armors")
+    public String showArmors(Model model, @PageableDefault(size = 2) Pageable page) {
+        
+        Page<Armor> armors = armorService.findAll(page); ;
+        
+        model.addAttribute("user", userService.getLoggedUser().get());
+        model.addAttribute("armor", armors);
+
+        //buttons
+        boolean hasPrev = armors.hasPrevious();
+        boolean hasNext = (page.getPageNumber()+1)*page.getPageSize() < armors.getTotalElements();
+        model.addAttribute("hasPrev", hasPrev);
+        model.addAttribute("prev", page.getPageNumber() - 1);
+        model.addAttribute("hasNext", hasNext);
+        model.addAttribute("next", page.getPageNumber() + 1);
+        
+        return "listing_armors";
+    }
+    /* 
     public ItemDto convertToDtoW(Weapon weapon){
         return new ItemDto(weapon.getName(), weapon.getDescription(),weapon.getstrength(),weapon.getPrice(),weapon.getIntimidation(),
                 "Weapon",userService.getLoggedUser().get().hasWeapon(weapon),weapon);
@@ -154,7 +164,7 @@ public class sessionController {
     public List<ItemDto> convertListToDtoA(List<Armor> armors){
         return armors.stream().map(this::convertToDtoA).collect(Collectors.toList());
     }
-
+    */
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
 
@@ -164,7 +174,7 @@ public class sessionController {
             int money = userService.getMoney();
             if (money >= eqOptional.get().getPrice()) {
                 userService.saveWeapon(id);
-                return "redirect:/list_objects";
+                return "redirect:/list_weapons";
             } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
@@ -184,7 +194,7 @@ public class sessionController {
             if (money >= eqOptional.get().getPrice()) {
                 userService.saveArmor(id);
                 armorService.save(eqOptional.get());
-                return "redirect:/list_objects";
+                return "redirect:/list_armors";
             } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
