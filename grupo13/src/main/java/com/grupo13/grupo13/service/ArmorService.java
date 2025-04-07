@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.Weapon;
 
 @Service
 public class ArmorService {
@@ -35,6 +36,8 @@ public class ArmorService {
         if(!imageFile.isEmpty()){
             armor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
+        armor.setImageName("/Armor/" + armor.getId() + "/image");
+
         this.save(armor);
     }
 
@@ -59,33 +62,41 @@ public class ArmorService {
     }
 	
     //updates an armor when edited
-    public void update(Armor oldArmor, Armor updatedArmor, MultipartFile imageFile) throws IOException{
-        if(!imageFile.isEmpty()){
-            oldArmor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+    public void update(Long oldArmorId, Armor updatedArmor){
+        Optional<Armor> oldArmorOp = findById(oldArmorId);
+        
+        if (oldArmorOp.isPresent()) {
+            Armor oldArmor = oldArmorOp.get();
+
+            oldArmor.setName(updatedArmor.getName());
+            oldArmor.setDescription(updatedArmor.getDescription());
+            oldArmor.setDefense(updatedArmor.getDefense());
+            oldArmor.setPrice(updatedArmor.getPrice());
+            oldArmor.setStyle(updatedArmor.getStyle());
+
+            oldArmor.getCharacters().forEach(character -> character.setStrength(updatedArmor.getDefense()));
+
+            armorRepository.save(oldArmor);
         }
-
-        oldArmor.setName(updatedArmor.getName());
-        oldArmor.setDescription(updatedArmor.getDescription());
-        oldArmor.setDefense(updatedArmor.getDefense());
-        oldArmor.setPrice(updatedArmor.getPrice());
-        oldArmor.setStyle(updatedArmor.getStyle());
-
-        oldArmor.getCharacters().forEach(character -> character.setStrength(updatedArmor.getDefense()));
-
-        armorRepository.save(oldArmor);
     }
 
-    //deletes an armor
-    public void delete(long id){
+      //deletes an armor
+      public void delete(long id){
         if(findById(id).isPresent()){
             Armor armor = findById(id).get();
             
             //deletes from users inventory
             armor.getUsers().forEach(user -> user.getInventoryArmor().remove(armor));
 
-            //falta el eliminar del personaje
+            for(Character character : armor.getCharacters()){
+					character.setWeapon(null);
+        			character.setStrength(0);
+        			character.setWeaponEquiped(false);
+				}
+			}
+            armorRepository.deleteById(id);
         }
-    }
+    
     
     /*	
 	//deletes an equipment
@@ -139,7 +150,7 @@ public class ArmorService {
 		armorRepository.save(armor);
 	}
 
-    public void createPostImage(long id, URI location, InputStream inputStream, long size) {
+    public void createArmorImage(long id, URI location, InputStream inputStream, long size) {
 
 		Armor armor = armorRepository.findById(id).orElseThrow();
 

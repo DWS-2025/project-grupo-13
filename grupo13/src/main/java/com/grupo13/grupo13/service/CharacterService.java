@@ -53,6 +53,7 @@ public class CharacterService {
         if (!imageFile.isEmpty()) {
             character.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
+        character.setImageName("/character/" + character.getId() + "/image");
         this.save(character);
     }
 
@@ -158,7 +159,7 @@ public class CharacterService {
 		characterRepository.save(character);
 	}
 
-    public void createPostImage(long id, URI location, InputStream inputStream, long size) {
+    public void createCharacterImage(long id, URI location, InputStream inputStream, long size) {
 
 		Character character = characterRepository.findById(id).orElseThrow();
 
