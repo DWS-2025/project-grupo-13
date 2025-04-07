@@ -9,7 +9,7 @@ public record UserDTO(
     Long id,
     int money,
     String userName,
-    Character character,            //poner simpleCharacter
+    CharacterBasicDTO character,          
     List<Weapon> inventoryWeapon,   //poner Simpleweapon
     List<Armor> inventoryArmor     //poner simplearmor
 ) {
