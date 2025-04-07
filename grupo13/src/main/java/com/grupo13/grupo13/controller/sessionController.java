@@ -124,6 +124,7 @@ public class sessionController {
         model.addAttribute("prev", page.getPageNumber() - 1);
         model.addAttribute("hasNext", hasNext);
         model.addAttribute("next", page.getPageNumber() + 1);
+        model.addAttribute("size", page.getPageSize());
         
         return "listing_weapons";
     }
@@ -143,6 +144,7 @@ public class sessionController {
         model.addAttribute("prev", page.getPageNumber() - 1);
         model.addAttribute("hasNext", hasNext);
         model.addAttribute("next", page.getPageNumber() + 1);
+        model.addAttribute("size", page.getPageSize());
         
         return "listing_armors";
     }
