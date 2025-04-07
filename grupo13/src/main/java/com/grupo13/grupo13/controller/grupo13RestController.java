@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
+import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
+import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.mapper.WeaponMapper;
+import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.model.Character;
@@ -43,6 +46,11 @@ public class grupo13RestController {
 	private WeaponService weaponService;
 	@Autowired
 	private ArmorService armorService;
+	@Autowired
+	private WeaponMapper weaponMapper;
+	@Autowired
+	private armorMapper armorMapper;
+
 
 	grupo13RestController(CharacterService characterService) {
 		this.characterService = characterService;
@@ -52,21 +60,21 @@ public class grupo13RestController {
 	// _________________________________________________________________________________________________________
 	// SHOW ALL -------------------------------------------------
 	@GetMapping("/weapons")
-	public Collection<Weapon> getWeapons() {
+	public Collection<WeaponDTO> getWeapons() {
 
 		return weaponService.findAll();
 	}
 
 	@GetMapping("/armors")
-	public Collection<Armor> getArmors() {
+	public Collection<ArmorBasicDTO> getArmors() {
 
 		return armorService.findAll();
 	}
 
 	// SHOW 1 -------------------------------------------------
 	@GetMapping("/weapon/{id}")
-	public Weapon getWeapon(@RequestParam long id) {
-		return weaponService.findById(id).get(); 
+	public WeaponDTO getWeapon(@PathVariable long id) {
+		return weaponService.findById(id); 
 	}
 	
 	@GetMapping("/weapon/{id}/image")
@@ -80,8 +88,8 @@ public class grupo13RestController {
 	}
 
 	@GetMapping("/armor/{id}")
-	public Armor getArmor(@RequestParam long id) {
-		return armorService.findById(id).get(); 
+	public ArmorDTO getArmor(@PathVariable long id) {
+		return armorService.findById(id); 
 	}
 
 	@GetMapping("/armor/{id}/image")
@@ -97,15 +105,19 @@ public class grupo13RestController {
 	// CREATE -------------------------------------------------
 
 	@PostMapping("/weapons")
-	public ResponseEntity<Weapon> createWeapon(@RequestBody Weapon weapon) {
+	public ResponseEntity<WeaponDTO> createWeapon(@RequestBody Weapon weapon) {
+
+		weaponService.save(weaponMapper.toDTO(weapon));
 
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(weapon.getId()).toUri();
 
-		return ResponseEntity.created(location).body(weapon);
+		return ResponseEntity.created(location).body(weaponMapper.toDTO(weapon));
 	}
 
 	@PostMapping("/armors")
 	public ResponseEntity<Armor> createArmor(@RequestBody Armor armor) {
+
+		armorService.save(armorMapper.toDTO(armor));
 
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(armor.getId()).toUri();
 
@@ -142,15 +154,15 @@ public class grupo13RestController {
 
 	
 	  @PutMapping("/weapon/{id}")
-	public Weapon replaceWeapon(@PathVariable long id, @RequestBody Weapon updatedWeapon) {
+	public WeaponDTO replaceWeapon(@PathVariable long id, @RequestBody Weapon updatedWeapon) {
 
-		weaponService.update(id, updatedWeapon);
+		weaponService.update(id, weaponMapper.toDTO(updatedWeapon));
 
-		return updatedWeapon;
+		return weaponMapper.toDTO(updatedWeapon);
 	}
 
 	@PutMapping("/armor/{id}")
-	public Armor replaceArmor(@PathVariable long id, @RequestBody Armor updatedArmor) {
+	public ArmorDTO replaceArmor(@PathVariable long id, @RequestBody ArmorDTO updatedArmor) {
 
 		armorService.update(id, updatedArmor);
 

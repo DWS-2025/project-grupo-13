@@ -1,4 +1,4 @@
-package mapper;
+package com.grupo13.grupo13.mapper;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.model.Armor;
 
 @Mapper(componentModel = "spring")
-public interface ArmorMapper {
+public interface armorMapper {
 
     ArmorDTO toDTO(Armor armor);
 
@@ -17,4 +17,6 @@ public interface ArmorMapper {
 
     //@Mapping(target = "books", ignore = true)
     Armor toDomain(ArmorBasicDTO armorDTO);
+
+    Armor toDomain(ArmorDTO armorDTO);
 }

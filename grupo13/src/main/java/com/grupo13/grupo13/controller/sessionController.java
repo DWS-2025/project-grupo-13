@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
+import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
@@ -111,11 +114,11 @@ public class sessionController {
     @GetMapping("/list_objects")
     public String iterationObj(Model model, HttpSession session) {
 
-        List<Weapon> equipmentListWeapon = weaponService.findAll();
-        List<Armor> equipmentListArmor = armorService.findAll();
+        List<WeaponDTO> equipmentListWeapon = weaponService.findAll();
+        List<ArmorBasicDTO> equipmentListArmor = armorService.findAll();
 
-        ArrayList<Weapon> availableWeapons = new ArrayList<>();
-        ArrayList<Armor> availableArmors = new ArrayList<>();
+        ArrayList<WeaponDTO> availableWeapons = new ArrayList<>();
+        ArrayList<ArmorBasicDTO> availableArmors = new ArrayList<>();
         List<Weapon> currentInventoryWeapons = userService.currentUserInventoryWeapon();
         List<Armor> currentInventoryArmors = userService.currentUserInventoryArmor();
 
@@ -123,12 +126,12 @@ public class sessionController {
         // creates a list of the equipment that the user doesnt have
         // the html will present the inventory as purchased and the not purchased
         // (available) equipments
-        for (Weapon equipmentWeapon : equipmentListWeapon) {
+        for (WeaponDTO equipmentWeapon : equipmentListWeapon) {
             if (!currentInventoryWeapons.contains(equipmentWeapon)) {
                 availableWeapons.add(equipmentWeapon);
             }
         }
-        for (Armor equipmentArmor : equipmentListArmor) {
+        for (ArmorBasicDTO equipmentArmor : equipmentListArmor) {
             if (!currentInventoryArmors.contains(equipmentArmor)) {
                 availableArmors.add(equipmentArmor);
             }
@@ -144,11 +147,14 @@ public class sessionController {
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
 
-        Optional<Weapon> eqOptional = weaponService.findById(id);
-        if (eqOptional.isPresent()) {
+        WeaponDTO weaponDTO = weaponService.findById(id);
             // checks if the user has enough money or if it's homeless
+            if (weaponDTO == null) {
+            model.addAttribute("message", "Could not purchase, doesnt exist");
+            return "sp_errors";
+            }else {
             int money = userService.getMoney();
-            if (money >= eqOptional.get().getPrice()) {
+            if (money >= weaponDTO.price()) {
                 userService.saveWeapon(id);
                 return "redirect:/list_objects";
             } else {
@@ -156,44 +162,46 @@ public class sessionController {
                 return "sp_errors";
             }
         }
-        model.addAttribute("message", "Could not purchase, doesnt exist");
-        return "sp_errors";
+        
+        
     }
 
     @PostMapping("/purchaseArmor")
     public String purchaseArmor(@RequestParam long id, Model model) {
 
-        Optional<Armor> eqOptional = armorService.findById(id);
-        if (eqOptional.isPresent()) {
-            // checks if the user has enough money or if it's homeless
+        ArmorDTO armorDTO = armorService.findById(id);
+        // checks if the user has enough money or if it's homeless
+        if (armorDTO == null) {
+            model.addAttribute("message", "Could not purchase, doesnt exist");
+            return "sp_errors";
+        } else {
             int money = userService.getMoney();
-            if (money >= eqOptional.get().getPrice()) {
+            if (money >= armorDTO.price()) {
                 userService.saveArmor(id);
-                armorService.save(eqOptional.get());
+                armorService.save(armorDTO);
                 return "redirect:/list_objects";
             } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
             }
         }
-        model.addAttribute("message", "Could not purchase, doesnt exist");
-        return "sp_errors";
     }
 
     @PostMapping("/equipWeapon")
     public String equipWeapon(@RequestParam long id, Model model) {
 
         Character character = userService.getCharacter();
-        Optional<Weapon> equipment = weaponService.findById(id);
+        WeaponDTO equipment = weaponService.findById(id);
 
-        if (equipment.isPresent()) { // if it exists
+        if (equipment != null) { // if it exists
 
-            characterService.equipWeapon(equipment.get(), character); // equips it, adding the necessary attributes
-            weaponService.addCharacter(character, equipment.get());
+            characterService.equipWeapon(equipment, character); // equips it, adding the necessary attributes
+            weaponService.addCharacter(character, equipment);
 
             return "redirect:/";
 
         } else {
+            
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
@@ -203,16 +211,17 @@ public class sessionController {
     public String equipArmor(@RequestParam long id, Model model) {
 
         Character character = userService.getCharacter();
-        Optional<Armor> equipment = armorService.findById(id);
+        ArmorDTO equipment = armorService.findById(id);
 
-        if (equipment.isPresent()) { // if it exists
+        if (equipment != null) { // if it exists
 
-            characterService.equipArmor(equipment.get(), character); // equips it, adding the necessary attributes
-            armorService.addCharacter(character, equipment.get());
+            characterService.equipArmor(equipment, character); // equips it, adding the necessary attributes
+            armorService.addCharacter(character, equipment);
 
             return "redirect:/";
 
         } else {
+            
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
@@ -222,9 +231,9 @@ public class sessionController {
     public String unEquipWeapon(@RequestParam long id, Model model) {
 
         Character character = userService.getCharacter();
-        Optional<Weapon> equipment = weaponService.findById(id);
+        WeaponDTO equipment = weaponService.findById(id);
 
-        if (equipment.isPresent()) {
+        if (equipment != null) {
 
             characterService.unEquipWeapon(character, id);
 
@@ -240,9 +249,9 @@ public class sessionController {
     public String unEquipArmor(@RequestParam long id, Model model) {
 
         Character character = userService.getCharacter();
-        Optional<Armor> equipment = armorService.findById(id);
+        ArmorDTO equipment = armorService.findById(id);
 
-        if (equipment.isPresent()) {
+        if (equipment != null) {
 
             characterService.unEquipArmor(character, id);
 
@@ -279,7 +288,7 @@ public class sessionController {
 
     @GetMapping("/Weapon/{id}/image")
     public ResponseEntity<Object> downloadImageWeapon(@PathVariable long id) throws SQLException {
-        Optional<Weapon> op = weaponService.findById(id);
+        WeaponDTO op = weaponService.findById(id);
         if (op.isPresent() && op.get().getimageFile() != null) {
             Blob image = op.get().getimageFile();
             Resource file = new InputStreamResource(image.getBinaryStream());

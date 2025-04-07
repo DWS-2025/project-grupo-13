@@ -15,8 +15,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile; 
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.repository.WeaponRepository;
+
 
 @Service
 public class WeaponService {
@@ -24,35 +27,53 @@ public class WeaponService {
     //attributes
     @Autowired
     private WeaponRepository weaponRepository;
+    @Autowired
+    private WeaponMapper mapper;
+
 
     //saves in repository
-    public void save(Weapon weapon){
+    public void save(WeaponDTO weapondto){
+        Weapon weapon = mapper.toDomain(weapondto);
         weaponRepository.save(weapon);
     }
 
     //saves the weapon's image
-    public void save(Weapon weapon, MultipartFile imageFile) throws IOException{
-        if(!imageFile.isEmpty()){
+    public void save(WeaponDTO weaponDTO, MultipartFile imageFile) throws IOException{
+
+        long id = weaponDTO.id();
+        Optional<Weapon> weaponOP = weaponRepository.findById(id);
+
+        if (weaponOP.isPresent()) {
+            Weapon weapon = weaponOP.get();
+            if(!imageFile.isEmpty()){
             weapon.setimageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         weapon.setImageName("/Weapon/" + weapon.getId() + "/image");
 
-        this.save(weapon);
+        weaponRepository.save(weapon);
+        }
+        
     }
 
-    public void addCharacter(Character character, Weapon weapon){
-        weapon.getCharacters().add(character);
-        weaponRepository.save(weapon);
+    public void addCharacter(Character character, WeaponDTO weaponDTO){
+        long id = weaponDTO.id();
+        Optional<Weapon> weaponOP = weaponRepository.findById(id);
+
+        if (weaponOP.isPresent()) {
+            Weapon weapon = weaponOP.get();
+            weapon.getCharacters().add(character);
+            weaponRepository.save(weapon);
+        }
     }
     
 	//returns all weapons in a list
-    public List<Weapon> findAll(){
-        return weaponRepository.findAll();
+    public List<WeaponDTO> findAll(){
+        return mapper.toDTOs(weaponRepository.findAll());
     }
 
 	//searches a weapon by its id
-    public Optional<Weapon> findById(long id){
-        return weaponRepository.findById(id);
+    public WeaponDTO findById(long id){
+        return mapper.toDTO(weaponRepository.findById(id).get());
     }
 
     //deletes a weapon by its id
@@ -61,19 +82,19 @@ public class WeaponService {
     }
 	
     //updates a weapon when edited
-    public void update(Long oldWeaponid, Weapon updatedWeapon){
-        Optional<Weapon> oldWeaponOp = findById(oldWeaponid);
+    public void update(Long oldWeaponid, WeaponDTO updatedWeapon){
+        Optional<Weapon> oldWeaponOp = weaponRepository.findById(oldWeaponid);
         
         if (oldWeaponOp.isPresent()) {
             Weapon oldWeapon = oldWeaponOp.get();
 
-            oldWeapon.setName(updatedWeapon.getName());
-            oldWeapon.setDescription(updatedWeapon.getDescription());
-            oldWeapon.setstrength(updatedWeapon.getstrength());
-            oldWeapon.setPrice(updatedWeapon.getPrice());
-            oldWeapon.setIntimidation(updatedWeapon.getIntimidation());
+            oldWeapon.setName(updatedWeapon.name());
+            oldWeapon.setDescription(updatedWeapon.description());
+            oldWeapon.setstrength(updatedWeapon.strength());
+            oldWeapon.setPrice(updatedWeapon.price());
+            oldWeapon.setIntimidation(updatedWeapon.intimidation());
 
-            oldWeapon.getCharacters().forEach(character -> character.setStrength(updatedWeapon.getstrength()));
+            oldWeapon.getCharacters().forEach(character -> character.setStrength(updatedWeapon.strength()));
 
             weaponRepository.save(oldWeapon);
         }
@@ -81,8 +102,8 @@ public class WeaponService {
 
     //deletes a weapon
     public void delete(long id){
-        if(findById(id).isPresent()){
-            Weapon weapon = findById(id).get();
+        if(weaponRepository.findById(id).isPresent()){
+            Weapon weapon = weaponRepository.findById(id).get();
             
             //deletes from users inventory
             weapon.getUsers().forEach(user -> user.getInventoryWeapon().remove(weapon));

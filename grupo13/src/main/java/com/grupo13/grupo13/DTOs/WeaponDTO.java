@@ -10,6 +10,7 @@ public record WeaponDTO(
     String description,
     int strength,
     int price,
+    int intimidation,
     List<UserBasicDTO> users,
     List<CharacterBasicDTO> characters
 ) {

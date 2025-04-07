@@ -1,4 +1,4 @@
-package mapper;
+package com.grupo13.grupo13.mapper;
 
 import java.util.List;
 

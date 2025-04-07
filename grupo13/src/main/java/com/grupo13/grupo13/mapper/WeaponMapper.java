@@ -1,4 +1,4 @@
-package mapper;
+package com.grupo13.grupo13.mapper;
 
 import java.util.List;
 
@@ -13,8 +13,10 @@ public interface WeaponMapper {
 
     WeaponDTO toDTO(Weapon weapon);
 
-    List<WeaponBasicDTO> toDTOs(List<Weapon> weaponss);
+    List<WeaponDTO> toDTOs(List<Weapon> weaponss);
 
     //@Mapping(target = "books", ignore = true)
     Weapon toDomain(WeaponBasicDTO weaponDTO);
+
+    Weapon toDomain(WeaponDTO weapondto);
 }
