@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.grupo13.grupo13.dto.WeaponDTO;
+
 
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
