@@ -34,7 +34,7 @@ public class Character {
     private Blob imageFile;
 
     
-
+    @JsonIgnore
     @OneToOne(mappedBy = "character")
     private User user;
 

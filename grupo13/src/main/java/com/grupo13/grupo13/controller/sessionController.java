@@ -74,15 +74,17 @@ public class sessionController {
 
     @PostMapping("/formProcess")
     public String procesarFormulario(Model model, HttpSession session, @RequestParam String nameOfCharacter,
-            @RequestParam String characterDesc,
-            @RequestParam String imageName, @RequestParam MultipartFile characterImage) throws IOException {
+            @RequestParam String characterDesc, @RequestParam MultipartFile characterImage) throws IOException {
 
-        if (nameOfCharacter.isBlank() || characterDesc.isBlank() || imageName.isBlank()) {
+        if (nameOfCharacter.isBlank() || characterDesc.isBlank()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
         // creates the character
         Character character = new Character(characterDesc, nameOfCharacter);
+
+        
+
 
         // saves the character in the repository
         userService.saveCharacter(character);
