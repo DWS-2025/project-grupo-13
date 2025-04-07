@@ -33,4 +33,14 @@ Usuario registrado, puede obtener monedas, comprar objetos, equiparlos y actuali
 ### Administrador:  
 Usuario con permisos elevados, puede acceder al `/admin` para crear objetos o modificarlos, además de acceder y modificar el perfil o inventario de los usuarios.
 
+## Imágenes en entidades
+|Entidad |   Imagenes   |
+| ------------ | ------------ |
+|  User | 0  |   
+| Character   | 1  |   
+|  Weapon |  1 |   
+|  Armor |  1 |   
+## Diagrama de la BBDD
+![Diagrama de base de datos](images/diagrama.png)
+
 
