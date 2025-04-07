@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.grupo13.grupo13.dto.ArmorDTO;
 import com.grupo13.grupo13.dto.WeaponDTO;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
@@ -67,10 +68,12 @@ public class grupo13RestController {
 				.collect(Collectors.toList());
 	}
 
-    @GetMapping("/armors")
-	public Collection<Armor> getArmors() {
-	
-		return armorService.findAll();
+	@GetMapping("/armors")   
+	public List<ArmorDTO> getArmors() {
+		// each weapon turns into weaponDTO
+		return armorService.findAll().stream()
+				.map(ArmorDTO::new) // using constructor for each one
+				.collect(Collectors.toList());
 	}
 
 	//CREATE -------------------------------------------------
