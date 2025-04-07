@@ -41,6 +41,6 @@ Usuario con permisos elevados, puede acceder al `/admin` para crear objetos o mo
 |  Weapon |  1 |   
 |  Armor |  1 |   
 ## Diagrama de la BBDD
-![Diagrama de base de datos](images/diagrama.png)
+![Diagrama de base de datos](grupo13/images/diagrama.png)
 
 
