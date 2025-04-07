@@ -31,6 +31,7 @@ public class Weapon {
     private int strength;
     private int price;
     private int intimidation;
+    private String imageName;
 
     @Lob
     @JsonIgnore
@@ -91,6 +92,10 @@ public class Weapon {
         return intimidation;
     }
 
+    public String getImageName(){
+        return imageName;
+    }
+
     //setters
     public void setId(long id) {
         this.id = id;
@@ -128,4 +133,7 @@ public class Weapon {
         this.intimidation = intimidation;
     }
 
+    public void setImageName(String imageName){
+        this.imageName = imageName;
+    }
 }
