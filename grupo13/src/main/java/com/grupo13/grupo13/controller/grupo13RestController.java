@@ -26,7 +26,7 @@ import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.WeaponMapper;
-import com.grupo13.grupo13.mapper.armorMapper;
+import com.grupo13.grupo13.mapper.ArmorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.model.Character;
@@ -51,7 +51,7 @@ public class grupo13RestController {
 	@Autowired
 	private WeaponMapper weaponMapper;
 	@Autowired
-	private armorMapper armorMapper;
+	private ArmorMapper armorMapper;
 
 
 	grupo13RestController(CharacterService characterService) {

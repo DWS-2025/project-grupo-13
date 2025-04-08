@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
-import com.grupo13.grupo13.mapper.armorMapper;
+import com.grupo13.grupo13.mapper.ArmorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
 
@@ -28,7 +28,7 @@ public class ArmorService {
 	@Autowired
 	private ArmorRepository armorRepository;
     @Autowired
-    private armorMapper mapper;
+    private ArmorMapper mapper;
 
 	//saves in repository
     public void save(ArmorDTO armorDTO){

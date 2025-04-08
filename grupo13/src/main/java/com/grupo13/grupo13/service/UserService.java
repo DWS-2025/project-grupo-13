@@ -15,7 +15,7 @@ import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.UserMapper;
-import com.grupo13.grupo13.mapper.armorMapper;
+import com.grupo13.grupo13.mapper.ArmorMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.User;
@@ -40,7 +40,7 @@ public class UserService {
     private WeaponMapper weaponMapper;
 
     @Autowired
-    private armorMapper armorMapper;
+    private ArmorMapper armorMapper;
 
     //gets the current user
     public UserDTO getLoggedUser() {
