@@ -61,8 +61,36 @@ https://github.com/DWS-2025/project-grupo-13/commit/4acfd93e62a96c380ea046ffd31f
 https://github.com/DWS-2025/project-grupo-13/commit/a00edba25a4756915fcc4d665fb7b8c34d063256
 
 ### Andrea
+Eliminación de herencia equipment, creación de la base de datos, adición de DTOs, corrección de errores sobre todo en el AdminController
+#### 5 archivos más modificados:
+`AdminController.java`, `header.html`, `ArmorService.java`, `Weapon.java`,`WeaponService.java`.
+#### 5 commits destacados:
+https://github.com/DWS-2025/project-grupo-13/commit/8bab4da0ed9483380d1359565beab7fbd0453d1b
+
+https://github.com/DWS-2025/project-grupo-13/commit/6db2c727396ecd90ddef913a8bbaa0f9b79faba7
+
+https://github.com/DWS-2025/project-grupo-13/commit/7e11e3eed3092e27b1d90885f02c97f24ae65078
+
+https://github.com/DWS-2025/project-grupo-13/commit/3087aedeed0062243bbdeca4b8e717dbddfc200a
+
+https://github.com/DWS-2025/project-grupo-13/commit/1e46a3b3e2c2ccdc55dc177cb4bb7736471b92a4
 
 ### Lucas
+Muchas soluciones de errores, implementación base de datos de character y de la api rest, así como edición de los servicios para adaptarlos a los cambios que van saliendo
+
+#### 5 archivos más modificados:
+`listing.html`, `characterService.java`, `sessionController`,`index.html`,`restController.java`
+#### 5 commits destacados:
+https://github.com/DWS-2025/project-grupo-13/commit/6f153b981393b80b23f9c5108f0fbac36a08a316
+
+https://github.com/DWS-2025/project-grupo-13/commit/01ae246e87606bd00cfbdea50f0f95146e62ae22
+
+https://github.com/DWS-2025/project-grupo-13/commit/cd9d74e4fe4ab563405a3887f3b93471480a63de
+
+https://github.com/DWS-2025/project-grupo-13/commit/753fb16195c1a28d4cdcff8584226d051a431a9d
+
+https://github.com/DWS-2025/project-grupo-13/commit/f9314ad71f3ee161ab792c5d29711cb4367cffa3
+
 
 ### Eduardo
 Comentarios, homogeneizar el formato (saltos de línea, espacios entre métodos...), revisión de errores en el código y base de datos, paginación de la tienda y separación entre weapon y armor de la tienda.
