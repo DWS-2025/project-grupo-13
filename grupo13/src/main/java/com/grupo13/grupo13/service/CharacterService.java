@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.WeaponMapper;
-import com.grupo13.grupo13.mapper.ArmorMapper;
+import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
@@ -43,7 +43,7 @@ public class CharacterService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private ArmorMapper armorMapper;
+    private armorMapper armorMapper;
     @Autowired
     private WeaponMapper weaponMapper;
 

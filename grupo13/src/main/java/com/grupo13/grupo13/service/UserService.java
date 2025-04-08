@@ -10,17 +10,13 @@ import com.grupo13.grupo13.DTOs.UserBasicDTO;
 import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.UserMapper;
-import com.grupo13.grupo13.mapper.ArmorMapper;
+import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.repository.UserRepository;
-
-import mapper.ArmorMapper;
-import mapper.CharacterMapper;
-import mapper.UserMapper;
-import mapper.WeaponMapper;
 
 @Service
 public class UserService {
@@ -40,7 +36,7 @@ public class UserService {
     private WeaponMapper weaponMapper;
 
     @Autowired
-    private ArmorMapper armorMapper;
+    private armorMapper armorMapper;
 
     @Autowired
     private CharacterMapper characterMapper;

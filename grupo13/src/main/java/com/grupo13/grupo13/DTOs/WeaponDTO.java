@@ -8,7 +8,6 @@ public record WeaponDTO(
     int strength,
     int intimidation,
     int price,
-    int intimidation,
     List<UserBasicDTO> users,
     List<CharacterBasicDTO> characters,
     String imageName

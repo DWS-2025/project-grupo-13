@@ -9,7 +9,7 @@ import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.model.Armor;
 
 @Mapper(componentModel = "spring")
-public interface ArmorMapper {
+public interface armorMapper {
 
     ArmorDTO toDTO(Armor armor);
 

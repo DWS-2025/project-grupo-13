@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.core.io.InputStreamResource;
@@ -187,8 +188,6 @@ public class sessionController {
                 return "sp_errors";
             }
         }
-        model.addAttribute("message", "Could not purchase, doesnt exist");
-        return "sp_errors";
     }
 
     @PostMapping("/equipWeapon")
