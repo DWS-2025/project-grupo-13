@@ -89,6 +89,9 @@ public class WeaponService {
         if (oldWeaponOp.isPresent()) {
             Weapon oldWeapon = oldWeaponOp.get();
 
+
+
+            oldWeapon.setImageName("api/weapon/" + oldWeaponid + "/image");
             oldWeapon.setName(updatedWeapon.name());
             oldWeapon.setDescription(updatedWeapon.description());
             oldWeapon.setstrength(updatedWeapon.strength());

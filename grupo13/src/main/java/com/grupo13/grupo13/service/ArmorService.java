@@ -78,6 +78,8 @@ public class ArmorService {
         if (oldArmorOp.isPresent()) {
             Armor oldArmor = oldArmorOp.get();
 
+            oldArmor.setImageName("api/armor/" + oldArmorId + "/image");
+
             oldArmor.setName(updatedArmor.name());
             oldArmor.setDescription(updatedArmor.description());
             oldArmor.setDefense(updatedArmor.defense());

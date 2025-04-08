@@ -287,7 +287,7 @@ public class sessionController {
                 .body(image);
     }
 
-    @GetMapping("/Weapon/{id}/image")
+  /*  @GetMapping("/Weapon/{id}/image")
     public ResponseEntity<Object> downloadImageWeapon(@PathVariable long id) throws SQLException {
         WeaponDTO op = weaponService.findById(id);
         if (op.isPresent() && op.get().getimageFile() != null) {
@@ -312,7 +312,7 @@ public class sessionController {
             return ResponseEntity.notFound().build();
         }
     }
-
+ */
     @GetMapping("/character/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
         Optional<Character> op = characterService.findById(id);
