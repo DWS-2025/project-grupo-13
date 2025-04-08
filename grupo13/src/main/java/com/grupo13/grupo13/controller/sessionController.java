@@ -25,6 +25,7 @@ import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.service.ArmorService;
@@ -56,16 +57,16 @@ public class sessionController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
 
-        List<Weapon> currentInventoryWeapon = userService.currentUserInventoryWeapon();
+        List<WeaponBasicDTO> currentInventoryWeapon = userService.currentUserInventoryWeapon();
 
-        List<Armor> currentInventoryArmor = userService.currentUserInventoryArmor();
+        List<ArmorBasicDTO> currentInventoryArmor = userService.currentUserInventoryArmor();
         Character character = userService.getCharacter();
 
         // gets the character and its inventory for mustache
         model.addAttribute("character", character);
         model.addAttribute("currentWeapon", currentInventoryWeapon);
         model.addAttribute("currentArmor", currentInventoryArmor);
-        model.addAttribute("user", userService.getLoggedUser().get());
+        model.addAttribute("user", userService.getLoggedUser());
 
         // checks if the user has "logged", in the first fase is creating the character
         if (character == null) {
@@ -93,7 +94,7 @@ public class sessionController {
         userService.saveCharacter(character);
         characterService.saveUser(character);
         characterService.save(character, characterImage);
-        userService.save(userService.getLoggedUser().get());
+        userService.save(userService.getLoggedUser());
 
         /* // saves image in the correspondent folder
         Files.createDirectories(IMAGES_FOLDER);
@@ -102,11 +103,11 @@ public class sessionController {
         */
 
         model.addAttribute("character", character);
-        List<Weapon> currentWeapon = userService.currentUserInventoryWeapon();
-        List<Armor> currentArmor = userService.currentUserInventoryArmor();
+        List<WeaponBasicDTO> currentWeapon = userService.currentUserInventoryWeapon();
+        List<ArmorBasicDTO> currentArmor = userService.currentUserInventoryArmor();
         model.addAttribute("currentW", currentWeapon);
         model.addAttribute("currentA", currentArmor);
-        model.addAttribute("user", userService.getLoggedUser().get());
+        model.addAttribute("user", userService.getLoggedUser());
 
         return "character_view";
     }
@@ -114,19 +115,19 @@ public class sessionController {
     @GetMapping("/list_objects")
     public String iterationObj(Model model, HttpSession session) {
 
-        List<WeaponDTO> equipmentListWeapon = weaponService.findAll();
+        List<WeaponBasicDTO> equipmentListWeapon = weaponService.findAll();
         List<ArmorBasicDTO> equipmentListArmor = armorService.findAll();
 
-        ArrayList<WeaponDTO> availableWeapons = new ArrayList<>();
+        ArrayList<WeaponBasicDTO> availableWeapons = new ArrayList<>();
         ArrayList<ArmorBasicDTO> availableArmors = new ArrayList<>();
-        List<Weapon> currentInventoryWeapons = userService.currentUserInventoryWeapon();
-        List<Armor> currentInventoryArmors = userService.currentUserInventoryArmor();
+        List<WeaponBasicDTO> currentInventoryWeapons = userService.currentUserInventoryWeapon();
+        List<ArmorBasicDTO> currentInventoryArmors = userService.currentUserInventoryArmor();
 
         // gets the listing of the current equipment in the repository and the inventory
         // creates a list of the equipment that the user doesnt have
         // the html will present the inventory as purchased and the not purchased
         // (available) equipments
-        for (WeaponDTO equipmentWeapon : equipmentListWeapon) {
+        for (WeaponBasicDTO equipmentWeapon : equipmentListWeapon) {
             if (!currentInventoryWeapons.contains(equipmentWeapon)) {
                 availableWeapons.add(equipmentWeapon);
             }
@@ -136,7 +137,7 @@ public class sessionController {
                 availableArmors.add(equipmentArmor);
             }
         }
-        model.addAttribute("user", userService.getLoggedUser().get());
+        model.addAttribute("user", userService.getLoggedUser());
         model.addAttribute("currentA", currentInventoryArmors);
         model.addAttribute("currentW", currentInventoryWeapons);
         model.addAttribute("availableA", availableArmors);

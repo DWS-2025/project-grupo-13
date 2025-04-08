@@ -16,5 +16,6 @@ public interface UserMapper {
     List<UserBasicDTO> toDTOs(List<User> users);
     
     @Mapping(target = "character", ignore = true)
-    User toDomain(UserBasicDTO userDTO);         
+    User toDomain(UserBasicDTO userDTO);
+    User toDomain(UserDTO userDTO);         
 }

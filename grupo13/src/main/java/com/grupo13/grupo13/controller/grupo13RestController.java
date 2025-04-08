@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
@@ -60,7 +62,7 @@ public class grupo13RestController {
 	// _________________________________________________________________________________________________________
 	// SHOW ALL -------------------------------------------------
 	@GetMapping("/weapons")
-	public Collection<WeaponDTO> getWeapons() {
+	public List<WeaponBasicDTO> getWeapons() {
 
 		return weaponService.findAll();
 	}

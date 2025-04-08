@@ -24,6 +24,7 @@ import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.repository.CharacterRepository;
+import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.repository.WeaponRepository;
 
 
@@ -42,7 +43,7 @@ public class CharacterService {
     @Autowired
     private ArmorService armorService;
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
     @Autowired
     private armorMapper armorMapper;
     @Autowired
@@ -72,7 +73,7 @@ public class CharacterService {
     }
 
     public void saveUser(Character character) {
-        character.setUser(userService.getLoggedUser().get());
+        character.setUser(userRepository.findById((long)1).get());
     }
 
     // for equipping armor or weapon, sets the necessary values from the equipment

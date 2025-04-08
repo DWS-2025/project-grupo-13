@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile; 
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Character;
@@ -67,7 +68,7 @@ public class WeaponService {
     }
     
 	//returns all weapons in a list
-    public List<WeaponDTO> findAll(){
+    public List<WeaponBasicDTO> findAll(){
         return mapper.toDTOs(weaponRepository.findAll());
     }
 
