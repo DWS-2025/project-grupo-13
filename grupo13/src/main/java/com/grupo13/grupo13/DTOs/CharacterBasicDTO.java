@@ -9,5 +9,5 @@ public record CharacterBasicDTO(
         int healthPoints,
         boolean weaponEquiped,
         boolean armorEquiped,
-        String imageName){
-}
+        String imageName
+){}

@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.service;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -7,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -15,10 +13,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.mapper.WeaponMapper;
+import com.grupo13.grupo13.mapper.ArmorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.repository.CharacterRepository;
+import com.grupo13.grupo13.repository.UserRepository;
+import com.grupo13.grupo13.repository.WeaponRepository;
 
 
 @Service
@@ -28,11 +33,19 @@ public class CharacterService {
     @Autowired
     private CharacterRepository characterRepository;
     @Autowired
+    private ArmorRepository armorRepository;
+    @Autowired
+    private WeaponRepository weaponRepository;
+    @Autowired
     private WeaponService weaponService;
     @Autowired
     private ArmorService armorService;
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
+    @Autowired
+    private ArmorMapper armorMapper;
+    @Autowired
+    private WeaponMapper weaponMapper;
 
     // returns all characters in a list
     public List<Character> findAll() {
@@ -58,23 +71,23 @@ public class CharacterService {
     }
 
     public void saveUser(Character character) {
-        character.setUser(userService.getLoggedUser().get());
+        character.setUser(userRepository.findById((long)1).get());
     }
 
     // for equipping armor or weapon, sets the necessary values from the equipment
     // and adds the character to the equipment
-    public void equipWeapon(Weapon weapon, Character character) {
+    public void equipWeapon(WeaponDTO weaponDTO, Character character) {
         character.setWeaponEquiped(true);
-        character.setStrength(weapon.getstrength());
-        character.setWeapon(weapon);
+        character.setStrength(weaponDTO.strength());
+        character.setWeapon(weaponRepository.findById(weaponDTO.id()).get());
         characterRepository.save(character);
     }
 
     // equips an armor to the character that recives
-    public void equipArmor(Armor armor, Character character) {
+    public void equipArmor(ArmorDTO armorDTO, Character character) {
         character.setArmorEquiped(true);
-        character.setDefense(armor.getDefense());
-        character.setArmor(armor);
+        character.setDefense(armorDTO.defense());
+        character.setArmor(armorRepository.findById(armorDTO.id()).get());
         characterRepository.save(character);
     }
 
@@ -94,9 +107,10 @@ public class CharacterService {
         character.setStrength(0);
         character.setWeaponEquiped(false);
         // removes the character from the list
-        if (weaponService.findById(id).isPresent()) {
-            weaponService.findById(id).get().getCharacters().remove(character);
-            weaponService.save(weaponService.findById(id).get());
+        if (weaponRepository.findById(id).isPresent()) {
+            weaponRepository.findById(id).get().getCharacters().remove(character);
+
+            weaponService.save(weaponMapper.toDTO(weaponRepository.findById(id).get()));
         }
         characterRepository.save(character);
     }
@@ -107,19 +121,20 @@ public class CharacterService {
         character.setDefense(0);
         character.setArmorEquiped(false);
         // removes the character from the list
-        if (armorService.findById(id).isPresent()) {
-            armorService.findById(id).get().getCharacters().remove(character);
-            armorService.save(armorService.findById(id).get());
+        if (armorRepository.findById(id).isPresent()) {
+            armorRepository.findById(id).get().getCharacters().remove(character);
+            armorService.save(armorMapper.toDTO(armorRepository.findById(id).get()));
         }
         characterRepository.save(character);
     }
 
-    // deletes the given character
+    /*// deletes the given character
     public void delete(Character character) {
         if (character.getArmor() != null) {
             long id = character.getArmor().getId();
-            if (armorService.findById(id).isPresent()) {
-                armorService.findById(id).get().getCharacters().remove(character);
+            if (armorRepository.findById(id).isPresent()) {
+                armorMapper.toDomain(armorService.findById(id)).getCharacters().remove(character);
+
             }
         }
         if (character.getWeapon() != null) {
@@ -131,11 +146,12 @@ public class CharacterService {
         userService.getLoggedUser().get().setCharacter(null);
         characterRepository.deleteById(character.getId());
     }
-
+*/
     public void deleteById(long id) {
         characterRepository.deleteById(id);
     }
 
+    //returns the image from the id it gets
     public Resource getImageFile(long id) throws SQLException  {
         Character character = characterRepository.findById(id).orElseThrow();
 
@@ -146,6 +162,7 @@ public class CharacterService {
 		}
     }
 
+    //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
 
 		Character character = characterRepository.findById(id).orElseThrow();
@@ -155,7 +172,6 @@ public class CharacterService {
 		}
 
 		character.setImageFile(BlobProxy.generateProxy(inputStream, size));
-
 		characterRepository.save(character);
 	}
 

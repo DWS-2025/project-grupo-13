@@ -5,5 +5,6 @@ public record ArmorBasicDTO(
     String name,
     String description,
     int defense,
-    int price
+    int price, 
+    int style
 ) {}

@@ -6,15 +6,18 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.grupo13.grupo13.repository.ArmorRepository;
+import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
+import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.mapper.ArmorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
 
@@ -24,35 +27,48 @@ public class ArmorService {
 	//attributes
 	@Autowired
 	private ArmorRepository armorRepository;
+    @Autowired
+    private ArmorMapper mapper;
 
 	//saves in repository
-    public void save(Armor armor){
+    public void save(ArmorDTO armorDTO){
+        
+        Armor armor = mapper.toDomain(armorDTO);
         armorRepository.save(armor);
     }
 
     //saves the armor's image
-    public void save(Armor armor, MultipartFile imageFile) throws IOException{
+    public void save(ArmorDTO armorDTO, MultipartFile imageFile) throws IOException{
+        
+        Armor armor = mapper.toDomain(armorDTO);
         if(!imageFile.isEmpty()){
             armor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         armor.setImageName("/Armor/" + armor.getId() + "/image");
 
-        this.save(armor);
+        armorRepository.save(armor);
     }
 
-    public void addCharacter(Character character, Armor armor){
+    public void addCharacter(Character character, ArmorDTO armorDTO){
+        Armor armor = mapper.toDomain(armorDTO);
+
         armor.getCharacters().add(character);
         armorRepository.save(armor);
     }
 
 	//returns all armors in a list
-    public List<Armor> findAll(){
-        return armorRepository.findAll();
+    public List<ArmorBasicDTO> findAll(){
+        return mapper.toDTOs(armorRepository.findAll());
+    }
+
+    //returns a page with all the armors
+    public Page<Armor> findAll(Pageable pageable) {
+        return armorRepository.findAll(pageable);
     }
 
 	//searches an armor by its id
-    public Optional<Armor> findById(long id){
-        return armorRepository.findById(id);
+    public ArmorDTO findById(long id){
+        return mapper.toDTO(armorRepository.findById(id).get());
     }
 
     //deletes an armor by its id
@@ -61,19 +77,21 @@ public class ArmorService {
     }
 	
     //updates an armor when edited
-    public void update(Long oldArmorId, Armor updatedArmor){
-        Optional<Armor> oldArmorOp = findById(oldArmorId);
+    public void update(Long oldArmorId, ArmorDTO updatedArmor){
+        Optional<Armor> oldArmorOp = armorRepository.findById(oldArmorId);
         
         if (oldArmorOp.isPresent()) {
             Armor oldArmor = oldArmorOp.get();
 
-            oldArmor.setName(updatedArmor.getName());
-            oldArmor.setDescription(updatedArmor.getDescription());
-            oldArmor.setDefense(updatedArmor.getDefense());
-            oldArmor.setPrice(updatedArmor.getPrice());
-            oldArmor.setStyle(updatedArmor.getStyle());
+            oldArmor.setImageName("api/armor/" + oldArmorId + "/image");
 
-            oldArmor.getCharacters().forEach(character -> character.setStrength(updatedArmor.getDefense()));
+            oldArmor.setName(updatedArmor.name());
+            oldArmor.setDescription(updatedArmor.description());
+            oldArmor.setDefense(updatedArmor.defense());
+            oldArmor.setPrice(updatedArmor.price());
+            oldArmor.setStyle(updatedArmor.style());
+
+            oldArmor.getCharacters().forEach(character -> character.setStrength(updatedArmor.defense()));
 
             armorRepository.save(oldArmor);
         }
@@ -81,8 +99,8 @@ public class ArmorService {
 
       //deletes an armor
       public void delete(long id){
-        if(findById(id).isPresent()){
-            Armor armor = findById(id).get();
+        if(armorRepository.findById(id).isPresent()){
+            Armor armor = armorRepository.findById(id).get();
             
             //deletes from users inventory
             armor.getUsers().forEach(user -> user.getInventoryArmor().remove(armor));
@@ -91,40 +109,10 @@ public class ArmorService {
 					character.setWeapon(null);
         			character.setStrength(0);
         			character.setWeaponEquiped(false);
-				}
 			}
-            armorRepository.deleteById(id);
-        }
-    
-    
-    /*	
-	//deletes an equipment
-	public void delete(long id) {
-
-		if (findById(id).isPresent()) {
-			Equipment equipment = findById(id).get();
-			//deletes from users inventory
-			for (User user : equipment.getUsers()) {            for each
-				user.getInventory().remove(equipment);
-			}
-			//deletes from characters equipped
-			for(Character character : equipment.getCharacters()){
-				if (isWeapon(equipment)) {
-					character.setWeapon(null);
-        			character.setStrength(0);
-        			character.setWeaponEquiped(false);
-				}else{
-					character.setArmor(null);
-        			character.setDefense(0);
-        			character.setArmorEquiped(false);
-				}
-			}
-			equipmentRepository.deleteById(id);
 		}
-
-	}
-
-    */
+        armorRepository.deleteById(id);
+    }
     
     public Resource getImageFile(long id) throws SQLException  {
         Armor armor = armorRepository.findById(id).orElseThrow();
@@ -136,6 +124,7 @@ public class ArmorService {
 		}
     }
 
+    //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
 
 		Armor armor = armorRepository.findById(id).orElseThrow();
@@ -145,7 +134,6 @@ public class ArmorService {
 		}
 
 		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
-
 		armorRepository.save(armor);
 	}
 
@@ -157,4 +145,5 @@ public class ArmorService {
 		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		armorRepository.save(armor);
 	}
+
 }

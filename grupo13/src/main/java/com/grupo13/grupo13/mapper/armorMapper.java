@@ -1,4 +1,4 @@
-package mapper;
+package com.grupo13.grupo13.mapper;
 
 import java.util.List;
 
@@ -17,4 +17,6 @@ public interface ArmorMapper {
 
     //@Mapping(target = "books", ignore = true)
     Armor toDomain(ArmorBasicDTO armorDTO);
+
+    Armor toDomain(ArmorDTO armorDTO);
 }

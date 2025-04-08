@@ -9,7 +9,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "app_user") // Cambié el nombre de la tabla
+@Table(name = "app_user") // The name of the table was changed
 
 public class User {
 
@@ -28,7 +28,7 @@ public class User {
     @ManyToMany
     private List<Armor> inventoryArmor;
  
-    //for the BBDD
+    //for the DB
     protected User(){}
 
     //constructor
@@ -86,6 +86,23 @@ public class User {
         this.inventoryArmor = inventoryArmor;
     }
 
+    //returns if the user has a specific weapon or armor
+    public boolean hasWeapon(Weapon weapon){    
+        for (Weapon equipmentWeapon : this.inventoryWeapon) {
+            if (this.inventoryWeapon.contains(equipmentWeapon)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public boolean hasArmor(Armor armor){    
+        for (Armor equipmentArmor : this.inventoryArmor) {
+            if (this.inventoryArmor.contains(equipmentArmor)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
