@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.service;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -7,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -153,6 +151,7 @@ public class CharacterService {
         characterRepository.deleteById(id);
     }
 
+    //returns the image from the id it gets
     public Resource getImageFile(long id) throws SQLException  {
         Character character = characterRepository.findById(id).orElseThrow();
 
@@ -163,6 +162,7 @@ public class CharacterService {
 		}
     }
 
+    //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
 
 		Character character = characterRepository.findById(id).orElseThrow();
@@ -172,7 +172,6 @@ public class CharacterService {
 		}
 
 		character.setImageFile(BlobProxy.generateProxy(inputStream, size));
-
 		characterRepository.save(character);
 	}
 

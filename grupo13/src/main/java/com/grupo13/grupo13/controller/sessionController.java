@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.controller;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.springframework.http.HttpHeaders;
@@ -8,14 +7,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +32,6 @@ import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
-
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,21 +73,20 @@ public class sessionController {
         } else {
             return "character_view";
         }
+
     }
 
     @PostMapping("/formProcess")
     public String procesarFormulario(Model model, HttpSession session, @RequestParam String nameOfCharacter,
-            @RequestParam String characterDesc, @RequestParam MultipartFile characterImage) throws IOException {
+            @RequestParam String characterDesc,
+            @RequestParam String imageName, @RequestParam MultipartFile characterImage) throws IOException {
 
-        if (nameOfCharacter.isBlank() || characterDesc.isBlank()) {
+        if (nameOfCharacter.isBlank() || characterDesc.isBlank() || imageName.isBlank()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
         // creates the character
         Character character = new Character(characterDesc, nameOfCharacter);
-
-        
-
 
         // saves the character in the repository
         userService.saveCharacter(character);
@@ -110,10 +108,12 @@ public class sessionController {
         model.addAttribute("user", userService.getLoggedUser());
 
         return "character_view";
+
     }
 
-    @GetMapping("/list_objects")
-    public String iterationObj(Model model, HttpSession session) {
+    //used to show the weapons on the shop
+    @GetMapping("/list_weapons")
+    public String showWeapons(Model model, @PageableDefault(size = 3) Pageable page) {
 
         List<WeaponBasicDTO> equipmentListWeapon = weaponService.findAll();
         List<ArmorBasicDTO> equipmentListArmor = armorService.findAll();
@@ -157,7 +157,7 @@ public class sessionController {
             int money = userService.getMoney();
             if (money >= weaponDTO.price()) {
                 userService.saveWeapon(id);
-                return "redirect:/list_objects";
+                return "redirect:/list_weapons";
             } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
@@ -165,6 +165,7 @@ public class sessionController {
         }
         
         
+
     }
 
     @PostMapping("/purchaseArmor")
@@ -186,6 +187,8 @@ public class sessionController {
                 return "sp_errors";
             }
         }
+        model.addAttribute("message", "Could not purchase, doesnt exist");
+        return "sp_errors";
     }
 
     @PostMapping("/equipWeapon")
@@ -206,6 +209,7 @@ public class sessionController {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
+
     }
 
     @PostMapping("/equipArmor")
@@ -226,6 +230,7 @@ public class sessionController {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
+
     }
 
     @PostMapping("/unEquipWeapon")
@@ -236,7 +241,7 @@ public class sessionController {
 
         if (equipment != null) {
 
-            characterService.unEquipWeapon(character, id);
+            characterService.unEquipWeapon(character, id); // unequips it
 
             return "redirect:/";
 
@@ -244,6 +249,7 @@ public class sessionController {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
         }
+
     }
 
     @PostMapping("/unEquipArmor")
@@ -254,7 +260,7 @@ public class sessionController {
 
         if (equipment != null) {
 
-            characterService.unEquipArmor(character, id);
+            characterService.unEquipArmor(character, id); // unequips it
 
             return "redirect:/";
 
@@ -262,6 +268,7 @@ public class sessionController {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
         }
+
     }
 
     @GetMapping("/image/{imageName}")
@@ -285,6 +292,7 @@ public class sessionController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(image);
+
     }
 
   /*  @GetMapping("/Weapon/{id}/image")
@@ -298,6 +306,7 @@ public class sessionController {
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
     @GetMapping("/Armor/{id}/image")
@@ -311,6 +320,7 @@ public class sessionController {
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
  */
     @GetMapping("/character/{id}/image")
@@ -324,6 +334,7 @@ public class sessionController {
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
 }

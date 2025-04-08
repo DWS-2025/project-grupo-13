@@ -1,22 +1,18 @@
 package com.grupo13.grupo13;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.Blob;
-
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.repository.WeaponRepository;
-
 import jakarta.annotation.PostConstruct;
 
 @Service
@@ -28,7 +24,6 @@ public class SampleData {
 
         @Autowired
         private WeaponRepository weaponRepository;
-
 
         @Autowired
         private ArmorRepository armorRepository;

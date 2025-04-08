@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.service;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -7,9 +6,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -72,6 +72,11 @@ public class WeaponService {
         return mapper.toDTOs(weaponRepository.findAll());
     }
 
+    //returns a page with all the weapons
+    public Page<Weapon> findAll(Pageable pageable) {
+        return weaponRepository.findAll(pageable);
+    }
+
 	//searches a weapon by its id
     public WeaponDTO findById(long id){
         return mapper.toDTO(weaponRepository.findById(id).get());
@@ -120,9 +125,8 @@ public class WeaponService {
             weaponRepository.deleteById(id);
         }
     }
-
- 
-
+    
+    //returns the image of the id given
     public Resource getImageFile(long id) throws SQLException  {
         Weapon weapon = weaponRepository.findById(id).orElseThrow();
 
@@ -133,6 +137,7 @@ public class WeaponService {
 		}
     }
 
+    //change the image of the id given
     public void replaceImage(long id, InputStream inputStream, long size) {
 
 		Weapon weapon = weaponRepository.findById(id).orElseThrow();
@@ -154,4 +159,5 @@ public class WeaponService {
 		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
 		weaponRepository.save(weapon);
 	}
+
 }

@@ -12,5 +12,5 @@ public record CharacterDTO(
         String imageName,
         UserBasicDTO user,
         WeaponBasicDTO weapon,          
-        ArmorBasicDTO armor) {          
-}
+        ArmorBasicDTO armor
+){}

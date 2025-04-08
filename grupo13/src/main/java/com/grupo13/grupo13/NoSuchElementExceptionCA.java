@@ -1,7 +1,5 @@
 package com.grupo13.grupo13;
-
 import java.util.NoSuchElementException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,4 +12,5 @@ public class NoSuchElementExceptionCA {
 	@ExceptionHandler(NoSuchElementException.class)
 	public void handleNotFound() {
 	}
+
 }

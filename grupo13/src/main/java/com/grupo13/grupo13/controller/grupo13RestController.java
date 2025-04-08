@@ -1,10 +1,9 @@
 package com.grupo13.grupo13.controller;
-
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,9 +32,6 @@ import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.WeaponService;
-
-import org.springframework.core.io.Resource;
-
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 @RestController
@@ -81,12 +77,12 @@ public class grupo13RestController {
 	
 	@GetMapping("/weapon/{id}/image")
 	public ResponseEntity<Object> getWeaponImage(@PathVariable long id) throws SQLException, IOException {
-		Resource postImage = weaponService.getImageFile(id);
+		Resource weaponImage = weaponService.getImageFile(id);
 
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-				.body(postImage);
+				.body(weaponImage);
 	}
 
 	@GetMapping("/armor/{id}")
@@ -96,12 +92,12 @@ public class grupo13RestController {
 
 	@GetMapping("/armor/{id}/image")
 	public ResponseEntity<Object> getArmorImage(@PathVariable long id) throws SQLException, IOException {
-		Resource postImage = armorService.getImageFile(id);
+		Resource armorImage = armorService.getImageFile(id);
 
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-				.body(postImage);
+				.body(armorImage);
 	}
 
 	// CREATE -------------------------------------------------
@@ -139,7 +135,6 @@ public class grupo13RestController {
 
 	}
 
-
 	@PostMapping("/armor/{id}/image")
 	public ResponseEntity<Object> createArmorImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
@@ -153,8 +148,6 @@ public class grupo13RestController {
 	}
 
 	// UPDATE -------------------------------------------------
-
-	
 	  @PutMapping("/weapon/{id}")
 	public WeaponDTO replaceWeapon(@PathVariable long id, @RequestBody Weapon updatedWeapon) {
 
@@ -230,7 +223,6 @@ public class grupo13RestController {
 	}
 
 	// CREATE -------------------------------------------------
-
 	@PostMapping("/characters")
 	public ResponseEntity<Character> createCharacter(@RequestBody Character character) {
 
@@ -272,4 +264,5 @@ public class grupo13RestController {
 
 		return ResponseEntity.noContent().build();
 	}
+	
 }

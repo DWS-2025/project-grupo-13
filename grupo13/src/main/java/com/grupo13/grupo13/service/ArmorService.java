@@ -6,14 +6,14 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
@@ -61,6 +61,11 @@ public class ArmorService {
         return mapper.toDTOs(armorRepository.findAll());
     }
 
+    //returns a page with all the armors
+    public Page<Armor> findAll(Pageable pageable) {
+        return armorRepository.findAll(pageable);
+    }
+
 	//searches an armor by its id
     public ArmorDTO findById(long id){
         return mapper.toDTO(armorRepository.findById(id).get());
@@ -104,10 +109,10 @@ public class ArmorService {
 					character.setWeapon(null);
         			character.setStrength(0);
         			character.setWeaponEquiped(false);
-				}
 			}
-            armorRepository.deleteById(id);
-        }
+		}
+        armorRepository.deleteById(id);
+    }
     
     public Resource getImageFile(long id) throws SQLException  {
         Armor armor = armorRepository.findById(id).orElseThrow();
@@ -119,6 +124,7 @@ public class ArmorService {
 		}
     }
 
+    //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
 
 		Armor armor = armorRepository.findById(id).orElseThrow();
@@ -128,7 +134,6 @@ public class ArmorService {
 		}
 
 		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
-
 		armorRepository.save(armor);
 	}
 
@@ -140,4 +145,5 @@ public class ArmorService {
 		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		armorRepository.save(armor);
 	}
+
 }

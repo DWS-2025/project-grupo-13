@@ -1,10 +1,11 @@
 package com.grupo13.grupo13.mapper;
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import com.grupo13.grupo13.DTOs.UserBasicDTO;
 import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.model.User;

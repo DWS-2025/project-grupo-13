@@ -1,4 +1,5 @@
 <style>
+
   .header {
     background-color: #b3f5f56e;
     justify-content: center;
@@ -21,10 +22,26 @@
   .dropdown-menu {
     width: 200px;
   }
+
+	.btn-next-prev {
+	background-color: #000000;
+	color: #7a3700;
+	padding: 10px 10px;
+	border: 2px solid #7a3700;
+	border-radius: 4px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: all 0.3s ease; 
+	}
+  
+	.btn-next-prev:hover {
+	background-color: #7a3700;
+	color: #ffffff;
+	}
+
 </style>
 
 <html>
-
 <head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -35,7 +52,12 @@
 
 <body>
   <ul class="header">
-    <a class="element-header" aria-current="page" href="/list_objects">Shop</a>
+    <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Shop</a>
+    <ul class="dropdown-menu">
+      <li><a class="element-header" href="/list_weapons">Buy weapons</a></li>
+      <li><a class="element-header" href="/list_armors">Buy armors</a></li>
+    </ul>
     <a class="element-header" href="/">Character</a>
     <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
       Admin</a>
