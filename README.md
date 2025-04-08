@@ -65,3 +65,17 @@ https://github.com/DWS-2025/project-grupo-13/commit/a00edba25a4756915fcc4d665fb7
 ### Lucas
 
 ### Eduardo
+Comentarios, homogeneizar el formato (saltos de línea, espacios entre métodos...), revisión de errores en el código y base de datos, paginación de la tienda y separación entre weapon y armor de la tienda.
+#### 5 archivos más modificados:
+`listing_armors.html`, `listing_weapons.html`, `sessionController.java`, `User.java`,`WeaponService`.
+
+#### 5 commits destacados
+https://github.com/DWS-2025/project-grupo-13/commit/4db88a1f3f191f0e63d9cb1be47086e70661ea44
+
+https://github.com/DWS-2025/project-grupo-13/commit/5f7699fc83891576ea5e81531aacff0cb965d100
+
+https://github.com/DWS-2025/project-grupo-13/commit/4a5d344
+
+https://github.com/DWS-2025/project-grupo-13/commit/1774d86f5e0d8ae33e9a71ae81fc3e8ef07c407b
+
+https://github.com/DWS-2025/project-grupo-13/commit/0d11dee
