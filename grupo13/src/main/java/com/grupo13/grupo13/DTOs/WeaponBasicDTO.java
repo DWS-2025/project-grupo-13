@@ -7,5 +7,4 @@ public record WeaponBasicDTO(
     int strength,
     int price,
     int intimidation
-) {
-}
+) {}

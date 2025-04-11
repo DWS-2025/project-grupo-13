@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.Collection;
 import java.util.List;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
@@ -59,13 +57,11 @@ public class grupo13RestController {
 	// SHOW ALL -------------------------------------------------
 	@GetMapping("/weapons")
 	public List<WeaponBasicDTO> getWeapons() {
-
 		return weaponService.findAll();
 	}
 
 	@GetMapping("/armors")
 	public Collection<ArmorBasicDTO> getArmors() {
-
 		return armorService.findAll();
 	}
 
@@ -104,35 +100,25 @@ public class grupo13RestController {
 
 	@PostMapping("/weapons")
 	public ResponseEntity<WeaponDTO> createWeapon(@RequestBody Weapon weapon) {
-
 		weaponService.save(weaponMapper.toDTO(weapon));
-
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(weapon.getId()).toUri();
-
 		return ResponseEntity.created(location).body(weaponMapper.toDTO(weapon));
 	}
 
 	@PostMapping("/armors")
 	public ResponseEntity<Armor> createArmor(@RequestBody Armor armor) {
-
 		armorService.save(armorMapper.toDTO(armor));
-
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(armor.getId()).toUri();
-
 		return ResponseEntity.created(location).body(armor);
 	}
 
-	
 	@PostMapping("/weapon/{id}/image")
 	public ResponseEntity<Object> createWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
 
 		URI location = fromCurrentRequest().build().toUri();
-
 		weaponService.createWeaponImage(id, location, imageFile.getInputStream(), imageFile.getSize());
-
 		return ResponseEntity.created(location).build();
-
 	}
 
 	@PostMapping("/armor/{id}/image")
@@ -140,11 +126,8 @@ public class grupo13RestController {
 			throws IOException {
 
 		URI location = fromCurrentRequest().build().toUri();
-
 		armorService.createArmorImage(id, location, imageFile.getInputStream(), imageFile.getSize());
-
 		return ResponseEntity.created(location).build();
-
 	}
 
 	// UPDATE -------------------------------------------------
@@ -158,9 +141,7 @@ public class grupo13RestController {
 
 	@PutMapping("/armor/{id}")
 	public ArmorDTO replaceArmor(@PathVariable long id, @RequestBody ArmorDTO updatedArmor) {
-
 		armorService.update(id, updatedArmor);
-
 		return updatedArmor;
 	}
 
@@ -169,7 +150,6 @@ public class grupo13RestController {
 			throws IOException {
 
 		weaponService.replaceImage(id, imageFile.getInputStream(), imageFile.getSize());
-
 		return ResponseEntity.noContent().build();
 	}
 
@@ -178,20 +158,17 @@ public class grupo13RestController {
 			throws IOException {
 
 		armorService.replaceImage(id, imageFile.getInputStream(), imageFile.getSize());
-
 		return ResponseEntity.noContent().build();
 	}
 
 	// DELETE -------------------------------------------------
 	@DeleteMapping("/armor/{id}")
 	public void deleteArmor(@PathVariable long id) {
-
 		armorService.deleteById(id);
 	}
 
 	@DeleteMapping("/weapon/{id}")
 	public void deleteWeapon(@PathVariable long id) {
-
 		weaponService.deleteById(id);
 	}
 
@@ -225,11 +202,8 @@ public class grupo13RestController {
 	// CREATE -------------------------------------------------
 	@PostMapping("/characters")
 	public ResponseEntity<Character> createCharacter(@RequestBody Character character) {
-
 		characterService.save(character);
-
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(character.getId()).toUri();
-
 		return ResponseEntity.created(location).body(character);
 	}
 
@@ -238,11 +212,8 @@ public class grupo13RestController {
 			throws IOException {
 
 		URI location = fromCurrentRequest().build().toUri();
-
 		characterService.createCharacterImage(id, location, imageFile.getInputStream(), imageFile.getSize());
-
 		return ResponseEntity.created(location).build();
-
 	}
 
 	// YOU CANNOT UPDATE CHARACTERS
@@ -251,7 +222,6 @@ public class grupo13RestController {
 	// DELETE -------------------------------------------------
 	@DeleteMapping("/character/{id}")
 	public void deleteCharacter(@PathVariable long id) {
-
 		characterService.deleteById(id);
 	}
 
@@ -261,7 +231,6 @@ public class grupo13RestController {
 			throws IOException {
 
 		characterService.replaceImage(id, imageFile.getInputStream(), imageFile.getSize());
-
 		return ResponseEntity.noContent().build();
 	}
 	

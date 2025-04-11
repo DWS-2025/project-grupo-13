@@ -6,7 +6,6 @@ import com.grupo13.grupo13.DTOs.CharacterDTO;
 
 @Mapper(componentModel = "spring")
 public interface CharacterMapper {
-
     /* 
     CharacterDTO toDTO(Character character);
     List<CharacterBasicDTO> toDTOs(List<Character> characters);

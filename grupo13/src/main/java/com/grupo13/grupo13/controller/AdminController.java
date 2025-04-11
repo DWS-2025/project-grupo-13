@@ -1,6 +1,5 @@
 package com.grupo13.grupo13.controller;
 import java.io.IOException;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.WeaponMapper;
@@ -27,16 +25,12 @@ public class AdminController {
     //attributes
     @Autowired
     private WeaponService weaponService;
-
     @Autowired
     private ArmorService armorService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
-    private CharacterService characterService;
-    
+    private CharacterService characterService;   
     @Autowired
     private armorMapper armorMapper;
     @Autowired
@@ -49,9 +43,7 @@ public class AdminController {
         WeaponDTO weapon = weaponService.findById(id);
 
         if (weapon != null) {
-            
             model.addAttribute("weapon", weapon);
-
             return "show_weapon";
         }else{
             return "error";
@@ -61,11 +53,9 @@ public class AdminController {
     
     @GetMapping("/armor/{id}")
     public String showArmor(Model model, @PathVariable long id) {
-        
         ArmorDTO armor = armorService.findById(id);
         
         if(armor != null){
-
             model.addAttribute("armor", armor);
             return "show_armor";
         }else{
@@ -132,7 +122,6 @@ public class AdminController {
     
     @GetMapping("/weapon/{id}/edit")
     public String editWeapon(Model model, @PathVariable long id) {
-
         WeaponDTO weapon = weaponService.findById(id);
 
         if(weapon != null){
@@ -146,7 +135,6 @@ public class AdminController {
 
     @GetMapping("/armor/{id}/edit")
     public String editArmor(Model model, @PathVariable long id) {
-
         ArmorDTO armor = armorService.findById(id);
 
         if(armor != null){
@@ -167,15 +155,13 @@ public class AdminController {
     }
     */
     @PostMapping("/weapon/{id}/edit")
-	public String updateWeapon(Model model, @PathVariable long id, Weapon updatedWeapon, @RequestParam MultipartFile weaponImage) throws IOException{
-        
+	public String updateWeapon(Model model, @PathVariable long id, Weapon updatedWeapon, @RequestParam MultipartFile weaponImage) throws IOException{    
         if (updatedWeapon.getName().isBlank() || updatedWeapon.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
 
         WeaponDTO editedWeapon = weaponService.findById(id);
-
         if(editedWeapon != null){
             weaponService.update(id, weaponMapper.toDTO(updatedWeapon));
 
@@ -192,15 +178,13 @@ public class AdminController {
 	}
 
     @PostMapping("/armor/{id}/edit")
-	public String updateArmor(Model model, @PathVariable long id, Armor updatedArmor, @RequestParam MultipartFile armorImage) throws IOException{
-        
+	public String updateArmor(Model model, @PathVariable long id, Armor updatedArmor, @RequestParam MultipartFile armorImage) throws IOException{       
         if (updatedArmor.getName().isBlank() || updatedArmor.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
 
         ArmorDTO editedArmor = armorService.findById(id);
-
         if(editedArmor != null){
             if(!armorImage.isEmpty()){
                 weaponService.replaceImage(id, armorImage.getInputStream(), armorImage.getSize());
