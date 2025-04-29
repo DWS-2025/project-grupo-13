@@ -124,6 +124,8 @@ public class sessionController {
         model.addAttribute("size", page.getPageSize());
         return "listing_weapons";
     }
+
+
     //used to show the armors on the shop
     @GetMapping("/list_armors")
     public String showArmors(Model model, @PageableDefault(size = 2) Pageable page) {
@@ -142,6 +144,11 @@ public class sessionController {
         return "listing_armors";
     }
 
+    @GetMapping("/search")
+    public String search() {
+
+        return "search";
+    }
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
         WeaponDTO weaponDTO = weaponService.findById(id);
