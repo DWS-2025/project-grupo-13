@@ -189,7 +189,7 @@ public class sessionController {
         WeaponDTO equipment = weaponService.findById(id);
 
         if (equipment != null) { // if it exists
-            characterService.equipWeapon(equipment, character); // equips it, adding the necessary attributes
+            characterService.equipWeapon(equipment, character.getId()); // equips it, adding the necessary attributes
             weaponService.addCharacter(character, equipment);
             return "redirect:/";
         } else {
@@ -205,7 +205,7 @@ public class sessionController {
         ArmorDTO equipment = armorService.findById(id);
 
         if (equipment != null) { // if it exists
-            characterService.equipArmor(equipment, character); // equips it, adding the necessary attributes
+            characterService.equipArmor(equipment, character.getId()); // equips it, adding the necessary attributes
             armorService.addCharacter(character, equipment);
             return "redirect:/";
         } else { 
@@ -221,7 +221,7 @@ public class sessionController {
         WeaponDTO equipment = weaponService.findById(id);
 
         if (equipment != null) { // if it exists
-            characterService.unEquipWeapon(character, id); // unequips it
+            characterService.unEquipWeapon(character.getId(), id); // unequips it
             return "redirect:/";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
@@ -236,7 +236,7 @@ public class sessionController {
         ArmorDTO equipment = armorService.findById(id);
 
         if (equipment != null) { // if it exists
-            characterService.unEquipArmor(character, id); // unequips it
+            characterService.unEquipArmor(character.getId(), id); // unequips it
             return "redirect:/";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");

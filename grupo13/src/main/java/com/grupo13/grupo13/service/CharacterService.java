@@ -74,7 +74,8 @@ public class CharacterService {
 
     // for equipping armor or weapon, sets the necessary values from the equipment
     // and adds the character to the equipment
-    public void equipWeapon(WeaponDTO weaponDTO, Character character) {
+    public void equipWeapon(WeaponDTO weaponDTO, long charId) {
+        Character character = characterRepository.findById(charId).get();
         character.setWeaponEquiped(true);
         character.setStrength(weaponDTO.strength());
         character.setWeapon(weaponRepository.findById(weaponDTO.id()).get());
@@ -82,7 +83,8 @@ public class CharacterService {
     }
 
     // equips an armor to the character that recives
-    public void equipArmor(ArmorDTO armorDTO, Character character) {
+    public void equipArmor(ArmorDTO armorDTO, long charId) {
+        Character character = characterRepository.findById(charId).get();
         character.setArmorEquiped(true);
         character.setDefense(armorDTO.defense());
         character.setArmor(armorRepository.findById(armorDTO.id()).get());
@@ -94,13 +96,14 @@ public class CharacterService {
         return character.getWeapon();
     }
 
-    // gets the armor in use
+    // gets the armor in use    
     public Armor getEquipedArmor(Character character) {
         return character.getArmor();
     }
 
     // unequips the weapon in use
-    public void unEquipWeapon(Character character, long id) {
+    public void unEquipWeapon(long charId, long id) {
+        Character character = characterRepository.findById(charId).get();
         character.setWeapon(null);
         character.setStrength(0);
         character.setWeaponEquiped(false);
@@ -114,7 +117,8 @@ public class CharacterService {
     }
 
     // unequips the armor in use
-    public void unEquipArmor(Character character, long id) {
+    public void unEquipArmor(long charId, long id) {
+        Character character = characterRepository.findById(charId).get();
         character.setArmor(null);
         character.setDefense(0);
         character.setArmorEquiped(false);
