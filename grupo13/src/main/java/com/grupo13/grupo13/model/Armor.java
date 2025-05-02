@@ -26,8 +26,8 @@ public class Armor{
     private int style;
     private String imageName;
     
+    @JsonIgnore 
     @Lob
-    @JsonIgnore
     private Blob imageFile;
 
     @OneToMany (mappedBy = "armor")
@@ -96,10 +96,6 @@ public class Armor{
 
     public void setName(String name){
         this.name = name;
-    }
-
-    public void setPicture(Blob imageFile){
-        this.imageFile = imageFile;
     }
 
     public void setDescription(String description){

@@ -1,6 +1,5 @@
 package com.grupo13.grupo13.controller;
 import java.io.IOException;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +16,6 @@ import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.service.ArmorService;
-import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
 
@@ -33,9 +31,6 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private CharacterService characterService;
     
     @Autowired
     private armorMapper armorMapper;
@@ -49,9 +44,7 @@ public class AdminController {
         WeaponDTO weapon = weaponService.findById(id);
 
         if (weapon != null) {
-            
             model.addAttribute("weapon", weapon);
-
             return "show_weapon";
         }else{
             return "error";
@@ -61,11 +54,9 @@ public class AdminController {
     
     @GetMapping("/armor/{id}")
     public String showArmor(Model model, @PathVariable long id) {
-        
         ArmorDTO armor = armorService.findById(id);
         
         if(armor != null){
-
             model.addAttribute("armor", armor);
             return "show_armor";
         }else{
@@ -83,35 +74,36 @@ public class AdminController {
         model.addAttribute("character", userService.getCharacter());
 
         return "equipment_manager";
-
     }
 
     @PostMapping("/weapon/new")
-    public String newWeapon(Model model, Weapon weapon, @RequestParam MultipartFile weaponImage) throws IOException {
+    public String newWeapon(Model model, WeaponDTO weaponDTO, @RequestParam MultipartFile weaponImage) throws IOException {
+        Weapon weapon = weaponMapper.toDomain(weaponDTO);
+
         if (weapon.getName().isBlank()||weapon.getDescription().isBlank()|| weaponImage.isEmpty()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
 
-        weaponService.save(weaponMapper.toDTO(weapon));
-        weaponService.save(weaponMapper.toDTO(weapon), weaponImage);
+        weaponService.save(weaponDTO);
+        weaponService.save(weaponDTO, weaponImage);
 
         return "saved_weapon";
-
     }
 
     @PostMapping("/armor/new")
-    public String newArmor(Model model, Armor armor, @RequestParam MultipartFile armorImage) throws IOException {
+    public String newArmor(Model model, ArmorDTO armorDTO, @RequestParam MultipartFile armorImage) throws IOException {
+        Armor armor = armorMapper.toDomain(armorDTO);
+
         if (armor.getName().isBlank()||armor.getDescription().isBlank()|| armorImage.isEmpty()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
         
-        armorService.save(armorMapper.toDTO(armor));
-        armorService.save(armorMapper.toDTO(armor), armorImage);
+        armorService.save(armorDTO);
+        armorService.save(armorDTO, armorImage);
 
         return "saved_armor";
-
     }
 
     @PostMapping("/weapon/{id}/delete")
@@ -119,7 +111,6 @@ public class AdminController {
         weaponService.deleteById(id);
         
         return "deleted_weapon";
-
     }
 
     @PostMapping("/armor/{id}/delete")
@@ -127,7 +118,6 @@ public class AdminController {
         armorService.deleteById(id);
         
         return "deleted_armor";
-
     }
     
     @GetMapping("/weapon/{id}/edit")
@@ -141,7 +131,6 @@ public class AdminController {
         }else{
             return "error";
         }
-
     }
 
     @GetMapping("/armor/{id}/edit")
@@ -156,7 +145,6 @@ public class AdminController {
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
         }
-
     }
     
     /*@GetMapping("/delete_Character")
@@ -166,9 +154,11 @@ public class AdminController {
 
     }
     */
+
     @PostMapping("/weapon/{id}/edit")
-	public String updateWeapon(Model model, @PathVariable long id, Weapon updatedWeapon, @RequestParam MultipartFile weaponImage) throws IOException{
-        
+	public String updateWeapon(Model model, @PathVariable long id, WeaponDTO updatedWeaponDTO, @RequestParam MultipartFile weaponImage) throws IOException{
+        Weapon updatedWeapon = weaponMapper.toDomain(updatedWeaponDTO);
+
         if (updatedWeapon.getName().isBlank() || updatedWeapon.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
@@ -177,7 +167,7 @@ public class AdminController {
         WeaponDTO editedWeapon = weaponService.findById(id);
 
         if(editedWeapon != null){
-            weaponService.update(id, weaponMapper.toDTO(updatedWeapon));
+            weaponService.update(id, updatedWeaponDTO);
 
             if(!weaponImage.isEmpty()){
                 weaponService.replaceImage(id, weaponImage.getInputStream(), weaponImage.getSize());
@@ -192,8 +182,9 @@ public class AdminController {
 	}
 
     @PostMapping("/armor/{id}/edit")
-	public String updateArmor(Model model, @PathVariable long id, Armor updatedArmor, @RequestParam MultipartFile armorImage) throws IOException{
-        
+	public String updateArmor(Model model, @PathVariable long id, ArmorDTO updatedArmorDTO, @RequestParam MultipartFile armorImage) throws IOException{
+        Armor updatedArmor = armorMapper.toDomain(updatedArmorDTO);
+
         if (updatedArmor.getName().isBlank() || updatedArmor.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
@@ -206,7 +197,7 @@ public class AdminController {
                 weaponService.replaceImage(id, armorImage.getInputStream(), armorImage.getSize());
             }
 
-            armorService.update(id, armorMapper.toDTO(updatedArmor));
+            armorService.update(id, updatedArmorDTO);
             return "redirect:/armor/" + id;
         }else{
             model.addAttribute("message", "Could not manage, not found");

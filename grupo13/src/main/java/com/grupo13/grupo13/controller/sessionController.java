@@ -9,12 +9,10 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +21,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
-import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
-import com.grupo13.grupo13.model.Armor;
+import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
@@ -53,6 +51,8 @@ public class sessionController {
 
     @Autowired
     private CharacterService characterService;
+    @Autowired
+    private CharacterMapper characterMapper;
 
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
@@ -60,16 +60,16 @@ public class sessionController {
         List<WeaponBasicDTO> currentInventoryWeapon = userService.currentUserInventoryWeapon();
 
         List<ArmorBasicDTO> currentInventoryArmor = userService.currentUserInventoryArmor();
-        Character character = userService.getCharacter();
+        CharacterDTO characterDTO = userService.getCharacter();
 
         // gets the character and its inventory for mustache
-        model.addAttribute("character", character);
+        model.addAttribute("character", characterDTO);
         model.addAttribute("currentWeapon", currentInventoryWeapon);
         model.addAttribute("currentArmor", currentInventoryArmor);
         model.addAttribute("user", userService.getLoggedUser());
 
         // checks if the user has "logged", in the first fase is creating the character
-        if (character == null) {
+        if (characterDTO == null) {
             return "index";
         } else {
             return "character_view";
@@ -88,11 +88,12 @@ public class sessionController {
         }
         // creates the character
         Character character = new Character(characterDesc, nameOfCharacter);
+        CharacterDTO characterDTO = characterMapper.toDTO(character);
 
         // saves the character in the repository
-        userService.saveCharacter(character);
-        characterService.saveUser(character);
-        characterService.save(character, characterImage);
+        userService.saveCharacter(characterDTO);
+        characterService.saveUser(characterDTO);    
+        characterService.save(characterDTO, characterImage);
         userService.save(userService.getLoggedUser());
 
         /* // saves image in the correspondent folder
@@ -109,7 +110,6 @@ public class sessionController {
         model.addAttribute("user", userService.getLoggedUser());
 
         return "character_view";
-
     }
 
     //used to show the weapons on the shop
@@ -164,9 +164,6 @@ public class sessionController {
                 return "sp_errors";
             }
         }
-        
-        
-
     }
 
     @PostMapping("/purchaseArmor")
@@ -192,82 +189,64 @@ public class sessionController {
 
     @PostMapping("/equipWeapon")
     public String equipWeapon(@RequestParam long id, Model model) {
+        CharacterDTO characterDTO = userService.getCharacter();
+        WeaponDTO weaponDTO = weaponService.findById(id);
 
-        Character character = userService.getCharacter();
-        WeaponDTO equipment = weaponService.findById(id);
-
-        if (equipment != null) { // if it exists
-
-            characterService.equipWeapon(equipment, character); // equips it, adding the necessary attributes
-            weaponService.addCharacter(character, equipment);
+        if (weaponDTO != null) { // if it exists
+            characterService.equipWeapon(weaponDTO, characterDTO); // equips it, adding the necessary attributes
+            weaponService.addCharacter(characterDTO, weaponDTO);
 
             return "redirect:/";
-
         } else {
-            
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
-
     }
 
     @PostMapping("/equipArmor")
     public String equipArmor(@RequestParam long id, Model model) {
+        CharacterDTO characterBasicDTO= userService.getCharacter();
+        ArmorDTO armorDTO = armorService.findById(id);
 
-        Character character = userService.getCharacter();
-        ArmorDTO equipment = armorService.findById(id);
-
-        if (equipment != null) { // if it exists
-
-            characterService.equipArmor(equipment, character); // equips it, adding the necessary attributes
-            armorService.addCharacter(character, equipment);
+        if (armorDTO != null) { // if it exists
+            characterService.equipArmor(armorDTO, characterBasicDTO); // equips it, adding the necessary attributes
+            armorService.addCharacter(characterBasicDTO, armorDTO);
 
             return "redirect:/";
-
         } else {
-            
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
         }
-
     }
 
     @PostMapping("/unEquipWeapon")
     public String unEquipWeapon(@RequestParam long id, Model model) {
+        CharacterDTO characterDTO = userService.getCharacter();
+        WeaponDTO weaponDTO = weaponService.findById(id);
 
-        Character character = userService.getCharacter();
-        WeaponDTO equipment = weaponService.findById(id);
-
-        if (equipment != null) {
-
-            characterService.unEquipWeapon(character, id); // unequips it
+        if (weaponDTO != null) {
+            characterService.unEquipWeapon(characterDTO, id); // unequips it
 
             return "redirect:/";
-
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
         }
-
     }
 
     @PostMapping("/unEquipArmor")
     public String unEquipArmor(@RequestParam long id, Model model) {
+        CharacterDTO characterDTO = userService.getCharacter();
+        ArmorDTO armorDTO = armorService.findById(id);
 
-        Character character = userService.getCharacter();
-        ArmorDTO equipment = armorService.findById(id);
-
-        if (equipment != null) {
-
-            characterService.unEquipArmor(character, id); // unequips it
+        if (armorDTO != null) {
+            characterService.unEquipArmor(characterDTO, id); // unequips it
 
             return "redirect:/";
-
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
         }
-
     }
 
     @GetMapping("/image/{imageName}")
@@ -291,7 +270,6 @@ public class sessionController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(image);
-
     }
 
   /*  @GetMapping("/Weapon/{id}/image")
@@ -324,16 +302,27 @@ public class sessionController {
  */
     @GetMapping("/character/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
-        Optional<Character> op = characterService.findById(id);
-        if (op.isPresent() && op.get().getImageFile() != null) {
-            Blob image = op.get().getImageFile();
+        CharacterDTO characterDTO = characterService.findById(id);
+        Character character = characterMapper.toDomain(characterDTO);
+        
+        if(character.getImageFile() != null){
+            Blob image = character.getImageFile();
+            Resource file = new InputStreamResource(image.getBinaryStream());
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                    .contentLength(image.length()).body(file);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+
+        /* 
+        if (character.isPresent() && character.get().getImageFile() != null) {
+            Blob image = character.get().getImageFile();
             Resource file = new InputStreamResource(image.getBinaryStream());
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
                     .contentLength(image.length()).body(file);
         } else {
             return ResponseEntity.notFound().build();
-        }
-
+        }*/
     }
 
 }

@@ -30,8 +30,8 @@ public class Weapon {
     private int intimidation;
     private String imageName;
 
-    @Lob
     @JsonIgnore
+    @Lob
 	private Blob imageFile;
 
     @OneToMany(mappedBy = "weapon")

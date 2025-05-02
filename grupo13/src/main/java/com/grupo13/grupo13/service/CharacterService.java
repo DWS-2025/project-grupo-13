@@ -5,7 +5,6 @@ import java.net.URI;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -14,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
+import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
@@ -43,40 +45,50 @@ public class CharacterService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private armorMapper armorMapper;
+    private CharacterMapper mapper;
     @Autowired
     private WeaponMapper weaponMapper;
+    @Autowired
+    private armorMapper armorMapper;
 
     // returns all characters in a list
-    public List<Character> findAll() {
-        return characterRepository.findAll();
+    public List<CharacterBasicDTO> findAll() {
+        return mapper.toBasicDTOs(characterRepository.findAll());
     }
 
     // returns a specific character by its id
-    public Optional<Character> findById(long id) {
-        return characterRepository.findById(id);
+    public CharacterDTO findById(long id) {
+        return mapper.toDTO(characterRepository.findById(id).get());
     }
 
     // creates a new character
-    public void save(Character character) {
+    public void save(CharacterDTO characterDTO) {
+        Character character = mapper.toDomain(characterDTO);
         characterRepository.save(character);
     }
 
-    public void save(Character character, MultipartFile imageFile) throws IOException {
+    //saves the character's image
+    public void save(CharacterDTO characterDTO, MultipartFile imageFile) throws IOException {
+        Character character = mapper.toDomain(characterDTO);
+
         if (!imageFile.isEmpty()) {
             character.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         character.setImageName("/character/" + character.getId() + "/image");
-        this.save(character);
+        
+        characterRepository.save(character);
     }
 
-    public void saveUser(Character character) {
+    public void saveUser(CharacterDTO characterDTO) {
+        Character character = mapper.toDomain(characterDTO);
         character.setUser(userRepository.findById((long)1).get());
     }
 
     // for equipping armor or weapon, sets the necessary values from the equipment
     // and adds the character to the equipment
-    public void equipWeapon(WeaponDTO weaponDTO, Character character) {
+    public void equipWeapon(WeaponDTO weaponDTO, CharacterDTO characterDTO) {
+        Character character = mapper.toDomain(characterDTO);
+
         character.setWeaponEquiped(true);
         character.setStrength(weaponDTO.strength());
         character.setWeapon(weaponRepository.findById(weaponDTO.id()).get());
@@ -84,25 +96,33 @@ public class CharacterService {
     }
 
     // equips an armor to the character that recives
-    public void equipArmor(ArmorDTO armorDTO, Character character) {
+    public void equipArmor(ArmorDTO armorDTO, CharacterDTO characterDTO) {
+        Character character = mapper.toDomain(characterDTO);
+
         character.setArmorEquiped(true);
         character.setDefense(armorDTO.defense());
         character.setArmor(armorRepository.findById(armorDTO.id()).get());
         characterRepository.save(character);
     }
 
-    // gets the equipment
-    public Weapon getEquipedWeapon(Character character) {
+    // gets the weapon equipped
+    public Weapon getEquipedWeapon(CharacterDTO characterDTO) {
+        Character character = mapper.toDomain(characterDTO);
+
         return character.getWeapon();
     }
 
-    // gets the armor in use
-    public Armor getEquipedArmor(Character character) {
+    // gets the armor equipped
+    public Armor getEquipedArmor(CharacterDTO characterDTO) {
+        Character character = mapper.toDomain(characterDTO);
+
         return character.getArmor();
     }
 
     // unequips the weapon in use
-    public void unEquipWeapon(Character character, long id) {
+    public void unEquipWeapon(CharacterDTO characterDTO, long id) {
+        Character character = mapper.toDomain(characterDTO);
+
         character.setWeapon(null);
         character.setStrength(0);
         character.setWeaponEquiped(false);
@@ -116,7 +136,9 @@ public class CharacterService {
     }
 
     // unequips the armor in use
-    public void unEquipArmor(Character character, long id) {
+    public void unEquipArmor(CharacterDTO characterDTO, long id) {
+        Character character = mapper.toDomain(characterDTO);
+
         character.setArmor(null);
         character.setDefense(0);
         character.setArmorEquiped(false);
