@@ -13,4 +13,4 @@ public record CharacterDTO(
         UserBasicDTO user,
         WeaponBasicDTO weapon,          
         ArmorBasicDTO armor
-){}
+) {}

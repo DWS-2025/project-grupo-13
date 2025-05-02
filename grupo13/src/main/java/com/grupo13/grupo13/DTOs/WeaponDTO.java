@@ -11,4 +11,4 @@ public record WeaponDTO(
     List<UserBasicDTO> users,
     List<CharacterBasicDTO> characters,
     String imageName
-){}
+) {}

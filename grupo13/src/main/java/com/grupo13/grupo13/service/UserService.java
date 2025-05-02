@@ -29,16 +29,12 @@ public class UserService {
     private WeaponService weaponService;
     @Autowired
     private ArmorService armorService;
-
     @Autowired
     private UserMapper mapper;
-
     @Autowired
     private WeaponMapper weaponMapper;
-
     @Autowired
     private armorMapper armorMapper;
-
     @Autowired
     private CharacterMapper characterMapper;
 

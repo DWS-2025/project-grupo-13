@@ -11,7 +11,6 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
@@ -26,7 +25,6 @@ import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.repository.CharacterRepository;
 import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.repository.WeaponRepository;
-
 
 @Service
 public class CharacterService {
@@ -86,9 +84,8 @@ public class CharacterService {
 
     // for equipping armor or weapon, sets the necessary values from the equipment
     // and adds the character to the equipment
-    public void equipWeapon(WeaponDTO weaponDTO, CharacterDTO characterDTO) {
-        Character character = mapper.toDomain(characterDTO);
-
+    public void equipWeapon(WeaponDTO weaponDTO, long charId) {
+        Character character = characterRepository.findById(charId).get();
         character.setWeaponEquiped(true);
         character.setStrength(weaponDTO.strength());
         character.setWeapon(weaponRepository.findById(weaponDTO.id()).get());
@@ -96,9 +93,8 @@ public class CharacterService {
     }
 
     // equips an armor to the character that recives
-    public void equipArmor(ArmorDTO armorDTO, CharacterDTO characterDTO) {
-        Character character = mapper.toDomain(characterDTO);
-
+    public void equipArmor(ArmorDTO armorDTO, long charId) {
+        Character character = characterRepository.findById(charId).get();
         character.setArmorEquiped(true);
         character.setDefense(armorDTO.defense());
         character.setArmor(armorRepository.findById(armorDTO.id()).get());
@@ -112,7 +108,7 @@ public class CharacterService {
         return character.getWeapon();
     }
 
-    // gets the armor equipped
+    // gets the armor in use    
     public Armor getEquipedArmor(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);
 
@@ -120,9 +116,8 @@ public class CharacterService {
     }
 
     // unequips the weapon in use
-    public void unEquipWeapon(CharacterDTO characterDTO, long id) {
-        Character character = mapper.toDomain(characterDTO);
-
+    public void unEquipWeapon(long charId, long id) {
+        Character character = characterRepository.findById(charId).get();
         character.setWeapon(null);
         character.setStrength(0);
         character.setWeaponEquiped(false);
@@ -136,9 +131,8 @@ public class CharacterService {
     }
 
     // unequips the armor in use
-    public void unEquipArmor(CharacterDTO characterDTO, long id) {
-        Character character = mapper.toDomain(characterDTO);
-
+    public void unEquipArmor(long charId, long id) {
+        Character character = characterRepository.findById(charId).get();
         character.setArmor(null);
         character.setDefense(0);
         character.setArmorEquiped(false);

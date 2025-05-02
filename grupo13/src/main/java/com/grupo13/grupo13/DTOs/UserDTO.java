@@ -8,4 +8,4 @@ public record UserDTO(
     CharacterBasicDTO character,          
     List<WeaponBasicDTO> inventoryWeapon,   
     List<ArmorBasicDTO> inventoryArmor     
-){}
+) {}

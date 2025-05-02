@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.WeaponMapper;
@@ -25,13 +24,10 @@ public class AdminController {
     //attributes
     @Autowired
     private WeaponService weaponService;
-
     @Autowired
     private ArmorService armorService;
-
     @Autowired
-    private UserService userService;
-    
+    private UserService userService;   
     @Autowired
     private armorMapper armorMapper;
     @Autowired
@@ -122,7 +118,6 @@ public class AdminController {
     
     @GetMapping("/weapon/{id}/edit")
     public String editWeapon(Model model, @PathVariable long id) {
-
         WeaponDTO weapon = weaponService.findById(id);
 
         if(weapon != null){
@@ -135,7 +130,6 @@ public class AdminController {
 
     @GetMapping("/armor/{id}/edit")
     public String editArmor(Model model, @PathVariable long id) {
-
         ArmorDTO armor = armorService.findById(id);
 
         if(armor != null){
@@ -165,7 +159,6 @@ public class AdminController {
         }
 
         WeaponDTO editedWeapon = weaponService.findById(id);
-
         if(editedWeapon != null){
             weaponService.update(id, updatedWeaponDTO);
 
@@ -191,7 +184,6 @@ public class AdminController {
         }
 
         ArmorDTO editedArmor = armorService.findById(id);
-
         if(editedArmor != null){
             if(!armorImage.isEmpty()){
                 weaponService.replaceImage(id, armorImage.getInputStream(), armorImage.getSize());

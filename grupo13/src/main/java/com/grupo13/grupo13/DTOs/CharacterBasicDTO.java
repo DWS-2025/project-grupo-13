@@ -10,4 +10,4 @@ public record CharacterBasicDTO(
         boolean weaponEquiped,
         boolean armorEquiped,
         String imageName
-){}
+) {}

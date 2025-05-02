@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -42,13 +41,10 @@ public class sessionController {
     // attributes
     @Autowired
     private UserService userService;
-
     @Autowired
     private WeaponService weaponService;
-
     @Autowired
     private ArmorService armorService;
-
     @Autowired
     private CharacterService characterService;
     @Autowired
@@ -58,7 +54,6 @@ public class sessionController {
     public String index(Model model, HttpSession session) {
 
         List<WeaponBasicDTO> currentInventoryWeapon = userService.currentUserInventoryWeapon();
-
         List<ArmorBasicDTO> currentInventoryArmor = userService.currentUserInventoryArmor();
         CharacterDTO characterDTO = userService.getCharacter();
 
@@ -74,7 +69,6 @@ public class sessionController {
         } else {
             return "character_view";
         }
-
     }
 
     @PostMapping("/formProcess")
@@ -115,42 +109,49 @@ public class sessionController {
     //used to show the weapons on the shop
     @GetMapping("/list_weapons")
     public String showWeapons(Model model, @PageableDefault(size = 3) Pageable page) {
-
-        List<WeaponBasicDTO> equipmentListWeapon = weaponService.findAll();
-        List<ArmorBasicDTO> equipmentListArmor = armorService.findAll();
-
-        ArrayList<WeaponBasicDTO> availableWeapons = new ArrayList<>();
-        ArrayList<ArmorBasicDTO> availableArmors = new ArrayList<>();
-        List<WeaponBasicDTO> currentInventoryWeapons = userService.currentUserInventoryWeapon();
-        List<ArmorBasicDTO> currentInventoryArmors = userService.currentUserInventoryArmor();
-
-        // gets the listing of the current equipment in the repository and the inventory
-        // creates a list of the equipment that the user doesnt have
-        // the html will present the inventory as purchased and the not purchased
-        // (available) equipments
-        for (WeaponBasicDTO equipmentWeapon : equipmentListWeapon) {
-            if (!currentInventoryWeapons.contains(equipmentWeapon)) {
-                availableWeapons.add(equipmentWeapon);
-            }
-        }
-        for (ArmorBasicDTO equipmentArmor : equipmentListArmor) {
-            if (!currentInventoryArmors.contains(equipmentArmor)) {
-                availableArmors.add(equipmentArmor);
-            }
-        }
+        Page<Weapon> weapons = weaponService.findAll(page);
         model.addAttribute("user", userService.getLoggedUser());
-        model.addAttribute("currentA", currentInventoryArmors);
-        model.addAttribute("currentW", currentInventoryWeapons);
-        model.addAttribute("availableA", availableArmors);
-        model.addAttribute("availableW", availableWeapons);
-        return "listing";
+        model.addAttribute("weapon", weapons);
+
+        //buttons
+        boolean hasPrev = page.hasPrevious();
+        boolean hasNext = (page.getPageNumber() + 1)*page.getPageSize() < weapons.getTotalElements();
+        model.addAttribute("hasPrev", hasPrev);
+        model.addAttribute("prev", page.getPageNumber() - 1);
+        model.addAttribute("hasNext", hasNext);
+        model.addAttribute("next", page.getPageNumber() + 1);
+        model.addAttribute("size", page.getPageSize());
+        return "listing_weapons";
     }
 
+
+    //used to show the armors on the shop
+    @GetMapping("/list_armors")
+    public String showArmors(Model model, @PageableDefault(size = 2) Pageable page) {
+        Page<Armor> armors = armorService.findAll(page);
+        model.addAttribute("user", userService.getLoggedUser());
+        model.addAttribute("armor", armors);
+
+        //buttons
+        boolean hasPrev = page.hasPrevious();
+        boolean hasNext = (page.getPageNumber() + 1)*page.getPageSize() < armors.getTotalElements();
+        model.addAttribute("hasPrev", hasPrev);
+        model.addAttribute("prev", page.getPageNumber() - 1);
+        model.addAttribute("hasNext", hasNext);
+        model.addAttribute("next", page.getPageNumber() + 1);
+        model.addAttribute("size", page.getPageSize());
+        return "listing_armors";
+    }
+
+    @GetMapping("/search")
+    public String search() {
+
+        return "search";
+    }
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
-
         WeaponDTO weaponDTO = weaponService.findById(id);
-            // checks if the user has enough money or if it's homeless
+            // checks if the user has enough money or not
             if (weaponDTO == null) {
             model.addAttribute("message", "Could not purchase, doesnt exist");
             return "sp_errors";
@@ -168,9 +169,8 @@ public class sessionController {
 
     @PostMapping("/purchaseArmor")
     public String purchaseArmor(@RequestParam long id, Model model) {
-
         ArmorDTO armorDTO = armorService.findById(id);
-        // checks if the user has enough money or if it's homeless
+        // checks if the user has enough money or not
         if (armorDTO == null) {
             model.addAttribute("message", "Could not purchase, doesnt exist");
             return "sp_errors";
@@ -185,6 +185,7 @@ public class sessionController {
                 return "sp_errors";
             }
         }
+
     }
 
     @PostMapping("/equipWeapon")
@@ -251,7 +252,6 @@ public class sessionController {
 
     @GetMapping("/image/{imageName}")
     public ResponseEntity<Object> getImage(Model model, @PathVariable String imageName) throws MalformedURLException {
-
         Path IMP_IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images", "imp_imgs");
         Path imagePath = IMP_IMAGES_FOLDER.resolve(imageName);
         Resource image = new UrlResource(imagePath.toUri());
@@ -265,7 +265,6 @@ public class sessionController {
         } catch (IOException e) {
             contentType = "application/octet-stream";
         }
-
         // returns the image
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
@@ -302,27 +301,16 @@ public class sessionController {
  */
     @GetMapping("/character/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
-        CharacterDTO characterDTO = characterService.findById(id);
-        Character character = characterMapper.toDomain(characterDTO);
-        
-        if(character.getImageFile() != null){
-            Blob image = character.getImageFile();
-            Resource file = new InputStreamResource(image.getBinaryStream());
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                    .contentLength(image.length()).body(file);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
+        Optional<Character> op = characterService.findById(id);
 
-        /* 
-        if (character.isPresent() && character.get().getImageFile() != null) {
-            Blob image = character.get().getImageFile();
+        if (op.isPresent() && op.get().getImageFile() != null) {
+            Blob image = op.get().getImageFile();
             Resource file = new InputStreamResource(image.getBinaryStream());
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
                     .contentLength(image.length()).body(file);
         } else {
             return ResponseEntity.notFound().build();
-        }*/
+        }
     }
 
 }
