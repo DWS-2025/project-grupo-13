@@ -1,35 +1,15 @@
 {{>header}}
 
 	<h1 style="color:rgb(0, 0, 0); text-align: center; font-weight: bold; font-family: Arial, sans-serif;">Store</h1>
-		<div class="row row-cols-auto g-4 justify-content-center">
-			{{#armor}}			
-			<div class="col">
-				<form action="/purchaseArmor" method="post" enctype="multipart/form-data">
-				<div class="card" style="width:18rem;">
-					<img src="/Armor/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
-					<div class="card-body">
-						<h5 class="card-title">{{name}}</h5>
-						<p class="card-text">{{description}}</p>
-						<h6 class="card-price">Price: {{price}}</h6>
-						<h6 class="card-defense">Defense: {{defense}}</h6>
-						<h6 class="card-style">Style: {{style}}</h6>
-						<!--Hidden inputs to avoid sending the data of every object-->
-						<input type="hidden" name="id" value="{{id}}">
-						<!--end of hidden inputs-->
-						<input type='submit' value='Add'>
-					</div>
-				</div>
-				</form>
-			</div>			
-			{{/armor}}	
-		</div>		
-		<div>
-			<nobr>					
-				{{#hasPrev}}<a class="btn-next-prev" href="/list_armors?page={{prev}}&size={{size}}">Prev</a>{{/hasPrev}}
-				{{#hasNext}}<a class="btn-next-prev" href="/list_armors?page={{next}}&size={{size}}">Next</a>{{/hasNext}}
-				<hr>
-			</nobr>
+	<div id="armor-container" class="row"></div>	
+		<div class="pagination">
+			<button class="btn-next-prev" onclick="loadPage(currentPage - 1)" id="prevBtn">Prev</button>
+			<span id="pageNum">1</span>
+			<button class="btn-next-prev" onclick="loadPage(currentPage + 1)" id="nextBtn">Next</button>
 		</div>
+
+		<script scr="/js/listing_armors.js"></script>
+
 		<body class="bg-dark" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('image/test_bg.jpg') no-repeat center center / cover;"></body>
 		
 {{>footer}}

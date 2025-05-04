@@ -4,6 +4,9 @@ import java.net.URI;
 import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -234,4 +237,11 @@ public class grupo13RestController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	public Page<ArmorDTO> getArmorsPage(@PageableDefault(size = 2) Pageable page) {
+    	return armorService.findAll(page).map(this::toDTO);
+	}
+
+	private ArmorDTO toDTO(Armor armor){
+		return armorMapper.toDTO(armor);
+	}
 }
