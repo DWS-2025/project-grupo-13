@@ -1,4 +1,5 @@
 package com.grupo13.grupo13.controller;
+
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
@@ -32,6 +36,7 @@ import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
+import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
@@ -49,7 +54,8 @@ public class grupo13RestController {
 	private WeaponMapper weaponMapper;
 	@Autowired
 	private armorMapper armorMapper;
-
+	@Autowired
+	private UserService userService;
 
 	grupo13RestController(CharacterService characterService) {
 		this.characterService = characterService;
@@ -71,9 +77,9 @@ public class grupo13RestController {
 	// SHOW 1 -------------------------------------------------
 	@GetMapping("/weapon/{id}")
 	public WeaponDTO getWeapon(@PathVariable long id) {
-		return weaponService.findById(id); 
+		return weaponService.findById(id);
 	}
-	
+
 	@GetMapping("/weapon/{id}/image")
 	public ResponseEntity<Object> getWeaponImage(@PathVariable long id) throws SQLException, IOException {
 		Resource weaponImage = weaponService.getImageFile(id);
@@ -86,7 +92,7 @@ public class grupo13RestController {
 
 	@GetMapping("/armor/{id}")
 	public ArmorDTO getArmor(@PathVariable long id) {
-		return armorService.findById(id); 
+		return armorService.findById(id);
 	}
 
 	@GetMapping("/armor/{id}/image")
@@ -134,7 +140,7 @@ public class grupo13RestController {
 	}
 
 	// UPDATE -------------------------------------------------
-	  @PutMapping("/weapon/{id}")
+	@PutMapping("/weapon/{id}")
 	public WeaponDTO replaceWeapon(@PathVariable long id, @RequestBody Weapon updatedWeapon) {
 
 		weaponService.update(id, weaponMapper.toDTO(updatedWeapon));
@@ -236,7 +242,7 @@ public class grupo13RestController {
 		characterService.replaceImage(id, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	public Page<ArmorDTO> getArmorsPage(@PageableDefault(size = 2) Pageable page) {
     	return armorService.findAll(page).map(this::toDTO);
 	}
@@ -244,4 +250,147 @@ public class grupo13RestController {
 	private ArmorDTO toDTO(Armor armor){
 		return armorMapper.toDTO(armor);
 	}
+	// GENERAL / FUNCTIONALITY
+
+	@PostMapping("/weapon/purchase/{id}")
+	public WeaponDTO purchaseWeapon(@PathVariable long id) {
+		WeaponDTO weaponDTO = weaponService.findById(id);
+		// checks if the user has enough money or not
+		if (weaponDTO == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+		}
+		int money = userService.getLoggedUser().money();
+		if (money >= weaponDTO.price()) {
+			if (!userService.hasWeapon(id)) {
+				userService.saveWeapon(id);
+				return weaponService.findById(id);
+			} else {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, "Already purchased");
+			}
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough Money");
+		}
+	}
+
+	// GENERAL / FUNCTIONALITY
+
+	@PostMapping("/armor/purchase/{id}")
+	public ArmorDTO purchaseArmor(@PathVariable long id) {
+		ArmorDTO armorDTO = armorService.findById(id);
+		// checks if the user has enough money or not
+		if (armorDTO == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+		}
+		int money = userService.getLoggedUser().money();
+		if (money >= armorDTO.price()) {
+			if (!userService.hasArmor(id)) {
+				userService.saveArmor(id);
+				return armorService.findById(id);
+			} else {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, "Already purchased");
+			}
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough Money");
+		}
+	}
+
+
+	//Equip weapons and armors
+
+	@PostMapping("/weapon/equipment/{id}")
+	public WeaponDTO equipWeapon(@PathVariable long id) {
+		//launches error if character doesnt exist, to be improved
+		Character character = userService.getCharacter();
+		long charId = character.getId();
+		WeaponDTO equipment = weaponService.findById(id);
+
+		if (equipment != null) { // if it exists
+			if (userService.hasWeapon(id)) {
+				characterService.equipWeapon(equipment, charId); // equips it, adding the necessary attributes
+				weaponService.addCharacter(character, equipment);
+				return equipment;
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
+			}
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+		}
+
+	}
+
+	@PostMapping("/armor/equipment/{id}")
+	public ArmorDTO equipArmor(@PathVariable long id) {
+		//launches error if character doesnt exist, to be improved
+		Character character = userService.getCharacter();
+		long charId = character.getId();
+		ArmorDTO equipment = armorService.findById(id);
+
+		if (equipment != null) { // if it exists
+			if (userService.hasArmor(id)) {
+				characterService.equipArmor(equipment, charId); // equips it, adding the necessary attributes
+				armorService.addCharacter(character, equipment);
+				return equipment;
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
+			}
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+		}
+
+	}
+	//Unequip weapons and armors
+
+	@DeleteMapping("/armor/equipment/{id}")
+    public ArmorDTO unEquipArmor(@RequestParam long id) {
+        //launches error if character doesnt exist, to be improved
+		Character character = userService.getCharacter();
+		long charId = character.getId();
+		ArmorDTO equipment = armorService.findById(id);
+
+		if (equipment != null) { // if it exists
+			if (userService.hasArmor(id)) {
+				characterService.unEquipArmor(id, charId); // equips it, adding the necessary attributes
+				return equipment;
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
+			}
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+		}
+
+    }
+	@DeleteMapping("/weapon/equipment/{id}")
+    public WeaponDTO unEquipWeapon(@RequestParam long id) {
+        //launches error if character doesnt exist, to be improved
+		Character character = userService.getCharacter();
+		long charId = character.getId();
+		WeaponDTO equipment = weaponService.findById(id);
+
+		if (equipment != null) { // if it exists
+			if (userService.hasWeapon(id)) {
+				characterService.unEquipWeapon(id, charId); // equips it, adding the necessary attributes
+				return equipment;
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
+			}
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+		}
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

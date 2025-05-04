@@ -124,6 +124,8 @@ public class sessionController {
         model.addAttribute("size", page.getPageSize());
         return "listing_weapons";
     }
+
+
     //used to show the armors on the shop
     @GetMapping("/list_armors")
     public String showArmors(Model model, @PageableDefault(size = 2) Pageable page) {
@@ -142,6 +144,11 @@ public class sessionController {
         return "listing_armors";
     }
 
+    @GetMapping("/search")
+    public String search() {
+
+        return "search";
+    }
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
         WeaponDTO weaponDTO = weaponService.findById(id);
@@ -189,7 +196,7 @@ public class sessionController {
         WeaponDTO equipment = weaponService.findById(id);
 
         if (equipment != null) { // if it exists
-            characterService.equipWeapon(equipment, character); // equips it, adding the necessary attributes
+            characterService.equipWeapon(equipment, character.getId()); // equips it, adding the necessary attributes
             weaponService.addCharacter(character, equipment);
             return "redirect:/";
         } else {
@@ -205,7 +212,7 @@ public class sessionController {
         ArmorDTO equipment = armorService.findById(id);
 
         if (equipment != null) { // if it exists
-            characterService.equipArmor(equipment, character); // equips it, adding the necessary attributes
+            characterService.equipArmor(equipment, character.getId()); // equips it, adding the necessary attributes
             armorService.addCharacter(character, equipment);
             return "redirect:/";
         } else { 
@@ -221,7 +228,7 @@ public class sessionController {
         WeaponDTO equipment = weaponService.findById(id);
 
         if (equipment != null) { // if it exists
-            characterService.unEquipWeapon(character, id); // unequips it
+            characterService.unEquipWeapon(character.getId(), id); // unequips it
             return "redirect:/";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
@@ -236,7 +243,7 @@ public class sessionController {
         ArmorDTO equipment = armorService.findById(id);
 
         if (equipment != null) { // if it exists
-            characterService.unEquipArmor(character, id); // unequips it
+            characterService.unEquipArmor(character.getId(), id); // unequips it
             return "redirect:/";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
