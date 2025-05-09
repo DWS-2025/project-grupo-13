@@ -9,6 +9,16 @@
             "projectName": "grupo13",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Grupo13Application$Application<grupo13>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.grupo13.grupo13.Grupo13Application$Application",
+            "projectName": "grupo13",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

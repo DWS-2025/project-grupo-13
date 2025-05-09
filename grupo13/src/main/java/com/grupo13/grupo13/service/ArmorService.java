@@ -12,16 +12,21 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.mapper.armorMapperImpl;
+import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
 
 @Service
+    private final mapper.armorMapperImpl armorMapperImpl;
+
 public class ArmorService {
 
 	//attributes
@@ -55,6 +60,10 @@ public class ArmorService {
         armor.getCharacters().add(character);
         armorRepository.save(armor);
     }
+
+    public Page<Armor> getArmors(Pageable pageable) {
+	 	return armorRepository.findAll(pageable);
+	 }
 
 	//returns all armors in a list
     public List<ArmorBasicDTO> findAll(){

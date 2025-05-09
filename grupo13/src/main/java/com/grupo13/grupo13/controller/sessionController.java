@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
@@ -128,21 +129,21 @@ public class sessionController {
 
     //used to show the armors on the shop
     @GetMapping("/list_armors")
-    public String showArmors(Model model, @PageableDefault(size = 2) Pageable page) {
+    public String showArmors(Model model, @PageableDefault(size = 3) Pageable page) {
         Page<Armor> armors = armorService.findAll(page);
         model.addAttribute("user", userService.getLoggedUser());
-        model.addAttribute("armor", armors);
-
+        model.addAttribute("weapon", armors);
+    
         //buttons
         boolean hasPrev = page.hasPrevious();
         boolean hasNext = (page.getPageNumber() + 1)*page.getPageSize() < armors.getTotalElements();
-        model.addAttribute("hasPrev", hasPrev);
+        model.addAttribute("hasPrev", hasPrev);            
         model.addAttribute("prev", page.getPageNumber() - 1);
         model.addAttribute("hasNext", hasNext);
         model.addAttribute("next", page.getPageNumber() + 1);
         model.addAttribute("size", page.getPageSize());
         return "listing_armors";
-    }
+    }    
 
     @GetMapping("/search")
     public String search() {

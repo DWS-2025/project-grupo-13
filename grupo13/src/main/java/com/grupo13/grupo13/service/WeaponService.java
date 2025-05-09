@@ -160,4 +160,9 @@ public class WeaponService {
 		weaponRepository.save(weapon);
 	}
 
+    public Page<Weapon> getWeapons(Pageable pageable) {
+        return weaponRepository.findAll(pageable);
+    }
+
+
 }

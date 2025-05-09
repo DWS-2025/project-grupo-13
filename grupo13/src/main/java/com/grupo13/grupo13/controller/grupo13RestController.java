@@ -379,9 +379,16 @@ public class grupo13RestController {
 
     }
 
+	@GetMapping("/list_armors")
+	 	public Page<ArmorDTO> getArmors(Pageable pageable) {
+	 	return armorService.getArmors(pageable).map(this::toDTO);
+	 }
 
 
-
+	 @GetMapping("/list_weapons")
+	 	public Page<WeaponDTO> getWeapons(Pageable pageable) {
+	 	return weaponService.getWeapons(pageable).map(this::toDTO);
+	 }
 
 
 
