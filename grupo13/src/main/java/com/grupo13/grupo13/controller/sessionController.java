@@ -8,10 +8,12 @@ import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
+
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
@@ -109,7 +112,7 @@ public class sessionController {
     //used to show the weapons on the shop
     @GetMapping("/list_weapons")
     public String showWeapons(Model model, @PageableDefault(size = 3) Pageable page) {
-        Page<Weapon> weapons = weaponService.findAll(page);
+        Page<WeaponDTO> weapons = weaponService.findAll(page);
         model.addAttribute("user", userService.getLoggedUser());
         model.addAttribute("weapon", weapons);
 
@@ -128,7 +131,7 @@ public class sessionController {
     //used to show the armors on the shop
     @GetMapping("/list_armors")
     public String showArmors(Model model, @PageableDefault(size = 2) Pageable page) {
-        Page<Armor> armors = armorService.findAll(page);
+        Page<ArmorDTO> armors = armorService.findAll(page);
         model.addAttribute("user", userService.getLoggedUser());
         model.addAttribute("armor", armors);
 
@@ -191,10 +194,11 @@ public class sessionController {
     @PostMapping("/equipWeapon")
     public String equipWeapon(@RequestParam long id, Model model) {
         CharacterDTO characterDTO = userService.getCharacter();
+        Character character = characterMapper.toDomain(characterDTO);
         WeaponDTO weaponDTO = weaponService.findById(id);
 
         if (weaponDTO != null) { // if it exists
-            characterService.equipWeapon(weaponDTO, characterDTO); // equips it, adding the necessary attributes
+            characterService.equipWeapon(weaponDTO, character.getId()); // equips it, adding the necessary attributes
             weaponService.addCharacter(characterDTO, weaponDTO);
 
             return "redirect:/";
@@ -206,12 +210,13 @@ public class sessionController {
 
     @PostMapping("/equipArmor")
     public String equipArmor(@RequestParam long id, Model model) {
-        CharacterDTO characterBasicDTO= userService.getCharacter();
+        CharacterDTO characterDTO= userService.getCharacter();
+        Character character = characterMapper.toDomain(characterDTO);
         ArmorDTO armorDTO = armorService.findById(id);
 
         if (armorDTO != null) { // if it exists
-            characterService.equipArmor(armorDTO, characterBasicDTO); // equips it, adding the necessary attributes
-            armorService.addCharacter(characterBasicDTO, armorDTO);
+            characterService.equipArmor(armorDTO, character.getId()); // equips it, adding the necessary attributes
+            armorService.addCharacter(characterDTO, armorDTO);
 
             return "redirect:/";
         } else {
@@ -223,10 +228,11 @@ public class sessionController {
     @PostMapping("/unEquipWeapon")
     public String unEquipWeapon(@RequestParam long id, Model model) {
         CharacterDTO characterDTO = userService.getCharacter();
+        Character character = characterMapper.toDomain(characterDTO);
         WeaponDTO weaponDTO = weaponService.findById(id);
 
         if (weaponDTO != null) {
-            characterService.unEquipWeapon(characterDTO, id); // unequips it
+            characterService.unEquipWeapon(character.getId(), id); // unequips it
 
             return "redirect:/";
         } else {
@@ -238,10 +244,11 @@ public class sessionController {
     @PostMapping("/unEquipArmor")
     public String unEquipArmor(@RequestParam long id, Model model) {
         CharacterDTO characterDTO = userService.getCharacter();
+        Character character = characterMapper.toDomain(characterDTO);
         ArmorDTO armorDTO = armorService.findById(id);
 
         if (armorDTO != null) {
-            characterService.unEquipArmor(characterDTO, id); // unequips it
+            characterService.unEquipArmor(character.getId(), id); // unequips it
 
             return "redirect:/";
         } else {
@@ -301,10 +308,11 @@ public class sessionController {
  */
     @GetMapping("/character/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
-        Optional<Character> op = characterService.findById(id);
+        CharacterDTO characterDTO = characterService.findById(id);
+        Character character = characterMapper.toDomain(characterDTO);
 
-        if (op.isPresent() && op.get().getImageFile() != null) {
-            Blob image = op.get().getImageFile();
+        if (character != null && character.getImageFile() != null) {
+            Blob image = character.getImageFile();
             Resource file = new InputStreamResource(image.getBinaryStream());
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
                     .contentLength(image.length()).body(file);

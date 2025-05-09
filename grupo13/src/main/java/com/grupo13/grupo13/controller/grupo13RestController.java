@@ -8,7 +8,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -294,14 +293,15 @@ public class grupo13RestController {
 	@PostMapping("/weapon/equipment/{id}")
 	public WeaponDTO equipWeapon(@PathVariable long id) {
 		//launches error if character doesnt exist, to be improved
-		Character character = userService.getCharacter();
+		CharacterDTO characterDTO = userService.getCharacter();
+		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		WeaponDTO equipment = weaponService.findById(id);
 
 		if (equipment != null) { // if it exists
 			if (userService.hasWeapon(id)) {
 				characterService.equipWeapon(equipment, charId); // equips it, adding the necessary attributes
-				weaponService.addCharacter(character, equipment);
+				weaponService.addCharacter(characterDTO, equipment);
 				return equipment;
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
@@ -315,14 +315,15 @@ public class grupo13RestController {
 	@PostMapping("/armor/equipment/{id}")
 	public ArmorDTO equipArmor(@PathVariable long id) {
 		//launches error if character doesnt exist, to be improved
-		Character character = userService.getCharacter();
+		CharacterDTO characterDTO = userService.getCharacter();
+		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		ArmorDTO equipment = armorService.findById(id);
 
 		if (equipment != null) { // if it exists
 			if (userService.hasArmor(id)) {
 				characterService.equipArmor(equipment, charId); // equips it, adding the necessary attributes
-				armorService.addCharacter(character, equipment);
+				armorService.addCharacter(characterDTO, equipment);
 				return equipment;
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
@@ -337,7 +338,8 @@ public class grupo13RestController {
 	@DeleteMapping("/armor/equipment/{id}")
     public ArmorDTO unEquipArmor(@RequestParam long id) {
         //launches error if character doesnt exist, to be improved
-		Character character = userService.getCharacter();
+		CharacterDTO characterDTO = userService.getCharacter();
+		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		ArmorDTO equipment = armorService.findById(id);
 
@@ -356,7 +358,8 @@ public class grupo13RestController {
 	@DeleteMapping("/weapon/equipment/{id}")
     public WeaponDTO unEquipWeapon(@RequestParam long id) {
         //launches error if character doesnt exist, to be improved
-		Character character = userService.getCharacter();
+		CharacterDTO characterDTO = userService.getCharacter();
+		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		WeaponDTO equipment = weaponService.findById(id);
 

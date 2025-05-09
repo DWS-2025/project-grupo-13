@@ -78,9 +78,10 @@ public class WeaponService {
     }
 
     //returns a page with all the weapons
-    public Page<Weapon> findAll(Pageable pageable) {
-        return weaponRepository.findAll(pageable);
+    public Page<WeaponDTO> findAll(Pageable pageable) {
+        return weaponRepository.findAll(pageable).map(weapon -> mapper.toDTO(weapon));
     }
+    
 
 	//searches a weapon by its id
     public WeaponDTO findById(long id){

@@ -66,8 +66,8 @@ public class ArmorService {
     }
 
     //returns a page with all the armors
-    public Page<Armor> findAll(Pageable pageable) {
-        return armorRepository.findAll(pageable);
+    public Page<ArmorDTO> findAll(Pageable pageable) {
+        return armorRepository.findAll(pageable).map(armor -> mapper.toDTO(armor));
     }
 
 	//searches an armor by its id
