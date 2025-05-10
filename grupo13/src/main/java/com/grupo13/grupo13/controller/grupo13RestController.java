@@ -1,10 +1,11 @@
 package com.grupo13.grupo13.controller;
-
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
@@ -64,7 +64,9 @@ public class grupo13RestController {
 
 	// WEAPONS AND ARMORS
 	// _________________________________________________________________________________________________________
+	
 	// SHOW ALL -------------------------------------------------
+
 	@GetMapping("/weapons")
 	public List<WeaponBasicDTO> getWeapons() {
 		return weaponService.findAll();
@@ -75,7 +77,18 @@ public class grupo13RestController {
 		return armorService.findAll();
 	}
 
+	@GetMapping("/list_weapons")
+	public Page<WeaponBasicDTO> getPageWeapons(Pageable pageable) {
+		return weaponService.findAllBasic(pageable);
+	}
+
+	@GetMapping("/list_armors")
+	public Page<ArmorBasicDTO> getPageArmors(Pageable pageable) {
+		return armorService.findAllBasic(pageable);
+	}
+
 	// SHOW 1 -------------------------------------------------
+
 	@GetMapping("/weapon/{id}")
 	public WeaponDTO getWeapon(@PathVariable long id) {
 		return weaponService.findById(id);
@@ -143,6 +156,7 @@ public class grupo13RestController {
 	}
 
 	// UPDATE -------------------------------------------------
+
 	  @PutMapping("/weapon/{id}")
 	public WeaponDTO replaceWeapon(@PathVariable long id, @RequestBody WeaponDTO updatedWeaponDTO) {
 		weaponService.update(id, updatedWeaponDTO);
@@ -170,6 +184,7 @@ public class grupo13RestController {
 	}
 
 	// DELETE -------------------------------------------------
+
 	@DeleteMapping("/armor/{id}")
 	public void deleteArmor(@PathVariable long id) {
 		armorService.deleteById(id);
@@ -184,12 +199,14 @@ public class grupo13RestController {
 	// _________________________________________________________________________________________________________
 
 	// SHOW ALL -------------------------------------------------
+
 	@GetMapping("/characters")
 	public List<CharacterBasicDTO> getCharacters() {
 		return characterService.findAll(); 
 	}
 
 	// SHOW 1 -------------------------------------------------
+
 	@GetMapping("/character/{id}")
 	public CharacterDTO getCharacter(@PathVariable long id) {
 		return characterService.findById(id);
@@ -206,6 +223,7 @@ public class grupo13RestController {
 	}
 
 	// CREATE -------------------------------------------------
+
 	@PostMapping("/characters")
 	public ResponseEntity<CharacterDTO> createCharacter(@RequestBody CharacterDTO characterDTO) {
 		characterService.save(characterDTO);
@@ -229,12 +247,14 @@ public class grupo13RestController {
 	// -------------------------------------------------
 
 	// DELETE -------------------------------------------------
+
 	@DeleteMapping("/character/{id}")
 	public void deleteCharacter(@PathVariable long id) {
 		characterService.deleteById(id);
 	}
 
 	// IMAGES ------------------------------------------------------
+
 	@PutMapping("character/{id}/image")
 	public ResponseEntity<Object> replaceCharacterImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
@@ -333,6 +353,7 @@ public class grupo13RestController {
 		}
 
 	}
+
 	//Unequip weapons and armors
 
 	@DeleteMapping("/armor/equipment/{id}")
@@ -355,6 +376,7 @@ public class grupo13RestController {
 		}
 
     }
+
 	@DeleteMapping("/weapon/equipment/{id}")
     public WeaponDTO unEquipWeapon(@RequestParam long id) {
         //launches error if character doesnt exist, to be improved
@@ -373,21 +395,6 @@ public class grupo13RestController {
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
 		}
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

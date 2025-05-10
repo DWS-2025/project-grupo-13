@@ -8,5 +8,4 @@ public record WeaponBasicDTO(
     int intimidation,
     int price,
     String imageName
-) {
-}
+) {}

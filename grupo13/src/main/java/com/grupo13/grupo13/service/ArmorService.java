@@ -70,6 +70,11 @@ public class ArmorService {
         return armorRepository.findAll(pageable).map(armor -> mapper.toDTO(armor));
     }
 
+    //returns a page with all the armors only with the public info
+    public Page<ArmorBasicDTO> findAllBasic(Pageable pageable) {
+        return armorRepository.findAll(pageable).map(armor -> mapper.toBasicDTO(armor));
+    }
+
 	//searches an armor by its id
     public ArmorDTO findById(long id){
         return mapper.toDTO(armorRepository.findById(id).get());

@@ -45,7 +45,6 @@ public class AdminController {
         }else{
             return "error";
         }
-
     }
     
     @GetMapping("/armor/{id}")
@@ -58,7 +57,6 @@ public class AdminController {
         }else{
             return "error";
         }
-        
     }
 
     @GetMapping("/equipment_manager")
@@ -171,7 +169,6 @@ public class AdminController {
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
         }
-
 	}
 
     @PostMapping("/armor/{id}/edit")
@@ -194,8 +191,7 @@ public class AdminController {
         }else{
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
-        }
-        
+        } 
 	}
     
 }

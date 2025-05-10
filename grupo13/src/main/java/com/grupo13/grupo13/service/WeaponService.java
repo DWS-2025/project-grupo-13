@@ -23,7 +23,6 @@ import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.repository.WeaponRepository;
 
-
 @Service
 public class WeaponService {
     
@@ -56,8 +55,7 @@ public class WeaponService {
         weapon.setImageName("/Weapon/" + weapon.getId() + "/image");
 
         weaponRepository.save(weapon);
-        }
-        
+        } 
     }
 
     public void addCharacter(CharacterDTO characterDTO, WeaponDTO weaponDTO){
@@ -81,8 +79,12 @@ public class WeaponService {
     public Page<WeaponDTO> findAll(Pageable pageable) {
         return weaponRepository.findAll(pageable).map(weapon -> mapper.toDTO(weapon));
     }
-    
 
+    //returns a page with all the weapons only with the public info
+    public Page<WeaponBasicDTO> findAllBasic(Pageable pageable) {
+        return weaponRepository.findAll(pageable).map(weapon -> mapper.toBasicDTO(weapon));
+    }
+    
 	//searches a weapon by its id
     public WeaponDTO findById(long id){
         return mapper.toDTO(weaponRepository.findById(id).get());

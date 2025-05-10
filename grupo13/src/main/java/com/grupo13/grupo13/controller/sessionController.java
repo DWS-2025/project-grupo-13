@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
-
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
@@ -320,5 +318,5 @@ public class sessionController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    
 }

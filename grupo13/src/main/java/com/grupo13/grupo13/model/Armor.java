@@ -39,6 +39,7 @@ public class Armor{
     //for the DB
     protected Armor(){}
 
+    
     //constructor
     public Armor(String name, String description, int defense, int price, int style) {
         this.name = name;
@@ -47,24 +48,8 @@ public class Armor{
         this.style = style;
         this.price = price;
     }
-
-    //get functions
-    public Long getId(){
-        return id;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public Blob getimageFile() {
-        return imageFile;
-    }
-
-    public String getDescription() {
-        return description;
-    }
     
+    //functions
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -85,6 +70,23 @@ public class Armor{
         if (id != other.id)
             return false;
         return true;
+    }
+
+    //get functions
+    public Long getId(){
+        return id;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public Blob getimageFile() {
+        return imageFile;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public int getDefense() {
