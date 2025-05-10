@@ -5,28 +5,21 @@ import java.net.URI;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
-import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
-import com.grupo13.grupo13.mapper.armorMapperImpl;
-import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.DTOs.CharacterDTO;
+import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
-import com.grupo13.grupo13.model.Weapon;
-
-
 
 public class ArmorService {
 
@@ -35,10 +28,12 @@ public class ArmorService {
 	private ArmorRepository armorRepository;
     @Autowired
     private armorMapper mapper;
- 
-    //saves in repository
+    @Autowired
+    private CharacterMapper characterMapper;
+
+	//saves in repository
     public void save(ArmorDTO armorDTO){
-        
+
         Armor armor = mapper.toDomain(armorDTO);
         armorRepository.save(armor);
     }
@@ -55,8 +50,9 @@ public class ArmorService {
         armorRepository.save(armor);
     }
 
-    public void addCharacter(Character character, ArmorDTO armorDTO){
+    public void addCharacter(CharacterDTO characterDTO, ArmorDTO armorDTO){
         Armor armor = mapper.toDomain(armorDTO);
+        Character character = characterMapper.toDomain(characterDTO);
 
         armor.getCharacters().add(character);
         armorRepository.save(armor);
@@ -67,16 +63,14 @@ public class ArmorService {
 	 }
 
 	//returns all armors in a list
-    public List<ArmorDTO> findAll(){
-        return mapper.toDTOs(armorRepository.findAll());
-        
+    public List<ArmorBasicDTO> findAll(){
+        return mapper.toBasicDTOs(armorRepository.findAll());
     }
 
-    //returns a page with all the weapons
+    //returns a page with all the armors
     public Page<ArmorDTO> findAll(Pageable pageable) {
         return armorRepository.findAll(pageable).map(armor -> mapper.toDTO(armor));
     }
-
 
 	//searches an armor by its id
     public ArmorDTO findById(long id){
@@ -89,28 +83,22 @@ public class ArmorService {
     }
 	
     //updates an armor when edited
-    public void update(Long oldArmorId, ArmorDTO updatedArmor){
-        Optional<Armor> oldArmorOp = armorRepository.findById(oldArmorId);
+    public void update(Long oldArmorId, ArmorDTO updatedArmorDTO){
         
-        if (oldArmorOp.isPresent()) {
-            Armor oldArmor = oldArmorOp.get();
+        if(armorRepository.existsById(oldArmorId)){
 
-            oldArmor.setImageName("api/armor/" + oldArmorId + "/image");
+            Armor updatedArmor = mapper.toDomain(updatedArmorDTO);
+            updatedArmor.setId(oldArmorId);
 
-            oldArmor.setName(updatedArmor.name());
-            oldArmor.setDescription(updatedArmor.description());
-            oldArmor.setDefense(updatedArmor.defense());
-            oldArmor.setPrice(updatedArmor.price());
-            oldArmor.setStyle(updatedArmor.style());
+            armorRepository.save(updatedArmor);
 
-            oldArmor.getCharacters().forEach(character -> character.setStrength(updatedArmor.defense()));
-
-            armorRepository.save(oldArmor);
+        }else{
+            throw new NoSuchElementException();
         }
     }
 
-      //deletes an armor
-      public void delete(long id){
+    //deletes an armor
+    public void delete(long id){
         if(armorRepository.findById(id).isPresent()){
             Armor armor = armorRepository.findById(id).get();
             
@@ -124,7 +112,7 @@ public class ArmorService {
 			}
 		}
         armorRepository.deleteById(id);
-    }
+    }   
     
     public Resource getImageFile(long id) throws SQLException  {
         Armor armor = armorRepository.findById(id).orElseThrow();

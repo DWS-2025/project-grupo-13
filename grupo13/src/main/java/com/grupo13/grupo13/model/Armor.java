@@ -26,8 +26,8 @@ public class Armor{
     private int style;
     private String imageName;
     
+    @JsonIgnore 
     @Lob
-    @JsonIgnore
     private Blob imageFile;
 
     @OneToMany (mappedBy = "armor")
@@ -48,23 +48,7 @@ public class Armor{
         this.price = price;
     }
 
-    //get functions
-    public Long getId(){
-        return id;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public Blob getimageFile() {
-        return imageFile;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-    
+    //functions
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -87,6 +71,23 @@ public class Armor{
         return true;
     }
 
+    //getters
+    public Long getId(){
+        return id;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public Blob getimageFile() {
+        return imageFile;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    
     public int getDefense() {
         return defense;
     }
@@ -111,17 +112,13 @@ public class Armor{
         return imageName;
     }
 
-    //set functions
+    //setters
     public void setId(long id) {
         this.id = id;
     }
 
     public void setName(String name){
         this.name = name;
-    }
-
-    public void setPicture(Blob imageFile){
-        this.imageFile = imageFile;
     }
 
     public void setDescription(String description){

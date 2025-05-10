@@ -27,8 +27,8 @@ public class Character {
     private boolean armorEquiped;
     private String imageName;
 
-    @Lob
     @JsonIgnore
+    @Lob
     private Blob imageFile;
 
     @OneToOne(mappedBy = "character")
@@ -44,12 +44,12 @@ public class Character {
     protected Character(){}
 
     //constructor
-    public Character(String desc, String name) {
-        this.description =  desc;
+    public Character(String description, String name) {
+        this.description =  description;
         this.name = name;
     }
 
-    //get functions
+    //getters
     public Long getId() {
         return id;
     }
@@ -94,7 +94,7 @@ public class Character {
         return imageFile;
     }
     
-    //set function
+    //setters
     public void setId(long id) {
         this.id = id;
     }
@@ -103,8 +103,8 @@ public class Character {
         this.name = name;
     }
 
-    public void setDescription(String desc) {
-        this.description = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setStrength(int strength) {
