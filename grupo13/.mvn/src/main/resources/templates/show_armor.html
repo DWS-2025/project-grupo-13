@@ -1,0 +1,18 @@
+{{>header}}
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">{{armor.name}}</h5>
+        <p class="card-text"><p>Style: {{armor.style}}</p>
+        <p>Defense: {{armor.defense}}</p>
+        <p>Description: {{armor.description}}</p>
+        <p>Price: {{armor.price}}</p></p>
+        <a href="#" class="card-link"><form action="/armor/{{id}}/delete" method="post">
+            <input type='submit' value='Delete armor' />
+        </form></a>
+        <a href="#" class="card-link"><a href="/armor/{{id}}/edit">Edit armor</a></a>
+    </div>
+</div>
+<a href="/equipment_manager">Return to manage equipment</a>
+
+{{>footer}}

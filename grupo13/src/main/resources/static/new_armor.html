@@ -1,0 +1,89 @@
+<style>
+    
+    .header {
+        background-color: #b3f5f56e;
+        justify-content: center;
+        text-align: center;
+        padding: 15px;
+        margin: 0 0;
+    }
+
+    .element-header {
+        color: #000000;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .element-header:hover {
+        color: #5e5e5e;
+        text-decoration: underline;
+    }
+
+    .dropdown-menu {
+        width: 200px;
+    }
+    
+    .btn-next-prev {
+	background-color: #000000;
+	color: #7a3700;
+	padding: 10px 10px;
+	border: 2px solid #7a3700;
+	border-radius: 4px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: all 0.3s ease; 
+	}
+  
+	.btn-next-prev:hover {
+	background-color: #7a3700;
+	color: #ffffff;
+	}
+
+</style>
+
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</head>
+<body>
+    <ul class="header">
+        <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Shop</a>
+        <ul class="dropdown-menu">
+          <li><a class="element-header" href="/list_weapons">Buy weapons</a></li>
+          <li><a class="element-header" href="/list_armors">Buy armors</a></li>
+        </ul>
+        <a class="element-header" href="/">Character</a>
+        <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Admin</a>
+        <ul class="dropdown-menu">
+          <li><a class="element-header" href="/equipment_manager">Manage equipment</a></li>
+          <li><a class="element-header" href="/new_armor.html">Create new armor</a></li>
+          <li><a class="element-header" href="/new_weapon.html">Create new weapon</a></li>
+        </ul>
+      </ul>
+    <div class="site-content" style="width: 95%; margin:auto">
+        <form action="/armor/new" method="post" enctype="multipart/form-data">
+            <p>Name: </p>
+            <input type='text' name='name' />
+            <p>Style: </p>
+            <input type='text' name='style' />
+            <p>Defense:</p>
+            <input type='text' name='defense' />
+            <p>Description:</p>
+            <textarea name='description' rows=5 cols=40> </textarea>
+            <p>Price:</p>
+            <input type='text' name='price' />
+            <p>Image name: </p>
+            <input type="text" name="imageName" class="form-control" />
+            <p>Image file:</p>
+            <input type='file' name='armorImage' accept=".jpg, .jpeg, .gif" class="form-control" />
+            <input type='submit' value='Save' />
+        </form>
+    </div>
+</body>
+</html>

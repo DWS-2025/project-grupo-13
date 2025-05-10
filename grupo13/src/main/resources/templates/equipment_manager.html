@@ -1,0 +1,18 @@
+{{>header}}
+
+<h1>Equipment</h1>
+<div class="card" style="width: 18rem">
+    <h2>Weapons</h2>
+    <ul class="list-group list-group-flush" id="weapon-list"></ul>
+    <h2>Armors</h2>
+    <ul class="list-group list-group-flush" id="armor-list"></ul>
+</div>
+<script src="js/eqmanager.js"></script> 
+
+    {{#character}}
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="delete_Character">Delete character</a></li>
+    </ul>
+    {{/character}}
+
+{{>footer}}
