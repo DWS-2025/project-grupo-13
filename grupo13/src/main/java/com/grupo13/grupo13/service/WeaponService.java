@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile; 
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.WeaponMapper;
@@ -75,6 +76,11 @@ public class WeaponService {
     //returns a page with all the weapons
     public Page<Weapon> findAll(Pageable pageable) {
         return weaponRepository.findAll(pageable);
+    }
+
+    //returns a page with all the weapons on dtos
+    public Page<WeaponBasicDTO> findAllB(Pageable pageable) {
+        return mapper.toDTOs(weaponRepository.findAll(pageable));
     }
 
 	//searches a weapon by its id
@@ -159,10 +165,6 @@ public class WeaponService {
 		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
 		weaponRepository.save(weapon);
 	}
-
-    public Page<Weapon> getWeapons(Pageable pageable) {
-        return weaponRepository.findAll(pageable);
-    }
 
 
 }

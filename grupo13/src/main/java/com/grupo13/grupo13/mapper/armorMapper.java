@@ -7,10 +7,12 @@ import com.grupo13.grupo13.model.Armor;
 
 @Mapper(componentModel = "spring")
 public interface armorMapper {
-    ArmorDTO toDTO(Armor armor);
-    List<ArmorBasicDTO> toDTOs(List<Armor> armors);
-
-    //@Mapping(target = "books", ignore = true)
-    Armor toDomain(ArmorBasicDTO armorDTO);
+   ArmorDTO toDTO(Armor amor);
+    List<ArmorDTO> toDTOs(List<Armor> armors);
     Armor toDomain(ArmorDTO armorDTO);
+
+    ArmorBasicDTO toBasicDTO(Armor armor);
+    List<ArmorBasicDTO> toBasicDTOs(List<Armor> armors);
+    Armor toBasicDomain(ArmorBasicDTO armorBasicDTO);
 }
+

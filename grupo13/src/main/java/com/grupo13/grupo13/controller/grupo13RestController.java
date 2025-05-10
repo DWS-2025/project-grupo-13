@@ -70,7 +70,7 @@ public class grupo13RestController {
 	}
 
 	@GetMapping("/armors")
-	public Collection<ArmorBasicDTO> getArmors() {
+	public Collection<ArmorDTO> getArmors() {
 		return armorService.findAll();
 	}
 
@@ -244,7 +244,7 @@ public class grupo13RestController {
 	}
 
 	public Page<ArmorDTO> getArmorsPage(@PageableDefault(size = 2) Pageable page) {
-    	return armorService.findAll(page).map(this::toDTO);
+    	return armorService.findAll(page);
 	}
 
 	private ArmorDTO toDTO(Armor armor){
@@ -381,13 +381,13 @@ public class grupo13RestController {
 
 	@GetMapping("/list_armors")
 	 	public Page<ArmorDTO> getArmors(Pageable pageable) {
-	 	return armorService.getArmors(pageable).map(this::toDTO);
+	 	return armorService.findAll(pageable);
 	 }
 
 
 	 @GetMapping("/list_weapons")
-	 	public Page<WeaponDTO> getWeapons(Pageable pageable) {
-	 	return weaponService.getWeapons(pageable).map(this::toDTO);
+	 	public Page<WeaponBasicDTO> getWeapons(Pageable pageable) {
+	 	return weaponService.findAllB(pageable);
 	 }
 
 

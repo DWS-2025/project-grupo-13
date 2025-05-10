@@ -18,14 +18,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.mapper.armorMapperImpl;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.Weapon;
 
-@Service
-    private final mapper.armorMapperImpl armorMapperImpl;
+
 
 public class ArmorService {
 
@@ -34,8 +35,8 @@ public class ArmorService {
 	private ArmorRepository armorRepository;
     @Autowired
     private armorMapper mapper;
-
-	//saves in repository
+ 
+    //saves in repository
     public void save(ArmorDTO armorDTO){
         
         Armor armor = mapper.toDomain(armorDTO);
@@ -66,14 +67,16 @@ public class ArmorService {
 	 }
 
 	//returns all armors in a list
-    public List<ArmorBasicDTO> findAll(){
+    public List<ArmorDTO> findAll(){
         return mapper.toDTOs(armorRepository.findAll());
+        
     }
 
-    //returns a page with all the armors
-    public Page<Armor> findAll(Pageable pageable) {
-        return armorRepository.findAll(pageable);
+    //returns a page with all the weapons
+    public Page<ArmorDTO> findAll(Pageable pageable) {
+        return armorRepository.findAll(pageable).map(armor -> mapper.toDTO(armor));
     }
+
 
 	//searches an armor by its id
     public ArmorDTO findById(long id){

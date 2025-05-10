@@ -130,7 +130,7 @@ public class sessionController {
     //used to show the armors on the shop
     @GetMapping("/list_armors")
     public String showArmors(Model model, @PageableDefault(size = 3) Pageable page) {
-        Page<Armor> armors = armorService.findAll(page);
+        Page<ArmorDTO> armors = armorService.findAll(page);
         model.addAttribute("user", userService.getLoggedUser());
         model.addAttribute("weapon", armors);
     
