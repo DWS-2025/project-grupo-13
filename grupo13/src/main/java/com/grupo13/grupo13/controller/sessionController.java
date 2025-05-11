@@ -36,7 +36,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
-
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
+import com.grupo13.grupo13.util.InputSanitizer;
 @Controller
 public class sessionController {
 
@@ -82,6 +84,13 @@ public class sessionController {
             return "sp_errors";
         }
         // creates the character
+        nameOfCharacter= InputSanitizer.whitelistSanitize(nameOfCharacter);
+        imageName= InputSanitizer.whitelistSanitize(imageName);
+        characterDesc= InputSanitizer.sanitizeRichText(characterDesc);
+        if (!InputSanitizer.isImageValid(characterImage)) {
+            model.addAttribute("message", "File not allowed or missing");
+            return "sp_errors";
+        }
         Character character = new Character(characterDesc, nameOfCharacter);
 
         // saves the character in the repository
@@ -107,6 +116,8 @@ public class sessionController {
 
     }
 
+    
+   
     //used to show the weapons on the shop
     @GetMapping("/list_weapons")
     public String showWeapons(Model model, @PageableDefault(size = 3) Pageable page) {

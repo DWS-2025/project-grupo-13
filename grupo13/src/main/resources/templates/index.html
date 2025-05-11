@@ -1,30 +1,50 @@
 {{>header}}
 
-    <div class="d-flex align-items-center vh-100 p-4">
-        <div class="d-flex col-6 p-4 bg-secondary bg-opacity-75 text-white rounded-3">
-            <form action="/formProcess" method="post" enctype="multipart/form-data" class="w-100">
-                <div class="mb-3">
-                    <label for="characterName" class="form-label">Name: </label>
-                    <input type="text" class="form-control" name="nameOfCharacter" id="characterName">
-                </div>
-                <div class="mb-3">
-                    <label for="characterIntro" class="form-label">What can you say about yourself?</label>
-                    <textarea class="form-control" name="characterDesc" rows="3" id="characterIntro"></textarea>
-                </div>
-                <div class="mb-3">
-                    <p>Picture name: </p>
-                    <input type="text" name="imageName" class="form-control"/>
-                    <p>Picture file:</p>
-                    <input type='file' name='characterImage' accept=".jpg, .jpeg, .gif" class="form-control"/>
-                    <input type='submit' value='Save' class="btn btn-primary mt-3" />
-                </div>
-            </form>
+<div class="d-flex align-items-center vh-100 p-4">
+  <div class="d-flex col-6 p-4 bg-secondary bg-opacity-75 text-white rounded-3">
+    <form action="/formProcess" method="post" enctype="multipart/form-data" class="w-100" onsubmit="copyContent()">
+      
+      <div class="mb-3">
+        <label for="characterName" class="form-label">Name: </label>
+        <input type="text" class="form-control" name="nameOfCharacter" id="characterName">
+      </div>
+
+      <div class="mb-3">
+        <label for="characterIntro" class="form-label">What can you say about yourself?</label>
+        <div style="margin-bottom: 5px;">
+          <button type="button" onclick="document.execCommand('bold')" title="N"><b>N</b></button>
+          <button type="button" onclick="document.execCommand('underline')" title="S"><u>S</u></button>
+          <button type="button" onclick="document.execCommand('italic')" title="I"><i>I</i></button>
         </div>
-        <div class="col-6 d-flex align-items-center justify-content-center">
-            <img src="/image/cute-cat-white.gif" class="img-fluid rounded-3" alt="Character Image">
-        </div>
-    </div>
-        <body class="bg-dark" style="background: url('image/background1.png') no-repeat center center / cover;"></body>
+
+       
+        <div id="characterIntro" class="form-control" contenteditable="true" style="min-height: 100px;"></div>
+        <textarea name="characterDesc" id="characterDesc" hidden></textarea>
+      </div>
+
+      <div class="mb-3">
+        <p>Picture name: </p>
+        <input type="text" name="imageName" class="form-control"/>
+        <p>Picture file:</p>
+        <input type='file' name='characterImage' accept=".jpg, .jpeg" class="form-control"/>
+      </div>
+
+      <input type='submit' value='Save' class="btn btn-primary mt-3" />
+    </form>
+  </div>
+
+  <div class="col-6 d-flex align-items-center justify-content-center">
+    <img src="/image/cute-cat-white.gif" class="img-fluid rounded-3" alt="Character Image">
+  </div>
+</div>
+
+<script>
+  function copyContent() {
+    const richText = document.getElementById("characterIntro").innerHTML;
+    document.getElementById("characterDesc").value = richText;
+  }
+</script>
+
+<body class="bg-dark" style="background: url('image/background1.png') no-repeat center center / cover;"></body>
 
 {{>footer}}
-
