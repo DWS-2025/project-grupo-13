@@ -5,6 +5,7 @@ public record WeaponBasicDTO(
     String name,
     String description,
     int strength,
+    int intimidation,
     int price,
-    int intimidation
+    String imageName
 ) {}

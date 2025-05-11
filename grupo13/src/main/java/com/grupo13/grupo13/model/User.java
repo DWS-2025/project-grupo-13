@@ -1,5 +1,6 @@
 package com.grupo13.grupo13.model;
 import java.util.List;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,7 @@ public class User {
     //attributes
     private int money;
     private String userName;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Character character;
     @ManyToMany
     private List<Weapon> inventoryWeapon;

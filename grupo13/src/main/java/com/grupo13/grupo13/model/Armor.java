@@ -26,8 +26,8 @@ public class Armor{
     private int style;
     private String imageName;
     
+    @JsonIgnore 
     @Lob
-    @JsonIgnore
     private Blob imageFile;
 
     @OneToMany (mappedBy = "armor")
@@ -39,6 +39,7 @@ public class Armor{
     //for the DB
     protected Armor(){}
 
+    
     //constructor
     public Armor(String name, String description, int defense, int price, int style) {
         this.name = name;
@@ -46,6 +47,29 @@ public class Armor{
         this.defense = defense;
         this.style = style;
         this.price = price;
+    }
+    
+    //functions
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (id ^ (id >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Armor other = (Armor) obj;
+        if (id != other.id)
+            return false;
+        return true;
     }
 
     //get functions
@@ -64,7 +88,7 @@ public class Armor{
     public String getDescription() {
         return description;
     }
-    
+
     public int getDefense() {
         return defense;
     }
@@ -96,10 +120,6 @@ public class Armor{
 
     public void setName(String name){
         this.name = name;
-    }
-
-    public void setPicture(Blob imageFile){
-        this.imageFile = imageFile;
     }
 
     public void setDescription(String description){
