@@ -5,6 +5,7 @@ import java.sql.Blob;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.grupo13.grupo13.model.Armor;
@@ -27,6 +28,9 @@ public class SampleData {
 
         @Autowired
         private ArmorRepository armorRepository;
+        
+        @Autowired
+	private PasswordEncoder passwordEncoder;
 
         public Blob localImageToBlob(String localFilePath) {
                 File imageFile = new File(localFilePath);
@@ -43,8 +47,8 @@ public class SampleData {
         // loads the default items
         @PostConstruct
         public void init() {
-                User lupe = new User(10000, "Lupe");
-                userRepository.save(lupe);
+                userRepository.save(new User("user", passwordEncoder.encode("pass"), "USER"));
+		userRepository.save(new User("admin", passwordEncoder.encode("adminpass"), "USER", "ADMIN"));
 
                 //faltan las imagenes
 
