@@ -1,32 +1,33 @@
 package com.grupo13.grupo13.controller;
-
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import java.util.Collection;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
+import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
@@ -53,6 +54,8 @@ public class grupo13RestController {
 	@Autowired
 	private armorMapper armorMapper;
 	@Autowired
+	private CharacterMapper characterMapper;
+	@Autowired
 	private UserService userService;
 
 	grupo13RestController(CharacterService characterService) {
@@ -61,18 +64,31 @@ public class grupo13RestController {
 
 	// WEAPONS AND ARMORS
 	// _________________________________________________________________________________________________________
+	
 	// SHOW ALL -------------------------------------------------
+
 	@GetMapping("/weapons")
 	public List<WeaponBasicDTO> getWeapons() {
 		return weaponService.findAll();
 	}
 
 	@GetMapping("/armors")
-	public Collection<ArmorBasicDTO> getArmors() {
+	public List<ArmorBasicDTO> getArmors() {
 		return armorService.findAll();
 	}
 
+	@GetMapping("/list_weapons")
+	public Page<WeaponBasicDTO> getPageWeapons(Pageable pageable) {
+		return weaponService.findAllBasic(pageable);
+	}
+
+	@GetMapping("/list_armors")
+	public Page<ArmorBasicDTO> getPageArmors(Pageable pageable) {
+		return armorService.findAllBasic(pageable);
+	}
+
 	// SHOW 1 -------------------------------------------------
+
 	@GetMapping("/weapon/{id}")
 	public WeaponDTO getWeapon(@PathVariable long id) {
 		return weaponService.findById(id);
@@ -106,69 +122,69 @@ public class grupo13RestController {
 	// CREATE -------------------------------------------------
 
 	@PostMapping("/weapons")
-	public ResponseEntity<WeaponDTO> createWeapon(@RequestBody Weapon weapon) {
-		weaponService.save(weaponMapper.toDTO(weapon));
+	public ResponseEntity<WeaponDTO> createWeapon(@RequestBody WeaponDTO weaponDTO) {
+		weaponService.save(weaponDTO);
+
+		Weapon weapon = weaponMapper.toDomain(weaponDTO);
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(weapon.getId()).toUri();
-		return ResponseEntity.created(location).body(weaponMapper.toDTO(weapon));
+
+		return ResponseEntity.created(location).body(weaponDTO);
 	}
 
 	@PostMapping("/armors")
-	public ResponseEntity<Armor> createArmor(@RequestBody Armor armor) {
-		armorService.save(armorMapper.toDTO(armor));
+	public ResponseEntity<ArmorDTO> createArmor(@RequestBody ArmorDTO armorDTO) {
+		armorService.save(armorDTO);
+
+		Armor armor = armorMapper.toDomain(armorDTO);
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(armor.getId()).toUri();
-		return ResponseEntity.created(location).body(armor);
+
+		return ResponseEntity.created(location).body(armorDTO);
 	}
 
 	@PostMapping("/weapon/{id}/image")
-	public ResponseEntity<Object> createWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-			throws IOException {
-
+	public ResponseEntity<Object> createWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
 		URI location = fromCurrentRequest().build().toUri();
 		weaponService.createWeaponImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.created(location).build();
 	}
 
 	@PostMapping("/armor/{id}/image")
-	public ResponseEntity<Object> createArmorImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-			throws IOException {
-
+	public ResponseEntity<Object> createArmorImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
 		URI location = fromCurrentRequest().build().toUri();
 		armorService.createArmorImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.created(location).build();
 	}
 
 	// UPDATE -------------------------------------------------
-	@PutMapping("/weapon/{id}")
-	public WeaponDTO replaceWeapon(@PathVariable long id, @RequestBody Weapon updatedWeapon) {
 
-		weaponService.update(id, weaponMapper.toDTO(updatedWeapon));
+	  @PutMapping("/weapon/{id}")
+	public WeaponDTO replaceWeapon(@PathVariable long id, @RequestBody WeaponDTO updatedWeaponDTO) {
+		weaponService.update(id, updatedWeaponDTO);
 
-		return weaponMapper.toDTO(updatedWeapon);
+		return updatedWeaponDTO;
 	}
 
 	@PutMapping("/armor/{id}")
-	public ArmorDTO replaceArmor(@PathVariable long id, @RequestBody ArmorDTO updatedArmor) {
-		armorService.update(id, updatedArmor);
-		return updatedArmor;
+	public ArmorDTO replaceArmor(@PathVariable long id, @RequestBody ArmorDTO updatedArmorDTO) {
+		armorService.update(id, updatedArmorDTO);
+
+		return updatedArmorDTO;
 	}
 
 	@PutMapping("weapon/{id}/image")
-	public ResponseEntity<Object> replaceWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-			throws IOException {
-
+	public ResponseEntity<Object> replaceWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
 		weaponService.replaceImage(id, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping("armor/{id}/image")
-	public ResponseEntity<Object> replaceArmorImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-			throws IOException {
-
+	public ResponseEntity<Object> replaceArmorImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
 		armorService.replaceImage(id, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.noContent().build();
 	}
 
 	// DELETE -------------------------------------------------
+
 	@DeleteMapping("/armor/{id}")
 	public void deleteArmor(@PathVariable long id) {
 		armorService.deleteById(id);
@@ -183,17 +199,17 @@ public class grupo13RestController {
 	// _________________________________________________________________________________________________________
 
 	// SHOW ALL -------------------------------------------------
+
 	@GetMapping("/characters")
-	public Collection<Character> getCharacters() {
-		return characterService.findAll(); // funciona, pero necesita de DTOS, al menos este siosi, si no se hacen
-											// referencias circulares
+	public List<CharacterBasicDTO> getCharacters() {
+		return characterService.findAll(); 
 	}
 
 	// SHOW 1 -------------------------------------------------
+
 	@GetMapping("/character/{id}")
-	public Character getCharacter(@PathVariable long id) {
-		return characterService.findById(id).get(); // funciona, pero necesita de DTOS, al menos este siosi, si no se
-													// hacen referencias circulares
+	public CharacterDTO getCharacter(@PathVariable long id) {
+		return characterService.findById(id);
 	}
 
 	@GetMapping("/character/{id}/image")
@@ -207,11 +223,15 @@ public class grupo13RestController {
 	}
 
 	// CREATE -------------------------------------------------
+
 	@PostMapping("/characters")
-	public ResponseEntity<Character> createCharacter(@RequestBody Character character) {
-		characterService.save(character);
+	public ResponseEntity<CharacterDTO> createCharacter(@RequestBody CharacterDTO characterDTO) {
+		characterService.save(characterDTO);
+
+		Character character = characterMapper.toDomain(characterDTO);
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(character.getId()).toUri();
-		return ResponseEntity.created(location).body(character);
+
+		return ResponseEntity.created(location).body(characterDTO);
 	}
 
 	@PostMapping("/character/{id}/image")
@@ -227,12 +247,14 @@ public class grupo13RestController {
 	// -------------------------------------------------
 
 	// DELETE -------------------------------------------------
+
 	@DeleteMapping("/character/{id}")
 	public void deleteCharacter(@PathVariable long id) {
 		characterService.deleteById(id);
 	}
 
 	// IMAGES ------------------------------------------------------
+
 	@PutMapping("character/{id}/image")
 	public ResponseEntity<Object> replaceCharacterImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
@@ -291,14 +313,15 @@ public class grupo13RestController {
 	@PostMapping("/weapon/equipment/{id}")
 	public WeaponDTO equipWeapon(@PathVariable long id) {
 		//launches error if character doesnt exist, to be improved
-		Character character = userService.getCharacter();
+		CharacterDTO characterDTO = userService.getCharacter();
+		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		WeaponDTO equipment = weaponService.findById(id);
 
 		if (equipment != null) { // if it exists
 			if (userService.hasWeapon(id)) {
 				characterService.equipWeapon(equipment, charId); // equips it, adding the necessary attributes
-				weaponService.addCharacter(character, equipment);
+				weaponService.addCharacter(characterDTO, equipment);
 				return equipment;
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
@@ -312,14 +335,15 @@ public class grupo13RestController {
 	@PostMapping("/armor/equipment/{id}")
 	public ArmorDTO equipArmor(@PathVariable long id) {
 		//launches error if character doesnt exist, to be improved
-		Character character = userService.getCharacter();
+		CharacterDTO characterDTO = userService.getCharacter();
+		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		ArmorDTO equipment = armorService.findById(id);
 
 		if (equipment != null) { // if it exists
 			if (userService.hasArmor(id)) {
 				characterService.equipArmor(equipment, charId); // equips it, adding the necessary attributes
-				armorService.addCharacter(character, equipment);
+				armorService.addCharacter(characterDTO, equipment);
 				return equipment;
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
@@ -329,12 +353,14 @@ public class grupo13RestController {
 		}
 
 	}
+
 	//Unequip weapons and armors
 
 	@DeleteMapping("/armor/equipment/{id}")
     public ArmorDTO unEquipArmor(@RequestParam long id) {
         //launches error if character doesnt exist, to be improved
-		Character character = userService.getCharacter();
+		CharacterDTO characterDTO = userService.getCharacter();
+		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		ArmorDTO equipment = armorService.findById(id);
 
@@ -350,10 +376,12 @@ public class grupo13RestController {
 		}
 
     }
+
 	@DeleteMapping("/weapon/equipment/{id}")
     public WeaponDTO unEquipWeapon(@RequestParam long id) {
         //launches error if character doesnt exist, to be improved
-		Character character = userService.getCharacter();
+		CharacterDTO characterDTO = userService.getCharacter();
+		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		WeaponDTO equipment = weaponService.findById(id);
 
@@ -367,21 +395,6 @@ public class grupo13RestController {
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
 		}
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

@@ -4,10 +4,10 @@
    <div class="d-flex col-5">
       <div class="card w-100 border-dark" style="background-color:  rgb(249, 196, 164);">
          <img src="/character/{{character.id}}/image" class="card-img-top" alt="...">
-         <div class="card-body">
-            <h5 class="card-title">{{character.name}}</h5>
-            <p class="card-text">{{character.description}}</p>
-         </div>
+         
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> <h5 class="card-title">{{character.name}}</h5></li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">    <p class="card-text">{{{character.description}}}</p></li> <!--Shows rich text -->
+         
          <ul class="list-group list-group-flush">
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">MONEY - {{user.money}}</li>
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Strength - {{character.strength}}</li>

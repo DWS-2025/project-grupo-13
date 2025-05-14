@@ -15,12 +15,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile; 
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.repository.WeaponRepository;
-
 
 @Service
 public class WeaponService {
@@ -30,6 +31,8 @@ public class WeaponService {
     private WeaponRepository weaponRepository;
     @Autowired
     private WeaponMapper mapper;
+    @Autowired
+    private CharacterMapper characterMapper;
 
 
     //saves in repository
@@ -52,13 +55,13 @@ public class WeaponService {
         weapon.setImageName("/Weapon/" + weapon.getId() + "/image");
 
         weaponRepository.save(weapon);
-        }
-        
+        } 
     }
 
-    public void addCharacter(Character character, WeaponDTO weaponDTO){
+    public void addCharacter(CharacterDTO characterDTO, WeaponDTO weaponDTO){
         long id = weaponDTO.id();
         Optional<Weapon> weaponOP = weaponRepository.findById(id);
+        Character character = characterMapper.toDomain(characterDTO);
 
         if (weaponOP.isPresent()) {
             Weapon weapon = weaponOP.get();
@@ -69,14 +72,19 @@ public class WeaponService {
     
 	//returns all weapons in a list
     public List<WeaponBasicDTO> findAll(){
-        return mapper.toDTOs(weaponRepository.findAll());
+        return mapper.toBasicDTOs(weaponRepository.findAll());
     }
 
     //returns a page with all the weapons
-    public Page<Weapon> findAll(Pageable pageable) {
-        return weaponRepository.findAll(pageable);
+    public Page<WeaponDTO> findAll(Pageable pageable) {
+        return weaponRepository.findAll(pageable).map(weapon -> mapper.toDTO(weapon));
     }
 
+    //returns a page with all the weapons only with the public info
+    public Page<WeaponBasicDTO> findAllBasic(Pageable pageable) {
+        return weaponRepository.findAll(pageable).map(weapon -> mapper.toBasicDTO(weapon));
+    }
+    
 	//searches a weapon by its id
     public WeaponDTO findById(long id){
         return mapper.toDTO(weaponRepository.findById(id).get());
@@ -88,24 +96,15 @@ public class WeaponService {
     }
 	
     //updates a weapon when edited
-    public void update(Long oldWeaponid, WeaponDTO updatedWeapon){
-        Optional<Weapon> oldWeaponOp = weaponRepository.findById(oldWeaponid);
+    public void update(Long oldWeaponid, WeaponDTO updatedWeaponDTO){
         
-        if (oldWeaponOp.isPresent()) {
-            Weapon oldWeapon = oldWeaponOp.get();
+        if (weaponRepository.existsById(oldWeaponid)) {
+            Weapon updatedWeapon = mapper.toDomain(updatedWeaponDTO);
+            updatedWeapon.setId(oldWeaponid);
 
-
-
-            oldWeapon.setImageName("api/weapon/" + oldWeaponid + "/image");
-            oldWeapon.setName(updatedWeapon.name());
-            oldWeapon.setDescription(updatedWeapon.description());
-            oldWeapon.setstrength(updatedWeapon.strength());
-            oldWeapon.setPrice(updatedWeapon.price());
-            oldWeapon.setIntimidation(updatedWeapon.intimidation());
-
-            oldWeapon.getCharacters().forEach(character -> character.setStrength(updatedWeapon.strength()));
-
-            weaponRepository.save(oldWeapon);
+            weaponRepository.save(updatedWeapon);
+        }else{
+            throw new NoSuchElementException();
         }
     }
 

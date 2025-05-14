@@ -6,6 +6,7 @@ import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.DTOs.UserBasicDTO;
 import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
@@ -44,38 +45,38 @@ public class UserService {
 
     //returns all users in a list
     public List<UserBasicDTO> findAll() {
-        return mapper.toDTOs(userRepository.findAll());
+        return mapper.toBasicDTOs(userRepository.findAll());
     }
 
     public void save(UserDTO userDTO) {
-
         User user = mapper.toDomain(userDTO);
+
         userRepository.save(user);
     }
 
     //returns true if a character (located by its id) has a equipment in use
     public boolean hasWeapon(long id) {
-
         User user = userRepository.findById((long)1).get();
-        WeaponDTO equipment = weaponService.findById(id);
-        if (equipment != null) {
-            return user.getInventoryWeapon().contains(weaponMapper.toDomain(equipment));
+        WeaponDTO weaponDTO = weaponService.findById(id);
+
+        if (weaponDTO != null) {
+            return user.getInventoryWeapon().contains(weaponMapper.toDomain(weaponDTO));
         }
         return false;
     }
 
     //returns if the user has an armor given by an id
     public boolean hasArmor(long id) {
-
         User user = userRepository.findById((long)1).get();
-        ArmorDTO equipment = armorService.findById(id);
-        if (equipment != null) {
-            return user.getInventoryArmor().contains(armorMapper.toDomain(equipment));
+        ArmorDTO armorDTO = armorService.findById(id);
+
+        if (armorDTO != null) {
+            return user.getInventoryArmor().contains(armorMapper.toDomain(armorDTO));
         }
         return false;
     }
 
-    //returns the money os the current user
+    //returns the money of the current user
     public int getMoney() {
         return userRepository.findById((long)1).get().getMoney();
     }
@@ -83,22 +84,23 @@ public class UserService {
     //returns the inventory of the current user
     public List<WeaponBasicDTO> currentUserInventoryWeapon() {
         User user = userRepository.findById((long)1).get();
-        return weaponMapper.toDTOs(user.getInventoryWeapon());
+        return weaponMapper.toBasicDTOs(user.getInventoryWeapon());
     }
 
     public List<ArmorBasicDTO> currentUserInventoryArmor() {
         User user = userRepository.findById((long)1).get();
-        return armorMapper.toDTOs(user.getInventoryArmor());
+        return armorMapper.toBasicDTOs(user.getInventoryArmor());
     }
 
     //put a equipment in the inventory of an scpecific user
     public void saveWeapon(long id) {
         User user = userRepository.findById((long)1).get();
+
         if (!hasWeapon(id)) {
-            WeaponDTO equipment = weaponService.findById(id);
-            if (equipment != null) {
-                Weapon weapon = weaponMapper.toDomain(equipment);
-                int price = equipment.price();
+            WeaponDTO weaponDTO = weaponService.findById(id);
+            if (weaponDTO != null) {
+                Weapon weapon = weaponMapper.toDomain(weaponDTO);
+                int price = weaponDTO.price();
                 user.setMoney(user.getMoney() - price);
                 user.getInventoryWeapon().add(weapon);
                 weapon.getUsers().add(user);
@@ -111,11 +113,12 @@ public class UserService {
     //save an armor
     public void saveArmor(long id) {
         User user = userRepository.findById((long)1).get();
+
         if (!hasArmor(id)) {
-            ArmorDTO equipment = armorService.findById(id);
-            if (equipment != null) {
-                Armor armor = armorMapper.toDomain(equipment);
-                int price = equipment.price();
+            ArmorDTO armorDTO = armorService.findById(id);
+            if (armorDTO != null) {
+                Armor armor = armorMapper.toDomain(armorDTO);
+                int price = armorDTO.price();
                 user.setMoney(user.getMoney() - price);
                 user.getInventoryArmor().add(armor);
                 armor.getUsers().add(user);
@@ -126,17 +129,17 @@ public class UserService {
     }
 
     //set a character to the current user
-    public void saveCharacter(Character character) {
+    public void saveCharacter(CharacterDTO characterDTO) {
+        Character character = characterMapper.toDomain(characterDTO);
+
         User user = userRepository.findById((long)1).get();
+
         user.setCharacter(character); 
     }
 
     //returns the character of the current user
-    public Character getCharacter() {
-        return userRepository.findById((long)1).get().getCharacter();
+    public CharacterDTO getCharacter() {
+        return characterMapper.toDTO(userRepository.findById((long)1).get().getCharacter());
     }
 
 }
-
-
-    
