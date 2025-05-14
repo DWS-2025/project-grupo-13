@@ -32,11 +32,13 @@ import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.repository.WeaponRepository;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
+import com.grupo13.grupo13.repository.WeaponRepository;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 @RestController
@@ -57,6 +59,8 @@ public class grupo13RestController {
 	private CharacterMapper characterMapper;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private WeaponRepository weaponRepository;
 
 	grupo13RestController(CharacterService characterService) {
 		this.characterService = characterService;
@@ -87,6 +91,18 @@ public class grupo13RestController {
 		return armorService.findAllBasic(pageable);
 	}
 
+	//SEARCH BY STRENGHT/PRICE (GREATER THAN)
+	@GetMapping("/weapons/search")
+    public List<WeaponBasicDTO> searchWeapons(
+        @RequestParam(required = true) Integer strength_gt,
+        @RequestParam(required = true) Integer price_gt
+    ) {
+        if (strength_gt != null && price_gt != null) {
+            return weaponRepository.findByStrengthGreaterThanAndPriceGreaterThan(strength_gt, price_gt);
+        } else {
+            return weaponService.findAll(); 
+        }
+	}
 	// SHOW 1 -------------------------------------------------
 
 	@GetMapping("/weapon/{id}")
