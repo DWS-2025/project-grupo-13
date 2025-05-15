@@ -24,6 +24,8 @@ public class User {
     //attributes
     private int money;
     private String userName;
+    private String encodedPassword;
+
     @OneToOne
     private Character character;
     @ManyToMany

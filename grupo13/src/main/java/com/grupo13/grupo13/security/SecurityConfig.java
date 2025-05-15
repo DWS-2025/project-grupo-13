@@ -65,10 +65,10 @@ public class SecurityConfig {
 		http
 			.authorizeHttpRequests(authorize -> authorize
                     // PRIVATE ENDPOINTS
-					.requestMatchers(HttpMethod.GET, "/api/users/me").hasRole("USER")
-                    .requestMatchers(HttpMethod.POST,"/api/books/").hasRole("USER")
-                    .requestMatchers(HttpMethod.PUT,"/api/books/**").hasRole("USER")
-                    .requestMatchers(HttpMethod.DELETE,"/api/books/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.GET, "/api/**").hasRole("USER")
+                    .requestMatchers(HttpMethod.POST,"/api/**").hasRole("USER")
+                    .requestMatchers(HttpMethod.PUT,"/api/**").hasRole("USER")
+                    .requestMatchers(HttpMethod.DELETE,"/api/**").hasRole("ADMIN")
 					// PUBLIC ENDPOINTS
 					.anyRequest().permitAll()
 			);
@@ -92,25 +92,38 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	@Order(1)
+	@Order(2)
 	public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
 
 		http.authenticationProvider(authenticationProvider());
 
 		http
 				.authorizeHttpRequests(authorize -> authorize
-						// PUBLIC PAGES
-						.requestMatchers("/").permitAll()
+						/////// PUBLIC PAGES
 						.requestMatchers("/images/**").permitAll()
 						.requestMatchers("/css/**").permitAll()
-						.requestMatchers("/books/**").permitAll()
+						.requestMatchers("/list_armors/**").permitAll()
+						.requestMatchers("/list_weapons/**").permitAll()
 						.requestMatchers("/error").permitAll()
-						// PRIVATE PAGES
-						.requestMatchers("/profile").hasAnyRole("USER")
-						.requestMatchers("/newbook").hasAnyRole("USER")
-						.requestMatchers("/editbook").hasAnyRole("USER")
-						.requestMatchers("/editbook/*").hasAnyRole("USER")
-						.requestMatchers("/removebook/*").hasAnyRole("ADMIN")
+						/////// PRIVATE PAGES
+						//USER PAGES
+						.requestMatchers("/").hasAnyRole("USER")
+						.requestMatchers("/formProcess/**").hasAnyRole("USER")
+						.requestMatchers("/search/**").hasAnyRole("USER")
+						.requestMatchers("/purchaseWeapon/**").hasAnyRole("USER")
+						.requestMatchers("/purchaseArmor/**").hasAnyRole("USER")
+						.requestMatchers("/equipWeapon/**").hasAnyRole("USER")
+						.requestMatchers("/equipArmor/**").hasAnyRole("USER")
+						.requestMatchers("/unEquipWeapon/**").hasAnyRole("USER")
+						.requestMatchers("/unEquipArmor/**").hasAnyRole("USER")
+						.requestMatchers("/image/**").hasAnyRole("USER")
+						.requestMatchers("/character/**").hasAnyRole("USER")
+						//ADMIN PAGES
+						.requestMatchers("/weapon/**").hasAnyRole("ADMIN")
+						.requestMatchers("/armor/**").hasAnyRole("ADMIN")
+						.requestMatchers("/equipment_manager/**").hasAnyRole("ADMIN")
+						//with all this should cover all adminController and etc, but keep checking, regular tests
+
 				)
 				.formLogin(formLogin -> formLogin
 						.loginPage("/login")
