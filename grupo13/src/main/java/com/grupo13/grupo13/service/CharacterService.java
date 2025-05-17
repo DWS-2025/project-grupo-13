@@ -32,13 +32,6 @@ import java.nio.file.Paths;
 @Service
 public class CharacterService {
 
-    private static final Path BACKUP_FOLDER = 
-        
-        Paths.get("").toAbsolutePath()
-             .resolve("backups")
-             .resolve("characters")
-             .normalize();
-
     // attributes
     @Autowired
     private CharacterRepository characterRepository;
