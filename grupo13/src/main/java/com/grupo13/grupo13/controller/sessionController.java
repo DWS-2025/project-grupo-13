@@ -147,27 +147,44 @@ public class sessionController {
     public String showWeapons(Model model, @PageableDefault(size = 3) Pageable pageable) {
         Page<WeaponBasicDTO> allWeapons = weaponService.findAllBasic(pageable);
 
-        List<WeaponBasicDTO> weaponsList = new LinkedList<>();
-        for(WeaponBasicDTO weap : allWeapons){
-            if(!userService.hasWeapon(weap)){
-                weaponsList.addLast(weap);
+        if(userService.getLoggedUserDTOOrNull() != null){
+            model.addAttribute("user", userService.getLoggedUserDTO());
+            
+            List<WeaponBasicDTO> weaponsList = new LinkedList<>();
+            for(WeaponBasicDTO weap : allWeapons){
+                if(!userService.hasWeapon(weap)){
+                    weaponsList.addLast(weap);
+                }
             }
+            Page<WeaponBasicDTO> showedWeapons = new PageImpl<>(weaponsList, pageable, allWeapons.getNumberOfElements()-weaponsList.size());
+            model.addAttribute("weapon", showedWeapons);
+
+            //buttons
+            boolean hasPrev = showedWeapons.hasPrevious();
+            boolean hasNext = showedWeapons.getNumberOfElements() > showedWeapons.getNumber() * showedWeapons.getSize();
+            model.addAttribute("hasPrev", hasPrev);
+            model.addAttribute("prev", showedWeapons.getNumber() - 1);
+            model.addAttribute("hasNext", hasNext);
+            model.addAttribute("next", showedWeapons.getNumber() + 1);
+            model.addAttribute("size", showedWeapons.getSize());
+            return "listing_weapons";
+
+        } else{
+            Page<WeaponBasicDTO> showedWeapons = weaponService.findAllBasic(pageable);
+
+            //Page<WeaponBasicDTO> showedWeapons = new PageImpl<>(weaponsList, pageable, allWeapons.getNumberOfElements()-weaponsList.size());
+            model.addAttribute("weapon", showedWeapons);
+
+            //buttons
+            boolean hasPrev = showedWeapons.hasPrevious();
+            boolean hasNext = showedWeapons.getNumberOfElements() > showedWeapons.getNumber() * showedWeapons.getSize();
+            model.addAttribute("hasPrev", hasPrev);
+            model.addAttribute("prev", showedWeapons.getNumber() - 1);
+            model.addAttribute("hasNext", hasNext);
+            model.addAttribute("next", showedWeapons.getNumber() + 1);
+            model.addAttribute("size", showedWeapons.getSize());
+            return "listing_weapons";
         }
-
-        Page<WeaponBasicDTO> showedWeapons = new PageImpl<>(weaponsList, pageable, allWeapons.getNumberOfElements()-weaponsList.size());
-        
-        model.addAttribute("user", userService.getLoggedUserDTO());
-        model.addAttribute("weapon", showedWeapons);
-
-        //buttons
-        boolean hasPrev = showedWeapons.hasPrevious();
-        boolean hasNext = showedWeapons.getNumberOfElements() > showedWeapons.getNumber() * showedWeapons.getSize();
-        model.addAttribute("hasPrev", hasPrev);
-        model.addAttribute("prev", showedWeapons.getNumber() - 1);
-        model.addAttribute("hasNext", hasNext);
-        model.addAttribute("next", showedWeapons.getNumber() + 1);
-        model.addAttribute("size", showedWeapons.getSize());
-        return "listing_weapons";
     }
 
     //used to show the armors on the shop

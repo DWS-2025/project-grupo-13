@@ -1,7 +1,9 @@
 package com.grupo13.grupo13.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
@@ -19,6 +21,9 @@ import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 @Service
 public class UserService {
@@ -52,6 +57,25 @@ public class UserService {
 	public UserDTO getLoggedUserDTO() {
         return mapper.toDTO(getLoggedUser());
     }
+
+    //for the shop, returns null if not logged
+    public User getLoggedUserOrNull() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // null if not authenticated or anonymus
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+        // if auth, we search in db
+        return userRepository.findByUserName(auth.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + auth.getName()));
+    }
+    
+    public UserDTO getLoggedUserDTOOrNull() {
+        
+        User user = getLoggedUserOrNull();
+        return (user != null) ? mapper.toDTO(getLoggedUserOrNull()) : null;
+        }
+
 
     //returns all users in a list
     public List<UserBasicDTO> findAll() {
