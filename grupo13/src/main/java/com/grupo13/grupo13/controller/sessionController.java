@@ -72,7 +72,7 @@ public class sessionController {
 		}
 	} 
 
-    @GetMapping("/")
+    @GetMapping("/character")
     public String index(Model model, HttpSession session) {
 
         List<WeaponBasicDTO> currentInventoryWeapon = userService.currentUserInventoryWeapon();
