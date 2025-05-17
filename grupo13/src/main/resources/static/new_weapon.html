@@ -60,6 +60,8 @@
     </ul>
     <a class="element-header" href="/">Character</a>
     <a class="element-header" href="/search">Search</a>
+    {{#logged}}
+    {{#admin}}
     <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
       Admin</a>
     <ul class="dropdown-menu">
@@ -84,8 +86,11 @@
       <input type="text" name="imageName" class="form-control" />
       <p>Picture file:</p>
       <input type='file' name='weaponImage' accept=".jpg, .jpeg, .gif" class="form-control" />
+      <input type="hidden" name="_csrf" value="{{token}}"/>
       <input type='submit' value='Save' />
     </form>
   </div>
+  {{/admin}}
+  {{/logged}}
 </body>
 </html>
