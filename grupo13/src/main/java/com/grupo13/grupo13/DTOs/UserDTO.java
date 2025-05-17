@@ -7,5 +7,6 @@ public record UserDTO(
     String userName,
     CharacterBasicDTO character,          
     List<WeaponBasicDTO> inventoryWeapon,   
-    List<ArmorBasicDTO> inventoryArmor     
+    List<ArmorBasicDTO> inventoryArmor,
+    List<String> roles     
 ) {}

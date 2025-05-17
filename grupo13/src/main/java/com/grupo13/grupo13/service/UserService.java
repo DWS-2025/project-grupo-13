@@ -1,6 +1,7 @@
 package com.grupo13.grupo13.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
@@ -38,9 +39,18 @@ public class UserService {
     @Autowired
     private CharacterMapper characterMapper;
 
+    public UserDTO getUser(String name) {
+		return mapper.toDTO(userRepository.findByUserName(name).orElseThrow());
+	}
+
+	public User getLoggedUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByUserName(username).get();
+    }
+
     //gets the current user
-    public UserDTO getLoggedUser() {
-        return mapper.toDTO(userRepository.findById((long)1).orElseThrow());
+	public UserDTO getLoggedUserDTO() {
+        return mapper.toDTO(getLoggedUser());
     }
 
     //returns all users in a list
