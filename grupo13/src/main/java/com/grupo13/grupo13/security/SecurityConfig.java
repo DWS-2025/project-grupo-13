@@ -64,7 +64,7 @@ public class SecurityConfig {
 		
 		http
 			.authorizeHttpRequests(authorize -> authorize
-
+					.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()				
 					.requestMatchers(HttpMethod.GET, "/api/weapon/*/image").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/armor/*/image").permitAll()
 

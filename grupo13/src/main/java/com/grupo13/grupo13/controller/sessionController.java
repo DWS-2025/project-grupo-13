@@ -53,7 +53,7 @@ public class sessionController {
     @Autowired
     private CharacterMapper characterMapper;
 
-    @GetMapping("/")
+    @GetMapping("/character")
     public String index(Model model, HttpSession session) {
 
         List<WeaponBasicDTO> currentInventoryWeapon = userService.currentUserInventoryWeapon();
@@ -116,7 +116,10 @@ public class sessionController {
         return "character_view";
     }
 
-    
+    @GetMapping("/")
+    public String redirectToProfile() {
+        return "redirect:/list_weapons";
+    }
    
     //used to show the weapons on the shop
     @GetMapping("/list_weapons")
