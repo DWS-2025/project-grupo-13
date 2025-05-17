@@ -39,8 +39,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 import com.grupo13.grupo13.util.InputSanitizer;
 @Controller
 public class sessionController {
@@ -85,7 +83,7 @@ public class sessionController {
         model.addAttribute("character", characterDTO);
         model.addAttribute("currentWeapon", currentInventoryWeapon);
         model.addAttribute("currentArmor", currentInventoryArmor);
-        model.addAttribute("user", userService.getLoggedUser());
+        model.addAttribute("user", userService.getLoggedUserDTO());
 
         // checks if the user has "logged", in the first fase is creating the character
         if (characterDTO == null) {
@@ -119,7 +117,7 @@ public class sessionController {
         userService.saveCharacter(characterDTO);
         characterService.saveUser(characterDTO);    
         characterService.save(characterDTO, characterImage);
-        userService.save(userService.getLoggedUser());
+        userService.save(userService.getLoggedUserDTO());
 
         /* // saves image in the correspondent folder
         Files.createDirectories(IMAGES_FOLDER);
@@ -132,18 +130,21 @@ public class sessionController {
         List<ArmorBasicDTO> currentArmor = userService.currentUserInventoryArmor();
         model.addAttribute("currentW", currentWeapon);
         model.addAttribute("currentA", currentArmor);
-        model.addAttribute("user", userService.getLoggedUser());
+        model.addAttribute("user", userService.getLoggedUserDTO());
 
         return "character_view";
     }
 
-    
+    @GetMapping("/")
+    public String redirectToProfile() {
+        return "redirect:/list_weapons";
+    }
    
     //used to show the weapons on the shop
     @GetMapping("/list_weapons")
     public String showWeapons(Model model, @PageableDefault(size = 3) Pageable page) {
         Page<WeaponDTO> weapons = weaponService.findAll(page);
-        model.addAttribute("user", userService.getLoggedUser());
+        model.addAttribute("user", userService.getLoggedUserDTO());
         model.addAttribute("weapon", weapons);
 
         //buttons
@@ -162,7 +163,7 @@ public class sessionController {
     @GetMapping("/list_armors")
     public String showArmors(Model model, @PageableDefault(size = 2) Pageable page) {
         Page<ArmorDTO> armors = armorService.findAll(page);
-        model.addAttribute("user", userService.getLoggedUser());
+        model.addAttribute("user", userService.getLoggedUserDTO());
         model.addAttribute("armor", armors);
 
         //buttons

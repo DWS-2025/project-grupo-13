@@ -64,6 +64,10 @@ public class SecurityConfig {
 		
 		http
 			.authorizeHttpRequests(authorize -> authorize
+					.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()				
+					.requestMatchers(HttpMethod.GET, "/api/weapon/*/image").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/armor/*/image").permitAll()
+
                     // PRIVATE ENDPOINTS
 					.requestMatchers(HttpMethod.GET, "/api/**").hasRole("USER")
                     .requestMatchers(HttpMethod.POST,"/api/**").hasRole("USER")
@@ -105,24 +109,27 @@ public class SecurityConfig {
 						.requestMatchers("/list_armors/**").permitAll()
 						.requestMatchers("/list_weapons/**").permitAll()
 						.requestMatchers("/error").permitAll()
+						.requestMatchers("/image/**").permitAll()
+
 						/////// PRIVATE PAGES
 						//USER PAGES
 						.requestMatchers("/").hasAnyRole("USER")
 						.requestMatchers("/formProcess/**").hasAnyRole("USER")
 						.requestMatchers("/search/**").hasAnyRole("USER")
-						.requestMatchers("/purchaseWeapon/**").hasAnyRole("USER")
-						.requestMatchers("/purchaseArmor/**").hasAnyRole("USER")
+						.requestMatchers("/purchaseWeapon").hasAnyRole("USER")
+						.requestMatchers("/purchaseArmor").hasAnyRole("USER")
 						.requestMatchers("/equipWeapon/**").hasAnyRole("USER")
 						.requestMatchers("/equipArmor/**").hasAnyRole("USER")
 						.requestMatchers("/unEquipWeapon/**").hasAnyRole("USER")
 						.requestMatchers("/unEquipArmor/**").hasAnyRole("USER")
-						.requestMatchers("/image/**").hasAnyRole("USER")
 						.requestMatchers("/character/**").hasAnyRole("USER")
 						//ADMIN PAGES
 						.requestMatchers("/weapon/**").hasAnyRole("ADMIN")
 						.requestMatchers("/armor/**").hasAnyRole("ADMIN")
 						.requestMatchers("/equipment_manager/**").hasAnyRole("ADMIN")
 						//with all this should cover all adminController and etc, but keep checking, regular tests
+						.anyRequest().authenticated()
+
 
 				)
 				.formLogin(formLogin -> formLogin

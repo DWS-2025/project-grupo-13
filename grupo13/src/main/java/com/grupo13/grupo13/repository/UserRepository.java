@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User,Long>{
     @Query("SELECT u From User u join u.inventoryArmor a WHERE a.name = :armorNam")
     List<User> findByArmorName(@Param("armorName")String armorName);
 
-    Optional<User> findByName(String name);
+    Optional<User> findByUserName(String name);
 
 
     //attributes
