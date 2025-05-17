@@ -5,14 +5,17 @@ import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +34,11 @@ import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import com.grupo13.grupo13.util.InputSanitizer;
@@ -51,7 +57,24 @@ public class sessionController {
     @Autowired
     private CharacterMapper characterMapper;
 
-    @GetMapping("/")
+
+@ModelAttribute
+	public void addAttributes(Model model, HttpServletRequest request) {
+
+		Principal principal = request.getUserPrincipal();
+
+		if(principal != null) {
+		
+			model.addAttribute("logged", true);		
+			model.addAttribute("userName", principal.getName());
+			model.addAttribute("admin", request.isUserInRole("ADMIN"));
+			
+		} else {
+			model.addAttribute("logged", false);
+		}
+	} 
+
+    @GetMapping("/character")
     public String index(Model model, HttpSession session) {
 
         List<WeaponBasicDTO> currentInventoryWeapon = userService.currentUserInventoryWeapon();
@@ -114,42 +137,64 @@ public class sessionController {
         return "character_view";
     }
 
-    
+    @GetMapping("/")
+    public String redirectToProfile() {
+        return "redirect:/list_weapons";
+    }
    
     //used to show the weapons on the shop
     @GetMapping("/list_weapons")
-    public String showWeapons(Model model, @PageableDefault(size = 3) Pageable page) {
-        Page<WeaponDTO> weapons = weaponService.findAll(page);
+    public String showWeapons(Model model, @PageableDefault(size = 3) Pageable pageable) {
+        Page<WeaponBasicDTO> allWeapons = weaponService.findAllBasic(pageable);
+
+        List<WeaponBasicDTO> weaponsList = new LinkedList<>();
+        for(WeaponBasicDTO weap : allWeapons){
+            if(!userService.hasWeapon(weap)){
+                weaponsList.addLast(weap);
+            }
+        }
+
+        Page<WeaponBasicDTO> showedWeapons = new PageImpl<>(weaponsList, pageable, allWeapons.getNumberOfElements()-weaponsList.size());
+        
         model.addAttribute("user", userService.getLoggedUserDTO());
-        model.addAttribute("weapon", weapons);
+        model.addAttribute("weapon", showedWeapons);
 
         //buttons
-        boolean hasPrev = page.hasPrevious();
-        boolean hasNext = (page.getPageNumber() + 1)*page.getPageSize() < weapons.getTotalElements();
+        boolean hasPrev = showedWeapons.hasPrevious();
+        boolean hasNext = showedWeapons.getNumberOfElements() > showedWeapons.getNumber() * showedWeapons.getSize();
         model.addAttribute("hasPrev", hasPrev);
-        model.addAttribute("prev", page.getPageNumber() - 1);
+        model.addAttribute("prev", showedWeapons.getNumber() - 1);
         model.addAttribute("hasNext", hasNext);
-        model.addAttribute("next", page.getPageNumber() + 1);
-        model.addAttribute("size", page.getPageSize());
+        model.addAttribute("next", showedWeapons.getNumber() + 1);
+        model.addAttribute("size", showedWeapons.getSize());
         return "listing_weapons";
     }
 
-
     //used to show the armors on the shop
     @GetMapping("/list_armors")
-    public String showArmors(Model model, @PageableDefault(size = 2) Pageable page) {
-        Page<ArmorDTO> armors = armorService.findAll(page);
+    public String showArmors(Model model, @PageableDefault(size = 2) Pageable pageable) {
+        Page<ArmorBasicDTO> allArmors = armorService.findAllBasic(pageable);
+
+        List<ArmorBasicDTO> armorsList = new LinkedList<>();
+        for(ArmorBasicDTO arm : allArmors){
+            if(!userService.hasArmor(arm)){
+                armorsList.addLast(arm);
+            }
+        }
+
+        Page<ArmorBasicDTO> showedArmors = new PageImpl<>(armorsList, pageable, allArmors.getNumberOfElements()-armorsList.size());
+        
         model.addAttribute("user", userService.getLoggedUserDTO());
-        model.addAttribute("armor", armors);
+        model.addAttribute("armor", showedArmors);
 
         //buttons
-        boolean hasPrev = page.hasPrevious();
-        boolean hasNext = (page.getPageNumber() + 1)*page.getPageSize() < armors.getTotalElements();
+        boolean hasPrev = showedArmors.hasPrevious();
+        boolean hasNext = showedArmors.getNumberOfElements() > showedArmors.getNumber() * showedArmors.getSize();
         model.addAttribute("hasPrev", hasPrev);
-        model.addAttribute("prev", page.getPageNumber() - 1);
+        model.addAttribute("prev", showedArmors.getNumber() - 1);
         model.addAttribute("hasNext", hasNext);
-        model.addAttribute("next", page.getPageNumber() + 1);
-        model.addAttribute("size", page.getPageSize());
+        model.addAttribute("next", showedArmors.getNumber() + 1);
+        model.addAttribute("size", showedArmors.getSize());
         return "listing_armors";
     }
 

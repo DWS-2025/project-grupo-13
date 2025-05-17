@@ -2,6 +2,8 @@ package com.grupo13.grupo13.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,7 +27,8 @@ import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.repository.CharacterRepository;
 import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.repository.WeaponRepository;
-
+import java.nio.file.Path;
+import java.nio.file.Paths;
 @Service
 public class CharacterService {
 
@@ -76,6 +79,8 @@ public class CharacterService {
         
         characterRepository.save(character);
     }
+
+
 
     public void saveUser(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);

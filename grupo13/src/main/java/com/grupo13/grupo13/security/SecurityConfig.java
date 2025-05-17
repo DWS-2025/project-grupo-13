@@ -64,7 +64,7 @@ public class SecurityConfig {
 		
 		http
 			.authorizeHttpRequests(authorize -> authorize
-
+					.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()				
 					.requestMatchers(HttpMethod.GET, "/api/weapon/*/image").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/armor/*/image").permitAll()
 
@@ -116,8 +116,8 @@ public class SecurityConfig {
 						.requestMatchers("/").hasAnyRole("USER")
 						.requestMatchers("/formProcess/**").hasAnyRole("USER")
 						.requestMatchers("/search/**").hasAnyRole("USER")
-						.requestMatchers("/purchaseWeapon/**").hasAnyRole("USER")
-						.requestMatchers("/purchaseArmor/**").hasAnyRole("USER")
+						.requestMatchers("/purchaseWeapon").hasAnyRole("USER")
+						.requestMatchers("/purchaseArmor").hasAnyRole("USER")
 						.requestMatchers("/equipWeapon/**").hasAnyRole("USER")
 						.requestMatchers("/equipArmor/**").hasAnyRole("USER")
 						.requestMatchers("/unEquipWeapon/**").hasAnyRole("USER")
