@@ -38,7 +38,6 @@ import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
-import com.grupo13.grupo13.repository.WeaponRepository;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 @RestController
@@ -288,7 +287,7 @@ public class grupo13RestController {
 		if (weaponDTO == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
 		}
-		int money = userService.getLoggedUser().money();
+		int money = userService.getLoggedUserDTO().money();
 		if (money >= weaponDTO.price()) {
 			if (!userService.hasWeapon(id)) {
 				userService.saveWeapon(id);
@@ -310,7 +309,7 @@ public class grupo13RestController {
 		if (armorDTO == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
 		}
-		int money = userService.getLoggedUser().money();
+		int money = userService.getLoggedUserDTO().money();
 		if (money >= armorDTO.price()) {
 			if (!userService.hasArmor(id)) {
 				userService.saveArmor(id);
