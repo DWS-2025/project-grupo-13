@@ -1,5 +1,5 @@
 //load weapon list
-  fetch("http://localhost:8080/api/weapons")
+  fetch("https://localhost:8443/api/weapons")
     .then(response => response.json())
     .then(weapons => {
       const list = document.getElementById("weapon-list");
@@ -13,7 +13,7 @@
     .catch(error => console.error("error", error));
 
 //load armor list
-  fetch("http://localhost:8080/api/armors")
+  fetch("https://localhost:8443/api/armors")
     .then(response => response.json())
     .then(armors => {
       const list = document.getElementById("armor-list");

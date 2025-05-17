@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
@@ -203,6 +204,18 @@ public class sessionController {
 
         return "search";
     }
+  @GetMapping("weaponview/{id}")
+    public String showWeapon(Model model, @PathVariable long id){
+        WeaponDTO weapon = weaponService.findById(id);
+
+        if (weapon != null) {
+            model.addAttribute("weapon", weapon);
+            return "view_weapon";
+        }else{
+            return "error";
+        }
+    }
+
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
         WeaponDTO weaponDTO = weaponService.findById(id);
