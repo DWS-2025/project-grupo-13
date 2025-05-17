@@ -168,7 +168,8 @@ public class UserService {
 
         User user = userRepository.findById((long)1).get();
 
-        user.setCharacter(character); 
+        user.setCharacter(character);
+        userRepository.save(user);
     }
 
     //returns the character of the current user

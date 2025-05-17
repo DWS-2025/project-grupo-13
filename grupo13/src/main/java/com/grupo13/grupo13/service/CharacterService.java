@@ -85,6 +85,7 @@ public class CharacterService {
     public void saveUser(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);
         character.setUser(userRepository.findById((long)1).get());
+        characterRepository.save(character);
     }
 
     // for equipping armor or weapon, sets the necessary values from the equipment

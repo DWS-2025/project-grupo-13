@@ -27,6 +27,7 @@ import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
+import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.CharacterMapper;
@@ -93,6 +94,13 @@ public class sessionController {
         } else {
             return "character_view";
         }
+    }
+    @GetMapping("/user")
+    public String user(Model model, HttpServletRequest request) {
+
+        UserDTO user = userService.getLoggedUserDTO();
+        model.addAttribute("user", user);
+        return "profile";
     }
 
     @PostMapping("/formProcess")
