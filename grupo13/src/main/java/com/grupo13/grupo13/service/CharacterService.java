@@ -63,9 +63,10 @@ public class CharacterService {
     }
 
     // creates a new character
-    public void save(CharacterDTO characterDTO) {
+    public CharacterDTO save(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);
-        characterRepository.save(character);
+        Character savedCharacter = characterRepository.save(character);
+        return mapper.toDTO(savedCharacter);
     }
 
     //saves the character's image

@@ -112,13 +112,16 @@ public class sessionController {
             model.addAttribute("message", "File not allowed or missing");
             return "sp_errors";
         }
+
         Character character = new Character(characterDesc, nameOfCharacter);
         CharacterDTO characterDTO = characterMapper.toDTO(character);
 
+        CharacterDTO savedCharacterDTO = characterService.save(characterDTO);
+
         // saves the character in the repository
-        userService.saveCharacter(characterDTO);
-        characterService.saveUser(characterDTO);    
-        characterService.save(characterDTO, characterImage);
+        userService.saveCharacter(savedCharacterDTO);
+        characterService.saveUser(savedCharacterDTO);    
+        characterService.save(savedCharacterDTO, characterImage);
         userService.save(userService.getLoggedUserDTO());
 
         /* // saves image in the correspondent folder
