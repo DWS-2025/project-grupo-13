@@ -152,4 +152,24 @@ public class UserService {
         return characterMapper.toDTO(userRepository.findById((long)1).get().getCharacter());
     }
 
+    //returns if the user has a specific weapon or armor
+    public boolean hasWeapon(WeaponBasicDTO weapon){ 
+        List<WeaponBasicDTO> inventory = getLoggedUserDTO().inventoryWeapon();   
+        for (WeaponBasicDTO equipmentWeapon : inventory) {
+            if (inventory.contains(equipmentWeapon)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasArmor(ArmorBasicDTO armor){ 
+        List<ArmorBasicDTO> inventory = getLoggedUserDTO().inventoryArmor();   
+        for (ArmorBasicDTO equipmentArmor : inventory) {
+            if (inventory.contains(equipmentArmor)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

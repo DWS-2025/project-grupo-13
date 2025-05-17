@@ -113,23 +113,4 @@ public class User {
         this.inventoryArmor = inventoryArmor;
     }
 
-    //returns if the user has a specific weapon or armor
-    public boolean hasWeapon(Weapon weapon){    
-        for (Weapon equipmentWeapon : this.inventoryWeapon) {
-            if (this.inventoryWeapon.contains(equipmentWeapon)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean hasArmor(Armor armor){    
-        for (Armor equipmentArmor : this.inventoryArmor) {
-            if (this.inventoryArmor.contains(equipmentArmor)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }
