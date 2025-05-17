@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -33,8 +34,11 @@ import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import com.grupo13.grupo13.util.InputSanitizer;
@@ -53,7 +57,24 @@ public class sessionController {
     @Autowired
     private CharacterMapper characterMapper;
 
-    @GetMapping("/")
+
+@ModelAttribute
+	public void addAttributes(Model model, HttpServletRequest request) {
+
+		Principal principal = request.getUserPrincipal();
+
+		if(principal != null) {
+		
+			model.addAttribute("logged", true);		
+			model.addAttribute("userName", principal.getName());
+			model.addAttribute("admin", request.isUserInRole("ADMIN"));
+			
+		} else {
+			model.addAttribute("logged", false);
+		}
+	} 
+
+    @GetMapping("/character")
     public String index(Model model, HttpSession session) {
 
         List<WeaponBasicDTO> currentInventoryWeapon = userService.currentUserInventoryWeapon();
@@ -116,6 +137,11 @@ public class sessionController {
         return "character_view";
     }
 
+    @GetMapping("/")
+    public String redirectToProfile() {
+        return "redirect:/list_weapons";
+    }
+   
     //used to show the weapons on the shop
     @GetMapping("/list_weapons")
     public String showWeapons(Model model, @PageableDefault(size = 3) Pageable pageable) {
