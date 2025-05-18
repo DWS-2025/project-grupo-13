@@ -25,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.security.jwt.AuthResponse;
+import com.grupo13.grupo13.security.jwt.AuthResponse.Status;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
@@ -38,6 +40,7 @@ import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -443,8 +446,9 @@ public class sessionController {
 
        userService.deleteUser(u.getId());
 
-       return "/";
+       return "/logout";
 
 	}
+    
     
 }
