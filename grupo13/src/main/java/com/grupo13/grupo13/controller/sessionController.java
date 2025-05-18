@@ -283,7 +283,7 @@ public class sessionController {
             characterService.equipWeapon(weaponDTO, character.getId()); // equips it, adding the necessary attributes
             weaponService.addCharacter(characterDTO, weaponDTO);
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
@@ -300,7 +300,7 @@ public class sessionController {
             characterService.equipArmor(armorDTO, character.getId()); // equips it, adding the necessary attributes
             armorService.addCharacter(characterDTO, armorDTO);
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
@@ -316,7 +316,7 @@ public class sessionController {
         if (weaponDTO != null) {
             characterService.unEquipWeapon(character.getId(), id); // unequips it
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
@@ -332,7 +332,7 @@ public class sessionController {
         if (armorDTO != null) {
             characterService.unEquipArmor(character.getId(), id); // unequips it
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
