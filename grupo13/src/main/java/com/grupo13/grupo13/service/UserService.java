@@ -204,10 +204,10 @@ public class UserService {
         }
         return false;
     }
-public void setMoney(long id, int ammount){
-        userRepository.findById(id).get().setMoney(ammount);
-}
 
+    public void setMoney(long id, int ammount){
+        userRepository.findById(id).get().setMoney(ammount);
+    }
 
     //updates an user's name when edited
     public void updateName(UserDTO updatedUserDTO, String userName){
