@@ -25,6 +25,7 @@ import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
+import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.CharacterMapper;
@@ -464,5 +465,20 @@ public class grupo13RestController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
 		}
     }
+
+	@PutMapping("/user/")
+	public ResponseEntity<?> replaceUser(@RequestParam String userName) {
+	try {
+		InputSanitizer.validateWhitelist(userName);
+		UserDTO old =userService.getLoggedUserDTO();
+	if (old == null) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+}
+		userService.updateName(old, userName);
+		return ResponseEntity.ok(userName);
+	} catch (IllegalArgumentException ex) {
+		return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+	}
+}
 
 }
