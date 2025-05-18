@@ -1,0 +1,12 @@
+{{>header}}
+{{#logged}}
+<h1>Edit Username</h1>
+<form action="/editUser" method="post" enctype="multipart/form-data">
+    <p>Name: </p>
+    <input type='text' name='userName' value="{{user.userName}}"/>
+    <br><br>
+    <input type="hidden" name="_csrf" value="{{token}}"/>
+    <input type='submit' value='Save' />
+</form>
+{{/logged}}
+{{>footer}}

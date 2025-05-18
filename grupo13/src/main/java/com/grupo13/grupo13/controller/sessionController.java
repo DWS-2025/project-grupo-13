@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.User;
+import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
@@ -31,6 +33,7 @@ import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.CharacterMapper;
+import com.grupo13.grupo13.mapper.UserMapper;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
@@ -57,6 +60,8 @@ public class sessionController {
     private CharacterService characterService;
     @Autowired
     private CharacterMapper characterMapper;
+    @Autowired
+    private UserMapper userMapper;
 
 
 @ModelAttribute
@@ -95,6 +100,7 @@ public class sessionController {
             return "character_view";
         }
     }
+
     @GetMapping("/user")
     public String user(Model model, HttpServletRequest request) {
 
@@ -400,5 +406,34 @@ public class sessionController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/editUser")
+    public String editUser(Model model, HttpSession session) {
+
+        model.addAttribute("user", userService.getLoggedUserDTO());
+
+        return "edit_user";
+    }
+
+    @PostMapping("/editUser")
+	public String updateUser(Model model, @RequestParam String userName) throws IOException{
+
+        if(userName.isBlank()){
+            model.addAttribute("message", "The name cannot be left blank");
+            return "sp_errors";
+        }
+
+        UserDTO oldUserDTO = userService.getLoggedUserDTO();
+        User oldUser = userMapper.toDomain(oldUserDTO);
+
+        if(oldUser != null){
+            userService.updateName(oldUserDTO, userName);
+
+            return "redirect:/user";   
+        }else{
+            model.addAttribute("message", "Could not manage, not found");
+            return "sp_errors";
+        }
+	}
     
 }
