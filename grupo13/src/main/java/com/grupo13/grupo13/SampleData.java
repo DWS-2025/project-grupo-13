@@ -48,6 +48,7 @@ public class SampleData {
         @PostConstruct
         public void init() {
                 userRepository.save(new User("user", passwordEncoder.encode("pass"), "USER"));
+                userRepository.save(new User("Lotti", passwordEncoder.encode("lottipico"), "USER"));
 		userRepository.save(new User("admin", passwordEncoder.encode("adminpass"), "USER", "ADMIN"));
 
                 //faltan las imagenes

@@ -74,38 +74,57 @@ public class AdminController {
         return "equipment_manager";
     }
 
-    @PostMapping("/weapon/new")
-    public String newWeapon(Model model, WeaponDTO weaponDTO, @RequestParam MultipartFile weaponImage) throws IOException {
-        Weapon weapon = weaponMapper.toDomain(weaponDTO);
-        
+    @GetMapping("/new_armor")
+    public String newArmor(Model model) {
+        model.addAttribute("user", userService.getLoggedUserDTO());
+        return "new_armor";
+    }
 
-        if (weapon.getName().isBlank()||weapon.getDescription().isBlank()|| weaponImage.isEmpty() || !InputSanitizer.isImageValid(weaponImage)) {
+    @GetMapping("/new_weapon")
+    public String newWeapon(Model model) {
+        model.addAttribute("user", userService.getLoggedUserDTO());
+        return "new_weapon";
+    }
+
+    @PostMapping("/weapon/new")
+    public String newWeapon(Model model, @RequestParam String name, @RequestParam int intimidation,
+            @RequestParam int strength, @RequestParam String description, @RequestParam int price, 
+            @RequestParam String imageName, @RequestParam MultipartFile weaponImage) throws IOException {
+
+        if (name.isBlank()||description.isBlank()|| weaponImage.isEmpty() || !InputSanitizer.isImageValid(weaponImage)) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-        weapon.setName(InputSanitizer.whitelistSanitize(weapon.getName()));
-        weapon.setDescription(InputSanitizer.whitelistSanitize(weapon.getDescription()));
+        name = InputSanitizer.whitelistSanitize(name);
+        description = InputSanitizer.whitelistSanitize(description);
+        imageName= InputSanitizer.whitelistSanitize(imageName);
         
-        weaponService.save(weaponDTO);
+        Weapon weapon = new Weapon(name, description, intimidation, strength, price);
+        weapon.setImageName(imageName);
+        WeaponDTO weaponDTO = weaponMapper.toDTO(weapon);
+        
         weaponService.save(weaponDTO, weaponImage);
 
         return "saved_weapon";
     }
 
     @PostMapping("/armor/new")
-    public String newArmor(Model model, ArmorDTO armorDTO, @RequestParam MultipartFile armorImage) throws IOException {
-        Armor armor = armorMapper.toDomain(armorDTO);
+    public String newArmor(Model model, @RequestParam String name, @RequestParam int style,
+            @RequestParam int defense, @RequestParam String description, @RequestParam int price,
+            @RequestParam String imageName, @RequestParam MultipartFile armorImage) throws IOException {
 
-        if (armor.getName().isBlank()||armor.getDescription().isBlank()|| armorImage.isEmpty() || !InputSanitizer.isImageValid(armorImage)) {
+        if (name.isBlank()||description.isBlank()|| armorImage.isEmpty() || !InputSanitizer.isImageValid(armorImage)) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
+        name = InputSanitizer.whitelistSanitize(name);
+        description = InputSanitizer.whitelistSanitize(description);
+        imageName= InputSanitizer.whitelistSanitize(imageName);
         
-        armor.setName(InputSanitizer.whitelistSanitize(armor.getName()));
-        armor.setDescription(InputSanitizer.whitelistSanitize(armor.getDescription()));
+        Armor armor = new Armor(name, description, style, defense, price);
+        armor.setImageName(imageName);
+        ArmorDTO armorDTO = armorMapper.toDTO(armor);
         
-
-        armorService.save(armorDTO);
         armorService.save(armorDTO, armorImage);
 
         return "saved_armor";

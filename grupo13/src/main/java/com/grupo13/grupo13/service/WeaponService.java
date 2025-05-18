@@ -44,18 +44,13 @@ public class WeaponService {
     //saves the weapon's image
     public void save(WeaponDTO weaponDTO, MultipartFile imageFile) throws IOException{
 
-        long id = weaponDTO.id();
-        Optional<Weapon> weaponOP = weaponRepository.findById(id);
-
-        if (weaponOP.isPresent()) {
-            Weapon weapon = weaponOP.get();
-            if(!imageFile.isEmpty()){
-            weapon.setimageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+        Weapon weapon = mapper.toDomain(weaponDTO);
+        if(!imageFile.isEmpty()){
+            weapon.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         weapon.setImageName("/Weapon/" + weapon.getId() + "/image");
 
         weaponRepository.save(weapon);
-        } 
     }
 
     public void addCharacter(CharacterDTO characterDTO, WeaponDTO weaponDTO){

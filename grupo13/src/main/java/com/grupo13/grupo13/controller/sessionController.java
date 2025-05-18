@@ -5,7 +5,6 @@ import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Principal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
@@ -32,15 +32,14 @@ import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.CharacterMapper;
+import com.grupo13.grupo13.mapper.UserMapper;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import com.grupo13.grupo13.util.InputSanitizer;
@@ -58,6 +57,8 @@ public class sessionController {
     private CharacterService characterService;
     @Autowired
     private CharacterMapper characterMapper;
+    @Autowired
+    private UserMapper userMapper;
 
 
 
@@ -82,6 +83,7 @@ public class sessionController {
             return "character_view";
         }
     }
+
     @GetMapping("/user")
     public String user(Model model, HttpServletRequest request) {
 
@@ -143,26 +145,27 @@ public class sessionController {
     //used to show the weapons on the shop
     @GetMapping("/list_weapons")
     public String showWeapons(Model model, @PageableDefault(size = 3) Pageable pageable) {
+        Page<WeaponBasicDTO> allWeapons = weaponService.findAllBasic(pageable);
         Page<WeaponBasicDTO> showedWeapons;
+        boolean hasNext;
         if(userService.getLoggedUserDTOOrNull() != null){
-            Page<WeaponBasicDTO> allWeapons = weaponService.findAllBasic(pageable);
             List<WeaponBasicDTO> weaponsList = new LinkedList<>();
             for(WeaponBasicDTO weap : allWeapons){
-                if(!userService.hasWeapon(weap)){
+                if(!userService.hasWeapon(weap.id())){
                     weaponsList.addLast(weap);
                 }
             }
             showedWeapons = new PageImpl<>(weaponsList, pageable, allWeapons.getNumberOfElements()-weaponsList.size());
             model.addAttribute("user", userService.getLoggedUserDTO());
-            model.addAttribute("weapon", showedWeapons);
-
+            hasNext = (showedWeapons.getNumber() + 1) <= (showedWeapons.getTotalPages());
         } else{
-            showedWeapons = weaponService.findAllBasic(pageable);
-            model.addAttribute("weapon", showedWeapons);
+            showedWeapons = allWeapons;
+            hasNext = showedWeapons.hasNext();
         }
+        model.addAttribute("weapon", showedWeapons);
+        
         //buttons
         boolean hasPrev = showedWeapons.hasPrevious();
-        boolean hasNext = showedWeapons.getTotalElements() > (showedWeapons.getNumber() + 1) * showedWeapons.getSize();
         model.addAttribute("hasPrev", hasPrev);
         model.addAttribute("prev", showedWeapons.getNumber() - 1);
         model.addAttribute("hasNext", hasNext);
@@ -174,26 +177,27 @@ public class sessionController {
     //used to show the armors on the shop
     @GetMapping("/list_armors")
     public String showArmors(Model model, @PageableDefault(size = 2) Pageable pageable) {
+        Page<ArmorBasicDTO> allArmors = armorService.findAllBasic(pageable);
         Page<ArmorBasicDTO> showedArmors;
+        boolean hasNext;
         if(userService.getLoggedUserDTOOrNull() != null){
-            Page<ArmorBasicDTO> allArmors = armorService.findAllBasic(pageable);
             List<ArmorBasicDTO> armorsList = new LinkedList<>();
             for(ArmorBasicDTO arm : allArmors){
-                if(!userService.hasArmor(arm)){
+                if(!userService.hasArmor(arm.id())){
                     armorsList.addLast(arm);
                 }
             }
             showedArmors = new PageImpl<>(armorsList, pageable, allArmors.getNumberOfElements()-armorsList.size());
             model.addAttribute("user", userService.getLoggedUserDTO());
-            model.addAttribute("armor", showedArmors);
-
+            hasNext = (showedArmors.getNumber() + 1) <= (showedArmors.getTotalPages());
         } else{
-            showedArmors = armorService.findAllBasic(pageable);
-            model.addAttribute("armor", showedArmors);
+            showedArmors = allArmors;
+            hasNext = showedArmors.hasNext();
         }
+        model.addAttribute("armor", showedArmors);
+        
         //buttons
         boolean hasPrev = showedArmors.hasPrevious();
-        boolean hasNext = showedArmors.getTotalElements() > (showedArmors.getNumber() + 1) * showedArmors.getSize();
         model.addAttribute("hasPrev", hasPrev);
         model.addAttribute("prev", showedArmors.getNumber() - 1);
         model.addAttribute("hasNext", hasNext);
@@ -283,7 +287,7 @@ public class sessionController {
             characterService.equipWeapon(weaponDTO, character.getId()); // equips it, adding the necessary attributes
             weaponService.addCharacter(characterDTO, weaponDTO);
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
@@ -300,7 +304,7 @@ public class sessionController {
             characterService.equipArmor(armorDTO, character.getId()); // equips it, adding the necessary attributes
             armorService.addCharacter(characterDTO, armorDTO);
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
@@ -316,7 +320,7 @@ public class sessionController {
         if (weaponDTO != null) {
             characterService.unEquipWeapon(character.getId(), id); // unequips it
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
@@ -332,7 +336,7 @@ public class sessionController {
         if (armorDTO != null) {
             characterService.unEquipArmor(character.getId(), id); // unequips it
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
@@ -402,5 +406,34 @@ public class sessionController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/editUser")
+    public String editUser(Model model, HttpSession session) {
+
+        model.addAttribute("user", userService.getLoggedUserDTO());
+
+        return "edit_user";
+    }
+
+    @PostMapping("/editUser")
+	public String updateUser(Model model, @RequestParam String userName) throws IOException{
+
+        if(userName.isBlank()){
+            model.addAttribute("message", "The name cannot be left blank");
+            return "sp_errors";
+        }
+
+        UserDTO oldUserDTO = userService.getLoggedUserDTO();
+        User oldUser = userMapper.toDomain(oldUserDTO);
+
+        if(oldUser != null){
+            userService.updateName(oldUserDTO, userName);
+
+            return "redirect:/user";   
+        }else{
+            model.addAttribute("message", "Could not manage, not found");
+            return "sp_errors";
+        }
+	}
     
 }
