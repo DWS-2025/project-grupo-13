@@ -217,4 +217,13 @@ public class UserService {
 
         userRepository.save(updatedUser);
     }
+
+    public void deleteUser(long id) {
+    if (userRepository.existsById(id)) {
+        userRepository.deleteById(id);
+    } else {
+        throw new NoSuchElementException("No existe un usuario con ID: " + id);
+    }
+}
+
 }

@@ -1,5 +1,11 @@
 {{>header}}
 {{#logged}}
+<form action="/deleteUser" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
+    <button class="btn btn-danger mt-2" type="submit">Delete account</button>
+          <input type="hidden" name="_csrf" value="{{token}}"/>
+
+</form>
+
 <a style="color: white;" href="/editUser">Editar nombre de usuario</a>
 <div class="d-flex vh-100 p-4">
    <div class="d-flex col-5">
@@ -18,11 +24,17 @@
                         <div class="row g-0">
                            <div class="col-md-4">
                             <img src="/character/{{id}}/image" class="card-img-top" alt="...">
+                            
                            </div>
                            <div class="col-md-8">
+                              
                               <div class="card-body">
+                                 
                                  <h5 class="card-title">{{name}}</h5>
                                  <p class="card-text"> {{description}} </p>
+                                 >
+</form>
+
                               </div>
                            </div>
                         </div>

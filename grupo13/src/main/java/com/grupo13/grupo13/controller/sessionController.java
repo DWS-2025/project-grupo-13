@@ -435,5 +435,16 @@ public class sessionController {
             return "sp_errors";
         }
 	}
+
+    @PostMapping("/deleteUser")
+	public String deleteUser(Model model) throws IOException{
+
+       User u= userService.getLoggedUser();
+
+       userService.deleteUser(u.getId());
+
+       return "/";
+
+	}
     
 }

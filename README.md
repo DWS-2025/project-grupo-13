@@ -76,6 +76,19 @@ https://github.com/DWS-2025/project-grupo-13/commit/2199e8c4d85d7b97b4c36cbbdc43
 
 
 ### Lucas
+
+#### 5 archivos más modificados:
+
+#### 5 commits destacados
+https://github.com/DWS-2025/project-grupo-13/commit/c3d197fa201f6d04b39e3b5c5651b6ffaa93401c
+
+https://github.com/DWS-2025/project-grupo-13/commit/cf737d3a01dd1ad1dc6c25cc8c24089de674e4c5
+
+https://github.com/DWS-2025/project-grupo-13/commit/5393ffd7fa9481ace0d7e18047ddf79e43a3abfd
+
+https://github.com/DWS-2025/project-grupo-13/commit/b9e5f7c50f9f17d1781c1cab8d62230cf4a8f7be
+
+https://github.com/DWS-2025/project-grupo-13/commit/5e7629afb61c8f212262a2a87b1d5f8a5dd2d62f
 ### Eduardo
 Paginacion, solucion de errores
 #### 5 archivos más modificados:
