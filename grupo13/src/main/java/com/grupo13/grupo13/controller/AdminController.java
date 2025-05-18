@@ -1,5 +1,7 @@
 package com.grupo13.grupo13.controller;
 import java.io.IOException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.UserBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
@@ -204,5 +207,12 @@ public class AdminController {
             return "sp_errors";
         } 
 	}
+
+    @GetMapping("/userList")
+    public String listUsers(Model model) {
+        List<UserBasicDTO> users = userService.findAll();
+        model.addAttribute("users", users);
+        return "userAdminList";
+    }
     
 }

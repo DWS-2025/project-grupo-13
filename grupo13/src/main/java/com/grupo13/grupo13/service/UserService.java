@@ -197,8 +197,8 @@ public class UserService {
         }
         return false;
     }
-public void setMoney(long id, int ammount){
+    public void setMoney(long id, int ammount){
         userRepository.findById(id).get().setMoney(ammount);
-}
+    }
 
 }

@@ -132,6 +132,8 @@ public class SecurityConfig {
 						.requestMatchers("/weapon/**").hasAnyRole("ADMIN")
 						.requestMatchers("/armor/**").hasAnyRole("ADMIN")
 						.requestMatchers("/equipment_manager/**").hasAnyRole("ADMIN")
+						.requestMatchers("/userList").hasAnyRole("ADMIN")
+
 						//with all this should cover all adminController and etc, but keep checking, regular tests
 						.anyRequest().authenticated()
 
