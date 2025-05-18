@@ -1,5 +1,7 @@
 package com.grupo13.grupo13.service;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,6 +45,11 @@ public class UserService {
     private armorMapper armorMapper;
     @Autowired
     private CharacterMapper characterMapper;
+
+    // returns a specific user by its id
+    public UserDTO findById(long id) {
+        return mapper.toDTO(userRepository.findById(id).get());
+    }
 
     public UserDTO getUser(String name) {
 		return mapper.toDTO(userRepository.findByUserName(name).orElseThrow());
@@ -197,8 +204,17 @@ public class UserService {
         }
         return false;
     }
-public void setMoney(long id, int ammount){
-        userRepository.findById(id).get().setMoney(ammount);
-}
 
+    public void setMoney(long id, int ammount){
+        userRepository.findById(id).get().setMoney(ammount);
+    }
+
+    //updates an user's name when edited
+    public void updateName(UserDTO updatedUserDTO, String userName){
+
+        User updatedUser = mapper.toDomain(updatedUserDTO);
+        updatedUser.setUserName(userName);;
+
+        userRepository.save(updatedUser);
+    }
 }

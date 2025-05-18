@@ -118,6 +118,7 @@ public class SecurityConfig {
 
 						/////// PRIVATE PAGES
 						//USER PAGES
+						.requestMatchers("/user").hasAnyRole("USER")
 						.requestMatchers("/").hasAnyRole("USER")
 						.requestMatchers("/formProcess/**").hasAnyRole("USER")
 						.requestMatchers("/search/**").hasAnyRole("USER")
@@ -128,6 +129,7 @@ public class SecurityConfig {
 						.requestMatchers("/unEquipWeapon/**").hasAnyRole("USER")
 						.requestMatchers("/unEquipArmor/**").hasAnyRole("USER")
 						.requestMatchers("/character/**").hasAnyRole("USER")
+						.requestMatchers("editUser").hasAnyRole("USER")
 						//ADMIN PAGES
 						.requestMatchers("/weapon/**").hasAnyRole("ADMIN")
 						.requestMatchers("/armor/**").hasAnyRole("ADMIN")

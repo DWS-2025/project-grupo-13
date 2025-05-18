@@ -42,8 +42,55 @@ Usuario con permisos elevados, puede acceder al `/admin` para crear objetos o mo
 |  Armor |  1 |   
 ## Diagrama de la BBDD
 ![Diagrama de base de datos](grupo13/images/diagrama.png)
+## Trabajo de cada integrante (FASE 3)
+### Pablo
+Busqueda dinámica, filtros de archivos, blacklists/whitelists, protección path traversal, solución de errores.
+#### 5 archivos más modificados:
+`AdminController.java`, `SessionController.java`, `GlobalModelAttributes.java`, `ImputSanitizer.java`,`grupo13RestController.txt`.
 
-## Trabajo de cada integrante
+#### 5 commits destacados
+https://github.com/DWS-2025/project-grupo-13/commit/8944da68d084aa37b248b3129db1b4b25ac018aa
+
+https://github.com/DWS-2025/project-grupo-13/commit/2e6816c22cdc3c4137edf0dca10ebe981225849d
+
+https://github.com/DWS-2025/project-grupo-13/commit/049f04daeaf27f5f43d0c84e28a676b9bd8a5b02
+
+https://github.com/DWS-2025/project-grupo-13/commit/e285e2561d388f873bac296016de20b0cdea7073
+
+https://github.com/DWS-2025/project-grupo-13/commit/d4c6413b1b875cd9e38f7489dce236d14a0abb7d
+### Andrea
+Introducción DTOs, manejo de DTOs, funciones de gestión de usuarios, solución de errores.
+#### 5 archivos más modificados:
+`CharacterService.java`, `SessionController.java`, `grupo13RestController.java`, `UserService.java`,`edit_user.html`.
+#### 5 commits destacados
+https://github.com/DWS-2025/project-grupo-13/commit/6560b9fc6872dcc9787afa0953d896023c55bf2f
+
+https://github.com/DWS-2025/project-grupo-13/commit/450dd12bb716df8f2838e60bfbd9248cf36616e7
+
+https://github.com/DWS-2025/project-grupo-13/commit/7fd56b350cc1ae10fb9b25dab1f3028913fd4e35
+
+https://github.com/DWS-2025/project-grupo-13/commit/342293550c3a69d7bba4830d05ec0c3fe80ffc61
+
+https://github.com/DWS-2025/project-grupo-13/commit/2199e8c4d85d7b97b4c36cbbdc43ec6297816628
+
+
+
+### Lucas
+### Eduardo
+Paginacion, solucion de errores
+#### 5 archivos más modificados:
+`AdminController.java`, `SessionController.java`, `new_armor.html`, `new_weapon.html`,`WeaponService.java`.
+#### 5 commits destacados
+https://github.com/DWS-2025/project-grupo-13/commit/3bd23374444ff168393cb14ba9d99457613cb940
+
+https://github.com/DWS-2025/project-grupo-13/commit/4e49c7ff7665bbddac77108feaa1714e2b739d22
+
+https://github.com/DWS-2025/project-grupo-13/commit/7a98d0b7eccf0a09bc8d042dc6b838aa4d4b937f
+
+https://github.com/DWS-2025/project-grupo-13/commit/c03ad56d24ff46d0f8c0dafd8d9e7369bf225c0b
+
+https://github.com/DWS-2025/project-grupo-13/commit/c44e3961cf53e9c9dbef9bc0ef44e4a0052ec779
+## Trabajo de cada integrante (FASE 2)
 ### Pablo
 Eliminacion de herencia en equipment, traspaso de varias clases a BBDD, readme.md, consultas dinámicas js en equipment manager del /admin, consultas en postman, correción de errores
 #### 5 archivos más modificados:
