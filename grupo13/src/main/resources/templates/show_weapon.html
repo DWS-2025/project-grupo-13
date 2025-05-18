@@ -1,5 +1,6 @@
 {{>header}}
-
+{{#logged}}
+{{#admin}}
 <div class="card" style="width: 18rem;">
     <div class="card-body">
         <h5 class="card-title">{{weapon.name}}</h5>
@@ -14,5 +15,6 @@
     </div>
 </div>
 <a href="/equipment_manager">Return to manage equipment</a>
-
+{{/admin}}
+{{/logged}}
 {{>footer}}

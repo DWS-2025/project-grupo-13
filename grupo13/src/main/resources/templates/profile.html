@@ -1,0 +1,45 @@
+{{>header}}
+{{#logged}}
+<div class="d-flex vh-100 p-4">
+   <div class="d-flex col-5">
+      <div class="card w-100 border-dark" style="background-color:  rgb(249, 196, 164);">         
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> <h5 class="card-title">{{userName}}</h5></li>
+         {{#user}} 
+         <ul class="list-group list-group-flush">
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">MONEY - {{user.money}}</li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+               <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardA"
+                  style="background-color:  rgb(255, 179, 132);" ; aria-expanded="true" aria-controls="collapseCardA">
+                Character </button>
+               <div class="collapse" id="collapseCardA">
+                  {{#character}}
+                     <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
+                        <div class="row g-0">
+                           <div class="col-md-4">
+                            <img src="/character/{{id}}/image" class="card-img-top" alt="...">
+                           </div>
+                           <div class="col-md-8">
+                              <div class="card-body">
+                                 <h5 class="card-title">{{name}}</h5>
+                                 <p class="card-text"> {{description}} </p>
+                              </div>
+                           </div>
+                        </div>
+                     {{/character}}
+                    </div>
+               </div>
+            </li>
+
+            {{#character}}
+            <img src="/character/{{id}}/image" class="card-img-top" alt="...">
+            {{/character}}
+        {{/user}}
+      </div>
+   </div>
+  
+</div>
+<body class="bg-dark"
+   style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/image/ch_background.jpg') no-repeat center center / cover;">
+</body>
+{{/logged}}
+{{>footer}}

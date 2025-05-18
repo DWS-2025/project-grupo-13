@@ -59,7 +59,9 @@
       <li><a class="element-header" href="/list_armors">Buy armors</a></li>
     </ul>
     <a class="element-header" href="/character">Character</a>
+    <a class="element-header" href="/user">Profile</a>
     <a class="element-header" href="/search">Search</a>
+    {{#admin}}
     <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
       Admin</a>
     <ul class="dropdown-menu">
@@ -67,5 +69,6 @@
       <li><a class="element-header" href="/new_armor.html">Create new armor</a></li>
       <li><a class="element-header" href="/new_weapon.html">Create new weapon</a></li>
     </ul>
+    {{/admin}}
   </ul>
   <div class="site-content" style="width: 95%; margin:auto">

@@ -63,9 +63,10 @@ public class CharacterService {
     }
 
     // creates a new character
-    public void save(CharacterDTO characterDTO) {
+    public CharacterDTO save(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);
-        characterRepository.save(character);
+        Character savedCharacter = characterRepository.save(character);
+        return mapper.toDTO(savedCharacter);
     }
 
     //saves the character's image
@@ -85,6 +86,7 @@ public class CharacterService {
     public void saveUser(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);
         character.setUser(userRepository.findById((long)1).get());
+        characterRepository.save(character);
     }
 
     // for equipping armor or weapon, sets the necessary values from the equipment

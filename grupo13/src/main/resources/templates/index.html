@@ -1,5 +1,4 @@
 {{>header}}
-
 <div class="d-flex align-items-center vh-100 p-4">
   <div class="d-flex col-6 p-4 bg-secondary bg-opacity-75 text-white rounded-3">
     <form action="/formProcess" method="post" enctype="multipart/form-data" class="w-100" onsubmit="copyContent()">
@@ -28,6 +27,7 @@
         <p>Picture file:</p>
         <input type='file' name='characterImage' accept=".jpg, .jpeg" class="form-control"/>
       </div>
+      <input type="hidden" name="_csrf" value="{{token}}"/>
 
       <input type='submit' value='Save' class="btn btn-primary mt-3" />
     </form>
@@ -46,5 +46,4 @@
 </script>
 
 <body class="bg-dark" style="background: url('image/background1.png') no-repeat center center / cover;"></body>
-
 {{>footer}}
