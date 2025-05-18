@@ -153,6 +153,10 @@ public class Weapon {
         this.intimidation = intimidation;
     }
 
+    public void setImageFile(Blob imageFile) {
+        this.imageFile = imageFile;
+    }
+
     public void setImageName(String imageName){
         this.imageName = imageName;
     }
