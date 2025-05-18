@@ -60,21 +60,7 @@ public class sessionController {
     private CharacterMapper characterMapper;
 
 
-@ModelAttribute
-	public void addAttributes(Model model, HttpServletRequest request) {
 
-		Principal principal = request.getUserPrincipal();
-
-		if(principal != null) {
-		
-			model.addAttribute("logged", true);		
-			model.addAttribute("userName", principal.getName());
-			model.addAttribute("admin", request.isUserInRole("ADMIN"));
-			
-		} else {
-			model.addAttribute("logged", false);
-		}
-	} 
 
     @GetMapping("/character")
     public String index(Model model, HttpSession session) {
@@ -130,7 +116,7 @@ public class sessionController {
         // saves the character in the repository
         userService.saveCharacter(savedCharacterDTO);
         characterService.saveUser(savedCharacterDTO);    
-        characterService.save(savedCharacterDTO, characterImage);
+        characterService.save(savedCharacterDTO, characterImage, imageName);
         userService.save(userService.getLoggedUserDTO());
 
         /* // saves image in the correspondent folder

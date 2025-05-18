@@ -32,6 +32,14 @@ import java.nio.file.Paths;
 @Service
 public class CharacterService {
 
+       private static final Path BACKUP_FOLDER = 
+        
+        Paths.get("").toAbsolutePath()
+             .resolve("backups")
+             .resolve("characters")
+             .normalize();
+
+
     // attributes
     @Autowired
     private CharacterRepository characterRepository;
@@ -70,16 +78,56 @@ public class CharacterService {
     }
 
     //saves the character's image
-    public void save(CharacterDTO characterDTO, MultipartFile imageFile) throws IOException {
+    public void save(CharacterDTO characterDTO, MultipartFile imageFile, String imageName) throws IOException {
         Character character = mapper.toDomain(characterDTO);
 
         if (!imageFile.isEmpty()) {
             character.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         character.setImageName("/character/" + character.getId() + "/image");
-        
+        backupImage(imageFile, imageName);
         characterRepository.save(character);
     }
+    public String backupImage(MultipartFile imageFile, String imageName) throws IOException {
+        // sanitize name
+        String baseName = Paths.get(imageName).getFileName().toString();
+
+        
+        String orig = imageFile.getOriginalFilename();
+        String ext = "";
+        if (orig != null) {
+            int i = orig.lastIndexOf('.');
+            if (i >= 0 && i < orig.length() - 1) {
+                ext = orig.substring(i); 
+            }
+        }
+
+        // check if file is using right extension
+        String finalName;
+        int dot = baseName.lastIndexOf('.');
+        if (dot >= 0) {
+            
+            finalName = baseName;
+        } else {
+            
+            finalName = baseName + ext;
+        }
+
+        
+        Path target = BACKUP_FOLDER.resolve(finalName).normalize();
+
+        //final validation to check file exists in the right folder
+        if (!target.startsWith(BACKUP_FOLDER)) {
+            throw new IOException("Path Traversal detected: " + imageName);
+        }
+
+        // save file
+        Files.createDirectories(target.getParent());
+        imageFile.transferTo(target.toFile());
+
+        return finalName;
+    }
+
 
 
 
