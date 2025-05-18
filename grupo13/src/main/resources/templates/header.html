@@ -61,6 +61,7 @@
     <a class="element-header" href="/character">Character</a>
     <a class="element-header" href="/user">Profile</a>
     <a class="element-header" href="/search">Search</a>
+    
     {{#admin}}
     <a class="element-header dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
       Admin</a>
@@ -68,7 +69,15 @@
       <li><a class="element-header" href="/equipment_manager">Manage equipment</a></li>
       <li><a class="element-header" href="/new_armor">Create new armor</a></li>
       <li><a class="element-header" href="/new_weapon">Create new weapon</a></li>
+      <li><a class="element-header" href="/userList">User List</a></li>
+
     </ul>
     {{/admin}}
+    {{#logged}}
+    <form action="/logout" method="POST">
+    <input type="hidden" name="_csrf" value="{{token}}">
+    <button type="submit">Logout</button>
+    </form>
+    {{/logged}}
   </ul>
   <div class="site-content" style="width: 95%; margin:auto">

@@ -1,0 +1,22 @@
+{{>header}}
+{{#logged}}
+{{#admin}}
+
+<h1>USER LIST</h1>
+<div class="card" style="width: 18rem">
+    <ul class="list-group list-group-flush" id="user-list"></ul>
+    {{#users}}
+    <li class="list-group-item">
+        {{userName}}
+        <form action="/admin/user/{{id}}/delete" method="post" style="display:inline;">
+            <input type="hidden" name="_csrf" value="{{token}}">
+            <button type="submit">Eliminar</button>
+        </form>
+    </li>
+
+    {{/users}}
+    </ul>
+
+    {{/admin}}
+    {{/logged}}
+    {{>footer}}
