@@ -64,9 +64,14 @@ public class SecurityConfig {
 		
 		http
 			.authorizeHttpRequests(authorize -> authorize
-					.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()				
+					.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/auth/logout").permitAll()				
 					.requestMatchers(HttpMethod.GET, "/api/weapon/*/image").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/armor/*/image").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/weapons/search").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/armors/search").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/weapons").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/armors").permitAll()
 
                     // PRIVATE ENDPOINTS
 					.requestMatchers(HttpMethod.GET, "/api/**").hasRole("USER")

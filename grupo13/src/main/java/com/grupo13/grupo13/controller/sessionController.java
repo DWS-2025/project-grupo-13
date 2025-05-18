@@ -5,7 +5,6 @@ import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Principal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -42,7 +41,6 @@ import com.grupo13.grupo13.service.WeaponService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import com.grupo13.grupo13.util.InputSanitizer;
@@ -64,21 +62,7 @@ public class sessionController {
     private UserMapper userMapper;
 
 
-@ModelAttribute
-	public void addAttributes(Model model, HttpServletRequest request) {
 
-		Principal principal = request.getUserPrincipal();
-
-		if(principal != null) {
-		
-			model.addAttribute("logged", true);		
-			model.addAttribute("userName", principal.getName());
-			model.addAttribute("admin", request.isUserInRole("ADMIN"));
-			
-		} else {
-			model.addAttribute("logged", false);
-		}
-	} 
 
     @GetMapping("/character")
     public String index(Model model, HttpSession session) {
@@ -135,7 +119,7 @@ public class sessionController {
         // saves the character in the repository
         userService.saveCharacter(savedCharacterDTO);
         characterService.saveUser(savedCharacterDTO);    
-        characterService.save(savedCharacterDTO, characterImage);
+        characterService.save(savedCharacterDTO, characterImage, imageName);
         userService.save(userService.getLoggedUserDTO());
 
         /* // saves image in the correspondent folder
@@ -163,67 +147,58 @@ public class sessionController {
     @GetMapping("/list_weapons")
     public String showWeapons(Model model, @PageableDefault(size = 3) Pageable pageable) {
         Page<WeaponBasicDTO> allWeapons = weaponService.findAllBasic(pageable);
-
+        Page<WeaponBasicDTO> showedWeapons;
+        boolean hasNext;
         if(userService.getLoggedUserDTOOrNull() != null){
-            model.addAttribute("user", userService.getLoggedUserDTO());
-            
             List<WeaponBasicDTO> weaponsList = new LinkedList<>();
             for(WeaponBasicDTO weap : allWeapons){
                 if(!userService.hasWeapon(weap)){
                     weaponsList.addLast(weap);
                 }
             }
-            Page<WeaponBasicDTO> showedWeapons = new PageImpl<>(weaponsList, pageable, allWeapons.getNumberOfElements()-weaponsList.size());
-            model.addAttribute("weapon", showedWeapons);
-
-            //buttons
-            boolean hasPrev = showedWeapons.hasPrevious();
-            boolean hasNext = showedWeapons.getNumberOfElements() > showedWeapons.getNumber() * showedWeapons.getSize();
-            model.addAttribute("hasPrev", hasPrev);
-            model.addAttribute("prev", showedWeapons.getNumber() - 1);
-            model.addAttribute("hasNext", hasNext);
-            model.addAttribute("next", showedWeapons.getNumber() + 1);
-            model.addAttribute("size", showedWeapons.getSize());
-            return "listing_weapons";
-
+            showedWeapons = new PageImpl<>(weaponsList, pageable, allWeapons.getNumberOfElements()-weaponsList.size());
+            model.addAttribute("user", userService.getLoggedUserDTO());
+            hasNext = (showedWeapons.getNumber() + 1) <= (showedWeapons.getTotalPages());
         } else{
-            Page<WeaponBasicDTO> showedWeapons = weaponService.findAllBasic(pageable);
-
-            //Page<WeaponBasicDTO> showedWeapons = new PageImpl<>(weaponsList, pageable, allWeapons.getNumberOfElements()-weaponsList.size());
-            model.addAttribute("weapon", showedWeapons);
-
-            //buttons
-            boolean hasPrev = showedWeapons.hasPrevious();
-            boolean hasNext = showedWeapons.getNumberOfElements() > showedWeapons.getNumber() * showedWeapons.getSize();
-            model.addAttribute("hasPrev", hasPrev);
-            model.addAttribute("prev", showedWeapons.getNumber() - 1);
-            model.addAttribute("hasNext", hasNext);
-            model.addAttribute("next", showedWeapons.getNumber() + 1);
-            model.addAttribute("size", showedWeapons.getSize());
-            return "listing_weapons";
+            showedWeapons = allWeapons;
+            hasNext = showedWeapons.hasNext();
         }
+        model.addAttribute("weapon", showedWeapons);
+        
+        //buttons
+        boolean hasPrev = showedWeapons.hasPrevious();
+        model.addAttribute("hasPrev", hasPrev);
+        model.addAttribute("prev", showedWeapons.getNumber() - 1);
+        model.addAttribute("hasNext", hasNext);
+        model.addAttribute("next", showedWeapons.getNumber() + 1);
+        model.addAttribute("size", showedWeapons.getSize());
+        return "listing_weapons";
     }
 
     //used to show the armors on the shop
     @GetMapping("/list_armors")
     public String showArmors(Model model, @PageableDefault(size = 2) Pageable pageable) {
         Page<ArmorBasicDTO> allArmors = armorService.findAllBasic(pageable);
-
-        List<ArmorBasicDTO> armorsList = new LinkedList<>();
-        for(ArmorBasicDTO arm : allArmors){
-            if(!userService.hasArmor(arm)){
-                armorsList.addLast(arm);
+        Page<ArmorBasicDTO> showedArmors;
+        boolean hasNext;
+        if(userService.getLoggedUserDTOOrNull() != null){
+            List<ArmorBasicDTO> armorsList = new LinkedList<>();
+            for(ArmorBasicDTO arm : allArmors){
+                if(!userService.hasArmor(arm)){
+                    armorsList.addLast(arm);
+                }
             }
+            showedArmors = new PageImpl<>(armorsList, pageable, allArmors.getNumberOfElements()-armorsList.size());
+            model.addAttribute("user", userService.getLoggedUserDTO());
+            hasNext = (showedArmors.getNumber() + 1) <= (showedArmors.getTotalPages());
+        } else{
+            showedArmors = allArmors;
+            hasNext = showedArmors.hasNext();
         }
-
-        Page<ArmorBasicDTO> showedArmors = new PageImpl<>(armorsList, pageable, allArmors.getNumberOfElements()-armorsList.size());
-        
-        model.addAttribute("user", userService.getLoggedUserDTO());
         model.addAttribute("armor", showedArmors);
-
+        
         //buttons
         boolean hasPrev = showedArmors.hasPrevious();
-        boolean hasNext = showedArmors.getNumberOfElements() > showedArmors.getNumber() * showedArmors.getSize();
         model.addAttribute("hasPrev", hasPrev);
         model.addAttribute("prev", showedArmors.getNumber() - 1);
         model.addAttribute("hasNext", hasNext);
@@ -237,16 +212,35 @@ public class sessionController {
 
         return "search";
     }
+  @GetMapping("weaponview/{id}")
+    public String showWeapon(Model model, @PathVariable long id){
+        WeaponDTO weapon = weaponService.findById(id);
+
+        if (weapon != null) {
+            model.addAttribute("weapon", weapon);
+            return "view_weapon";
+        }else{
+            return "error";
+        }
+    }
+
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
         WeaponDTO weaponDTO = weaponService.findById(id);
+        
             // checks if the user has enough money or not
             if (weaponDTO == null) {
             model.addAttribute("message", "Could not purchase, doesnt exist");
             return "sp_errors";
+            }
+            if(userService.hasWeapon(id)){
+            model.addAttribute("message", "You alredy own that weapon");
+            return "sp_errors";
+
             }else {
-            int money = userService.getMoney();
-            if (money >= weaponDTO.price()) {
+            long urid=userService.getLoggedUser().getId();
+            if (userService.getMoney(urid) >= weaponDTO.price()) {
+                userService.setMoney(urid, userService.getMoney(urid)-weaponDTO.price());
                 userService.saveWeapon(id);
                 return "redirect:/list_weapons";
             } else {
@@ -263,12 +257,19 @@ public class sessionController {
         if (armorDTO == null) {
             model.addAttribute("message", "Could not purchase, doesnt exist");
             return "sp_errors";
-        } else {
-            int money = userService.getMoney();
-            if (money >= armorDTO.price()) {
-                userService.saveArmor(id);
-                armorService.save(armorDTO);
-                return "redirect:/list_objects";
+        }
+         if(userService.hasArmor(id)){
+            model.addAttribute("message", "You alredy own that armor");
+            return "sp_errors";
+
+            } else {
+             long urid=userService.getLoggedUser().getId();
+
+            if (userService.getMoney(urid) >= armorDTO.price()) {
+                 userService.setMoney(urid, userService.getMoney(urid)-armorDTO.price());
+                 userService.saveArmor(id);
+                 armorService.save(armorDTO);
+                 return "redirect:/list_armors";
             } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
@@ -287,7 +288,7 @@ public class sessionController {
             characterService.equipWeapon(weaponDTO, character.getId()); // equips it, adding the necessary attributes
             weaponService.addCharacter(characterDTO, weaponDTO);
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
@@ -304,7 +305,7 @@ public class sessionController {
             characterService.equipArmor(armorDTO, character.getId()); // equips it, adding the necessary attributes
             armorService.addCharacter(characterDTO, armorDTO);
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not equip, doesnt exist");
             return "sp_errors";
@@ -320,7 +321,7 @@ public class sessionController {
         if (weaponDTO != null) {
             characterService.unEquipWeapon(character.getId(), id); // unequips it
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";
@@ -336,7 +337,7 @@ public class sessionController {
         if (armorDTO != null) {
             characterService.unEquipArmor(character.getId(), id); // unequips it
 
-            return "redirect:/";
+            return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
             return "sp_errors";

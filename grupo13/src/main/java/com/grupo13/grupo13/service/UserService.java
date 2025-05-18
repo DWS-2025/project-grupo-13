@@ -118,8 +118,8 @@ public class UserService {
     }
 
     //returns the money of the current user
-    public int getMoney() {
-        return userRepository.findById((long)1).get().getMoney();
+    public int getMoney(long id) {
+        return userRepository.findById(id).get().getMoney();
     }
 
     //returns the inventory of the current user
@@ -204,6 +204,10 @@ public class UserService {
         }
         return false;
     }
+public void setMoney(long id, int ammount){
+        userRepository.findById(id).get().setMoney(ammount);
+}
+
 
     //updates an user's name when edited
     public void updateName(UserDTO updatedUserDTO, String userName){
