@@ -130,7 +130,7 @@ public class sessionController {
         // saves the character in the repository
         userService.saveCharacter(savedCharacterDTO);
         characterService.saveUser(savedCharacterDTO);    
-        characterService.save(savedCharacterDTO, characterImage);
+        characterService.save(savedCharacterDTO, characterImage, imageName);
         userService.save(userService.getLoggedUserDTO());
 
         /* // saves image in the correspondent folder

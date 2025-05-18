@@ -38,6 +38,8 @@ import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
+import com.grupo13.grupo13.util.InputSanitizer;
+
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 @RestController
@@ -137,27 +139,44 @@ public class grupo13RestController {
 	// CREATE -------------------------------------------------
 
 	@PostMapping("/weapons")
-	public ResponseEntity<WeaponDTO> createWeapon(@RequestBody WeaponDTO weaponDTO) {
-		weaponService.save(weaponDTO);
+	public ResponseEntity<?> createWeapon(@RequestBody WeaponDTO weaponDTO) {
+    try {
+        InputSanitizer.validateWhitelist(weaponDTO.name());
+        InputSanitizer.validateWhitelist(weaponDTO.description());
 
-		Weapon weapon = weaponMapper.toDomain(weaponDTO);
-		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(weapon.getId()).toUri();
+        weaponService.save(weaponDTO);
+        Weapon weapon = weaponMapper.toDomain(weaponDTO);
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(weapon.getId()).toUri();
 
-		return ResponseEntity.created(location).body(weaponDTO);
-	}
+        return ResponseEntity.created(location).body(weaponDTO);
+
+    } catch (IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+    }
+}
 
 	@PostMapping("/armors")
-	public ResponseEntity<ArmorDTO> createArmor(@RequestBody ArmorDTO armorDTO) {
-		armorService.save(armorDTO);
+	public ResponseEntity<?> createArmor(@RequestBody ArmorDTO armorDTO) {
+	try {
+        InputSanitizer.validateWhitelist(armorDTO.name());
+        InputSanitizer.validateWhitelist(armorDTO.description());
 
-		Armor armor = armorMapper.toDomain(armorDTO);
-		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(armor.getId()).toUri();
+        armorService.save(armorDTO);
+        Armor armor = armorMapper.toDomain(armorDTO);
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(armor.getId()).toUri();
 
-		return ResponseEntity.created(location).body(armorDTO);
+        return ResponseEntity.created(location).body(armorDTO);
+
+    } catch (IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+    }
 	}
 
 	@PostMapping("/weapon/{id}/image")
 	public ResponseEntity<Object> createWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
+		if(!InputSanitizer.isImageValid(imageFile)){
+			return ResponseEntity.badRequest().body("Error Validating Image ");
+		}
 		URI location = fromCurrentRequest().build().toUri();
 		weaponService.createWeaponImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.created(location).build();
@@ -165,6 +184,9 @@ public class grupo13RestController {
 
 	@PostMapping("/armor/{id}/image")
 	public ResponseEntity<Object> createArmorImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
+		if(!InputSanitizer.isImageValid(imageFile)){
+			return ResponseEntity.badRequest().body("Error Validating Image ");
+		}
 		URI location = fromCurrentRequest().build().toUri();
 		armorService.createArmorImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.created(location).build();
@@ -172,31 +194,52 @@ public class grupo13RestController {
 
 	// UPDATE -------------------------------------------------
 
-	  @PutMapping("/weapon/{id}")
-	public WeaponDTO replaceWeapon(@PathVariable long id, @RequestBody WeaponDTO updatedWeaponDTO) {
-		weaponService.update(id, updatedWeaponDTO);
+	@PutMapping("/weapon/{id}")
+	public ResponseEntity<?> replaceWeapon(@PathVariable long id, @RequestBody WeaponDTO updatedWeaponDTO) {
+	try {
+		InputSanitizer.validateWhitelist(updatedWeaponDTO.name());
+		InputSanitizer.validateWhitelist(updatedWeaponDTO.description());
 
-		return updatedWeaponDTO;
+		weaponService.update(id, updatedWeaponDTO);
+		return ResponseEntity.ok(updatedWeaponDTO);
+	} catch (IllegalArgumentException ex) {
+		return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
 	}
+}
+
 
 	@PutMapping("/armor/{id}")
-	public ArmorDTO replaceArmor(@PathVariable long id, @RequestBody ArmorDTO updatedArmorDTO) {
+	public ResponseEntity<?> replaceArmor(@PathVariable long id, @RequestBody ArmorDTO updatedArmorDTO) {
+	try {
+		InputSanitizer.validateWhitelist(updatedArmorDTO.name());
+		InputSanitizer.validateWhitelist(updatedArmorDTO.description());
+
 		armorService.update(id, updatedArmorDTO);
-
-		return updatedArmorDTO;
+		return ResponseEntity.ok(updatedArmorDTO);
+	} catch (IllegalArgumentException ex) {
+		return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
 	}
+}
 
-	@PutMapping("weapon/{id}/image")
+
+	@PutMapping("/weapon/{id}/image")
 	public ResponseEntity<Object> replaceWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
-		weaponService.replaceImage(id, imageFile.getInputStream(), imageFile.getSize());
-		return ResponseEntity.noContent().build();
+	if (!InputSanitizer.isImageValid(imageFile)) {
+		return ResponseEntity.badRequest().body("Error: Invalid image file.");
 	}
+	weaponService.replaceImage(id, imageFile.getInputStream(), imageFile.getSize());
+	return ResponseEntity.noContent().build();
+}
 
-	@PutMapping("armor/{id}/image")
+	@PutMapping("/armor/{id}/image")
 	public ResponseEntity<Object> replaceArmorImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
-		armorService.replaceImage(id, imageFile.getInputStream(), imageFile.getSize());
-		return ResponseEntity.noContent().build();
+	if (!InputSanitizer.isImageValid(imageFile)) {
+		return ResponseEntity.badRequest().body("Error: Invalid image file.");
 	}
+	armorService.replaceImage(id, imageFile.getInputStream(), imageFile.getSize());
+	return ResponseEntity.noContent().build();
+}
+
 
 	// DELETE -------------------------------------------------
 
@@ -240,18 +283,28 @@ public class grupo13RestController {
 	// CREATE -------------------------------------------------
 
 	@PostMapping("/characters")
-	public ResponseEntity<CharacterDTO> createCharacter(@RequestBody CharacterDTO characterDTO) {
+	public ResponseEntity<?> createCharacter(@RequestBody CharacterDTO characterDTO) {
+		try{
+		InputSanitizer.validateWhitelist(characterDTO.name());
+		InputSanitizer.validateWhitelist(characterDTO.description());
+		InputSanitizer.validateWhitelist(characterDTO.imageName());
 		characterService.save(characterDTO);
 
 		Character character = characterMapper.toDomain(characterDTO);
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(character.getId()).toUri();
-
 		return ResponseEntity.created(location).body(characterDTO);
+		}catch (IllegalArgumentException ex) {
+	 return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+
+		}
 	}
 
 	@PostMapping("/character/{id}/image")
 	public ResponseEntity<Object> createCharacterImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
+				if (!InputSanitizer.isImageValid(imageFile)) {
+		return ResponseEntity.badRequest().body("Error: Invalid image file.");
+	}
 
 		URI location = fromCurrentRequest().build().toUri();
 		characterService.createCharacterImage(id, location, imageFile.getInputStream(), imageFile.getSize());

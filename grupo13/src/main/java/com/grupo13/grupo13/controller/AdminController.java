@@ -17,6 +17,7 @@ import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
+import com.grupo13.grupo13.util.InputSanitizer;
 
 @Controller
 public class AdminController {
@@ -73,12 +74,15 @@ public class AdminController {
     @PostMapping("/weapon/new")
     public String newWeapon(Model model, WeaponDTO weaponDTO, @RequestParam MultipartFile weaponImage) throws IOException {
         Weapon weapon = weaponMapper.toDomain(weaponDTO);
+        
 
-        if (weapon.getName().isBlank()||weapon.getDescription().isBlank()|| weaponImage.isEmpty()) {
+        if (weapon.getName().isBlank()||weapon.getDescription().isBlank()|| weaponImage.isEmpty() || !InputSanitizer.isImageValid(weaponImage)) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-
+        weapon.setName(InputSanitizer.whitelistSanitize(weapon.getName()));
+        weapon.setDescription(InputSanitizer.whitelistSanitize(weapon.getDescription()));
+        
         weaponService.save(weaponDTO);
         weaponService.save(weaponDTO, weaponImage);
 
@@ -89,11 +93,15 @@ public class AdminController {
     public String newArmor(Model model, ArmorDTO armorDTO, @RequestParam MultipartFile armorImage) throws IOException {
         Armor armor = armorMapper.toDomain(armorDTO);
 
-        if (armor.getName().isBlank()||armor.getDescription().isBlank()|| armorImage.isEmpty()) {
+        if (armor.getName().isBlank()||armor.getDescription().isBlank()|| armorImage.isEmpty() || !InputSanitizer.isImageValid(armorImage)) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
         
+        armor.setName(InputSanitizer.whitelistSanitize(armor.getName()));
+        armor.setDescription(InputSanitizer.whitelistSanitize(armor.getDescription()));
+        
+
         armorService.save(armorDTO);
         armorService.save(armorDTO, armorImage);
 
@@ -151,10 +159,12 @@ public class AdminController {
 	public String updateWeapon(Model model, @PathVariable long id, WeaponDTO updatedWeaponDTO, @RequestParam MultipartFile weaponImage) throws IOException{
         Weapon updatedWeapon = weaponMapper.toDomain(updatedWeaponDTO);
 
-        if (updatedWeapon.getName().isBlank() || updatedWeapon.getDescription().isBlank() /*|| picture.isBlank()*/ ) {
+        if (updatedWeapon.getName().isBlank() || updatedWeapon.getDescription().isBlank() || weaponImage.isEmpty() || !InputSanitizer.isImageValid(weaponImage) ) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
+        updatedWeapon.setName(InputSanitizer.whitelistSanitize(updatedWeapon.getName()));
+        updatedWeapon.setDescription(InputSanitizer.whitelistSanitize(updatedWeapon.getDescription()));
 
         WeaponDTO editedWeapon = weaponService.findById(id);
         if(editedWeapon != null){
@@ -179,7 +189,8 @@ public class AdminController {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-
+        updatedArmor.setName(InputSanitizer.whitelistSanitize(updatedArmor.getName()));
+        updatedArmor.setDescription(InputSanitizer.whitelistSanitize(updatedArmor.getDescription()));
         ArmorDTO editedArmor = armorService.findById(id);
         if(editedArmor != null){
             if(!armorImage.isEmpty()){
