@@ -265,14 +265,14 @@ public class grupo13RestController {
 
 	// SHOW 1 -------------------------------------------------
 
-	@GetMapping("/character/{id}")
-	public CharacterDTO getCharacter(@PathVariable long id) {
-		return characterService.findById(id);
+	@GetMapping("/character/")
+	public CharacterDTO getCharacter() {
+		return characterService.findById(userService.getLoggedUser().getId());
 	}
 
-	@GetMapping("/character/{id}/image")
-	public ResponseEntity<Object> getCharacterImage(@PathVariable long id) throws SQLException, IOException {
-		Resource postImage = characterService.getImageFile(id);
+	@GetMapping("/character/image")
+	public ResponseEntity<Object> getCharacterImage() throws SQLException, IOException {
+		Resource postImage = characterService.getImageFile(userService.getLoggedUser().getId());
 
 		return ResponseEntity
 				.ok()
