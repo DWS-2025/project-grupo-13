@@ -157,9 +157,10 @@ public class sessionController {
     //used to show the weapons on the shop
     @GetMapping("/list_weapons")
     public String showWeapons(Model model, @PageableDefault(size = 3) Pageable pageable) {
+        Page<WeaponBasicDTO> allWeapons = weaponService.findAllBasic(pageable);
         Page<WeaponBasicDTO> showedWeapons;
+        boolean hasNext;
         if(userService.getLoggedUserDTOOrNull() != null){
-            Page<WeaponBasicDTO> allWeapons = weaponService.findAllBasic(pageable);
             List<WeaponBasicDTO> weaponsList = new LinkedList<>();
             for(WeaponBasicDTO weap : allWeapons){
                 if(!userService.hasWeapon(weap)){
@@ -168,15 +169,15 @@ public class sessionController {
             }
             showedWeapons = new PageImpl<>(weaponsList, pageable, allWeapons.getNumberOfElements()-weaponsList.size());
             model.addAttribute("user", userService.getLoggedUserDTO());
-            model.addAttribute("weapon", showedWeapons);
-
+            hasNext = (showedWeapons.getNumber() + 1) <= (showedWeapons.getTotalPages());
         } else{
-            showedWeapons = weaponService.findAllBasic(pageable);
-            model.addAttribute("weapon", showedWeapons);
+            showedWeapons = allWeapons;
+            hasNext = showedWeapons.hasNext();
         }
+        model.addAttribute("weapon", showedWeapons);
+        
         //buttons
         boolean hasPrev = showedWeapons.hasPrevious();
-        boolean hasNext = showedWeapons.getTotalElements() > (showedWeapons.getNumber() + 1) * showedWeapons.getSize();
         model.addAttribute("hasPrev", hasPrev);
         model.addAttribute("prev", showedWeapons.getNumber() - 1);
         model.addAttribute("hasNext", hasNext);
@@ -188,9 +189,10 @@ public class sessionController {
     //used to show the armors on the shop
     @GetMapping("/list_armors")
     public String showArmors(Model model, @PageableDefault(size = 2) Pageable pageable) {
+        Page<ArmorBasicDTO> allArmors = armorService.findAllBasic(pageable);
         Page<ArmorBasicDTO> showedArmors;
+        boolean hasNext;
         if(userService.getLoggedUserDTOOrNull() != null){
-            Page<ArmorBasicDTO> allArmors = armorService.findAllBasic(pageable);
             List<ArmorBasicDTO> armorsList = new LinkedList<>();
             for(ArmorBasicDTO arm : allArmors){
                 if(!userService.hasArmor(arm)){
@@ -199,15 +201,15 @@ public class sessionController {
             }
             showedArmors = new PageImpl<>(armorsList, pageable, allArmors.getNumberOfElements()-armorsList.size());
             model.addAttribute("user", userService.getLoggedUserDTO());
-            model.addAttribute("armor", showedArmors);
-
+            hasNext = (showedArmors.getNumber() + 1) <= (showedArmors.getTotalPages());
         } else{
-            showedArmors = armorService.findAllBasic(pageable);
-            model.addAttribute("armor", showedArmors);
+            showedArmors = allArmors;
+            hasNext = showedArmors.hasNext();
         }
+        model.addAttribute("armor", showedArmors);
+        
         //buttons
         boolean hasPrev = showedArmors.hasPrevious();
-        boolean hasNext = showedArmors.getTotalElements() > (showedArmors.getNumber() + 1) * showedArmors.getSize();
         model.addAttribute("hasPrev", hasPrev);
         model.addAttribute("prev", showedArmors.getNumber() - 1);
         model.addAttribute("hasNext", hasNext);
