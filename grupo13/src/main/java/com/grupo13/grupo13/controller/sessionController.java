@@ -34,7 +34,6 @@ import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -146,7 +145,7 @@ public class sessionController {
         if(userService.getLoggedUserDTOOrNull() != null){
             List<WeaponBasicDTO> weaponsList = new LinkedList<>();
             for(WeaponBasicDTO weap : allWeapons){
-                if(!userService.hasWeapon(weap)){
+                if(!userService.hasWeapon(weap.id())){
                     weaponsList.addLast(weap);
                 }
             }
@@ -178,7 +177,7 @@ public class sessionController {
         if(userService.getLoggedUserDTOOrNull() != null){
             List<ArmorBasicDTO> armorsList = new LinkedList<>();
             for(ArmorBasicDTO arm : allArmors){
-                if(!userService.hasArmor(arm)){
+                if(!userService.hasArmor(arm.id())){
                     armorsList.addLast(arm);
                 }
             }
