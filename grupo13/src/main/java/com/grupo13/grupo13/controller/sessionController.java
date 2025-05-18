@@ -444,7 +444,5 @@ public class sessionController {
        userService.deleteUser(u.getId());
 
        return "/";
-
 	}
-    
 }

@@ -16,6 +16,7 @@ import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
+import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.UserService;
@@ -234,4 +235,10 @@ public class AdminController {
         return "userAdminList";
     }
     
+    @PostMapping("/admin/user/{id}/delete")
+	public String deleteUser(Model model, @PathVariable long id) throws IOException{
+       userService.deleteUser(id);
+
+       return "deleted_user";
+	}
 }
