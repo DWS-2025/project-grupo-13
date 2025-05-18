@@ -221,13 +221,20 @@ public class sessionController {
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
         WeaponDTO weaponDTO = weaponService.findById(id);
+        
             // checks if the user has enough money or not
             if (weaponDTO == null) {
             model.addAttribute("message", "Could not purchase, doesnt exist");
             return "sp_errors";
+            }
+            if(userService.hasWeapon(id)){
+            model.addAttribute("message", "You alredy own that weapon");
+            return "sp_errors";
+
             }else {
-            int money = userService.getMoney();
-            if (money >= weaponDTO.price()) {
+            long urid=userService.getLoggedUser().getId();
+            if (userService.getMoney(urid) >= weaponDTO.price()) {
+                userService.setMoney(urid, userService.getMoney(urid)-weaponDTO.price());
                 userService.saveWeapon(id);
                 return "redirect:/list_weapons";
             } else {
@@ -244,12 +251,19 @@ public class sessionController {
         if (armorDTO == null) {
             model.addAttribute("message", "Could not purchase, doesnt exist");
             return "sp_errors";
-        } else {
-            int money = userService.getMoney();
-            if (money >= armorDTO.price()) {
-                userService.saveArmor(id);
-                armorService.save(armorDTO);
-                return "redirect:/list_objects";
+        }
+         if(userService.hasArmor(id)){
+            model.addAttribute("message", "You alredy own that armor");
+            return "sp_errors";
+
+            } else {
+             long urid=userService.getLoggedUser().getId();
+
+            if (userService.getMoney(urid) >= armorDTO.price()) {
+                 userService.setMoney(urid, userService.getMoney(urid)-armorDTO.price());
+                 userService.saveArmor(id);
+                 armorService.save(armorDTO);
+                 return "redirect:/list_armors";
             } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
