@@ -76,9 +76,9 @@ https://github.com/DWS-2025/project-grupo-13/commit/2199e8c4d85d7b97b4c36cbbdc43
 
 
 ### Lucas
-
+Carpeta de seguridad, users y adaptar la web al manejo de users. Añadir funcionalidades y htmls para la gestión de seguridad y usuarios
 #### 5 archivos más modificados:
-
+`Security Config`, `Session Controller`, `User Service`,`Grupo13RestController`,`CharacterService`.
 #### 5 commits destacados
 https://github.com/DWS-2025/project-grupo-13/commit/c3d197fa201f6d04b39e3b5c5651b6ffaa93401c
 
