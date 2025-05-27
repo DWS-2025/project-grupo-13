@@ -36,7 +36,7 @@ public class InputSanitizer {
         String contentType = file.getContentType();
         if (contentType == null) return false;
 
-        boolean isTypeValid = contentType.equals("image/jpeg") || contentType.equals("image/png");
+        boolean isTypeValid = contentType.equals("image/jpeg");
    
 
         return isTypeValid;

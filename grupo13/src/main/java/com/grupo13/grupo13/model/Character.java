@@ -44,9 +44,10 @@ public class Character {
     protected Character(){}
 
     //constructor
-    public Character(String description, String name) {
+    public Character(String description, String name, String imageName) {
         this.description =  description;
         this.name = name;
+        this.imageName = imageName;
     }
 
     //get functions

@@ -1,6 +1,10 @@
 package com.grupo13.grupo13.service;
 import java.io.IOException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,6 +15,8 @@ import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
@@ -84,7 +90,7 @@ public class CharacterService {
         if (!imageFile.isEmpty()) {
             character.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
-        character.setImageName("/character/" + character.getId() + "/image");
+       
         backupImage(imageFile, imageName);
         characterRepository.save(character);
     }
@@ -127,6 +133,30 @@ public class CharacterService {
 
         return finalName;
     }
+
+//show image 
+
+    public ResponseEntity<Object> returnImage(String imageName) throws MalformedURLException {
+
+        if (!imageName.contains(".")) {
+        imageName= imageName + ".jpg";
+    }
+
+   String sanitized = imageName.replaceAll("^(\\.\\./|\\./)+", "");
+		 Path normalized = BACKUP_FOLDER.resolve(sanitized).normalize();
+
+    
+    if (!normalized.startsWith(BACKUP_FOLDER)) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid image path.");
+    }
+	    
+
+
+		
+		Resource file = new UrlResource(normalized.toUri());
+
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(file);
+	}
 
 
 

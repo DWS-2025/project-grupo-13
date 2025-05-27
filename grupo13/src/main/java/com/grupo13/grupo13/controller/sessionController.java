@@ -49,6 +49,14 @@ import com.grupo13.grupo13.util.InputSanitizer;
 @Controller
 public class sessionController {
 
+       private static final Path BACKUP_FOLDER = 
+        
+        Paths.get("").toAbsolutePath()
+             .resolve("backups")
+             .resolve("characters")
+             .normalize();
+
+
     // attributes
     @Autowired
     private UserService userService;
@@ -72,6 +80,7 @@ public class sessionController {
         List<WeaponBasicDTO> currentInventoryWeapon = userService.currentUserInventoryWeapon();
         List<ArmorBasicDTO> currentInventoryArmor = userService.currentUserInventoryArmor();
         CharacterDTO characterDTO = userService.getCharacter();
+        
 
         // gets the character and its inventory for mustache
         model.addAttribute("character", characterDTO);
@@ -109,11 +118,17 @@ public class sessionController {
         imageName= InputSanitizer.whitelistSanitize(imageName);
         characterDesc= InputSanitizer.sanitizeRichText(characterDesc);
         if (!InputSanitizer.isImageValid(characterImage)) {
-            model.addAttribute("message", "File not allowed or missing");
+            model.addAttribute("message", "File not allowed or missing: you must upload a jpg file.");
             return "sp_errors";
         }
 
-        Character character = new Character(characterDesc, nameOfCharacter);
+           Path imagePath = BACKUP_FOLDER.resolve(imageName).normalize().resolve(".jpg");
+    if (Files.exists(imagePath)) {
+        model.addAttribute("message", "Choose a different image name.");
+        return "sp_errors";
+    }
+
+        Character character = new Character(characterDesc, nameOfCharacter,imageName);
         CharacterDTO characterDTO = characterMapper.toDTO(character);
 
         CharacterDTO savedCharacterDTO = characterService.save(characterDTO);
@@ -137,7 +152,7 @@ public class sessionController {
         model.addAttribute("currentA", currentArmor);
         model.addAttribute("user", userService.getLoggedUserDTO());
 
-        return "character_view";
+        return "redirect:/list_weapons";
     }
 
     @GetMapping("/")
@@ -451,4 +466,12 @@ public class sessionController {
 	}
     
     
+	@GetMapping("/userImage")
+	public ResponseEntity<Object> downloadUserImage(@RequestParam Long id) throws MalformedURLException {
+        CharacterDTO characterDTO = characterService.findById(id);
+
+        String imageName = characterDTO.imageName();
+        
+		return characterService.returnImage(imageName);
+	}
 }

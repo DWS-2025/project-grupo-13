@@ -222,7 +222,7 @@ public class UserService {
     if (userRepository.existsById(id)) {
         userRepository.deleteById(id);
     } else {
-        throw new NoSuchElementException("No existe un usuario con ID: " + id);
+        throw new NoSuchElementException("User doesn't exist " + id);
     }
 }
 
