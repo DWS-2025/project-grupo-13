@@ -99,6 +99,10 @@ public class CharacterService {
         String baseName = Paths.get(imageName).getFileName().toString();
 
         
+ if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
+    throw new SecurityException("Invalid file name: " + imageName);
+}
+
         String orig = imageFile.getOriginalFilename();
         String ext = "";
         if (orig != null) {
@@ -142,8 +146,12 @@ public class CharacterService {
         imageName= imageName + ".jpg";
     }
 
-   String sanitized = imageName.replaceAll("^(\\.\\./|\\./)+", "");
-		 Path normalized = BACKUP_FOLDER.resolve(sanitized).normalize();
+    if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
+    throw new SecurityException("Invalid file name: " + imageName);
+}
+ 
+
+		 Path normalized = BACKUP_FOLDER.resolve(imageName).normalize();
 
     
     if (!normalized.startsWith(BACKUP_FOLDER)) {

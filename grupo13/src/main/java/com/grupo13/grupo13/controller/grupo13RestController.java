@@ -93,18 +93,7 @@ public class grupo13RestController {
 		return armorService.findAllBasic(pageable);
 	}
 
-	//SEARCH BY STRENGHT/PRICE (GREATER THAN)
-	@GetMapping("/weapons/search")
-    public List<WeaponBasicDTO> searchWeapons(
-        @RequestParam(required = true) Integer strength_gt,
-        @RequestParam(required = true) Integer price_gt
-    ) {
-        if (strength_gt != null && price_gt != null) {
-            return weaponRepository.findByStrengthGreaterThanAndPriceGreaterThan(strength_gt, price_gt);
-        } else {
-            return weaponService.findAll(); 
-        }
-	}
+	
 	// SHOW 1 -------------------------------------------------
 
 	@GetMapping("/weapon/{id}")

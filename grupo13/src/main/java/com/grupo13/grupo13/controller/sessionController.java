@@ -13,6 +13,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Weapon;
+import com.grupo13.grupo13.repository.WeaponRepository;
 import com.grupo13.grupo13.security.jwt.AuthResponse;
 import com.grupo13.grupo13.security.jwt.AuthResponse.Status;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
@@ -70,7 +73,8 @@ public class sessionController {
     private CharacterMapper characterMapper;
     @Autowired
     private UserMapper userMapper;
-
+ @Autowired
+    private WeaponRepository weaponRepository;
 
 
 
@@ -224,11 +228,32 @@ public class sessionController {
         return "listing_armors";
     }
 
-    @GetMapping("/search")
-    public String search() {
 
-        return "search";
+
+
+
+
+@GetMapping("/search")
+public String searchWeapons(Model model, @RequestParam(required = false) String name) {
+    if (name != null && !name.isEmpty()) {
+        Weapon probe = new Weapon();
+        probe.setName(name);
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+            .withIgnorePaths("description", "strength", "price", "intimidation", "imageName", "imageFile", "id", "characters", "users")
+            .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+
+        Example<Weapon> example = Example.of(probe, matcher);
+
+        model.addAttribute("weapons", weaponRepository.findAll(example));
+    } else {
+        model.addAttribute("weapons", weaponRepository.findAll());
     }
+    return "search";
+}
+
+
+        
   @GetMapping("weaponview/{id}")
     public String showWeapon(Model model, @PathVariable long id){
         WeaponDTO weapon = weaponService.findById(id);

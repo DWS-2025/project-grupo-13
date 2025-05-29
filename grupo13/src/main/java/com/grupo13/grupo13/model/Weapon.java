@@ -41,9 +41,11 @@ public class Weapon {
     private List<User> users;
 
     //for the DB
-    protected Weapon(){}
+    public Weapon(){}
 
     //constructor
+
+    
     public Weapon(String name, String description, int strength, int price, int intimidation) {
         this.name = name;
         this.description = description;
