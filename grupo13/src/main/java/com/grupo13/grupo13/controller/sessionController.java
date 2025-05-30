@@ -111,26 +111,31 @@ public class sessionController {
     @PostMapping("/formProcess")
     public String procesarFormulario(Model model, HttpSession session, @RequestParam String nameOfCharacter,
             @RequestParam String characterDesc,
-            @RequestParam String imageName, @RequestParam MultipartFile characterImage) throws IOException {
+            @RequestParam MultipartFile characterImage) throws IOException {
 
-        if (nameOfCharacter.isBlank() || characterDesc.isBlank() || imageName.isBlank()) {
+        if (nameOfCharacter.isBlank() || characterDesc.isBlank()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
         // creates the character
         nameOfCharacter= InputSanitizer.whitelistSanitize(nameOfCharacter);
-        imageName= InputSanitizer.whitelistSanitize(imageName);
+
+
+        
         characterDesc= InputSanitizer.sanitizeRichText(characterDesc);
         if (!InputSanitizer.isImageValid(characterImage)) {
             model.addAttribute("message", "File not allowed or missing: you must upload a jpg file.");
             return "sp_errors";
         }
 
-           Path imagePath = BACKUP_FOLDER.resolve(imageName).normalize().resolve(".jpg");
-    if (Files.exists(imagePath)) {
-        model.addAttribute("message", "Choose a different image name.");
-        return "sp_errors";
-    }
+        String originalFilename = characterImage.getOriginalFilename();
+        int dotIndex = originalFilename.lastIndexOf('.');
+        String baseName = (dotIndex == -1) ? originalFilename : originalFilename.substring(0, dotIndex);
+        String extension = (dotIndex == -1) ? "" : originalFilename.substring(dotIndex);
+        String imageName = baseName + "-" + userService.getLoggedUser().getUserName() + extension;
+      
+        
+  
 
         Character character = new Character(characterDesc, nameOfCharacter,imageName);
         CharacterDTO characterDTO = characterMapper.toDTO(character);
