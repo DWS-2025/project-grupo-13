@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#  backups/characters
+backups/characters/*
+
+# except no-image.png
+!backups/characters/no-image.png

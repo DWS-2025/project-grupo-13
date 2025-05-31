@@ -497,10 +497,13 @@ public String searchWeapons(Model model, @RequestParam(required = false) String 
     
     
 	@GetMapping("/userImage")
-	public ResponseEntity<Object> downloadUserImage(@RequestParam Long id) throws MalformedURLException {
-        CharacterDTO characterDTO = characterService.findById(id);
+	public ResponseEntity<Object> downloadUserImage() throws MalformedURLException {
+         Character c = userService.getLoggedUser().getCharacter();
 
-        String imageName = characterDTO.imageName();
+
+        
+
+        String imageName = c.getImageName();
         
 		return characterService.returnImage(imageName);
 	}
