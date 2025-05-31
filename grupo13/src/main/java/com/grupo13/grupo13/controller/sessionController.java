@@ -477,7 +477,7 @@ public String searchWeapons(Model model, @RequestParam(required = false) String 
         if(oldUser != null){
             userService.updateName(oldUserDTO, userName);
 
-            return "redirect:/user";   
+            return "redirect:/logout";   
         }else{
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";

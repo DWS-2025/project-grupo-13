@@ -90,14 +90,14 @@ public class UserService {
     }
 
     public void save(UserDTO userDTO) {
-        User user = mapper.toDomain(userDTO);
+        User user = getLoggedUser();
 
         userRepository.save(user);
     }
 
     //returns true if a character (located by its id) has a equipment in use
     public boolean hasWeapon(long id) {
-        User user = userRepository.findById((long)1).get();
+        User user = getLoggedUser();
         WeaponDTO weaponDTO = weaponService.findById(id);
 
         if (weaponDTO != null) {
@@ -108,7 +108,7 @@ public class UserService {
 
     //returns if the user has an armor given by an id
     public boolean hasArmor(long id) {
-        User user = userRepository.findById((long)1).get();
+        User user = getLoggedUser();
         ArmorDTO armorDTO = armorService.findById(id);
 
         if (armorDTO != null) {
@@ -124,18 +124,18 @@ public class UserService {
 
     //returns the inventory of the current user
     public List<WeaponBasicDTO> currentUserInventoryWeapon() {
-        User user = userRepository.findById((long)1).get();
+        User user = getLoggedUser();
         return weaponMapper.toBasicDTOs(user.getInventoryWeapon());
     }
 
     public List<ArmorBasicDTO> currentUserInventoryArmor() {
-        User user = userRepository.findById((long)1).get();
+        User user = getLoggedUser();
         return armorMapper.toBasicDTOs(user.getInventoryArmor());
     }
 
     //put a equipment in the inventory of an scpecific user
     public void saveWeapon(long id) {
-        User user = userRepository.findById((long)1).get();
+        User user = getLoggedUser();
 
         if (!hasWeapon(id)) {
             WeaponDTO weaponDTO = weaponService.findById(id);
@@ -153,7 +153,7 @@ public class UserService {
 
     //save an armor
     public void saveArmor(long id) {
-        User user = userRepository.findById((long)1).get();
+        User user = getLoggedUser();
 
         if (!hasArmor(id)) {
             ArmorDTO armorDTO = armorService.findById(id);
@@ -173,7 +173,8 @@ public class UserService {
     public void saveCharacter(CharacterDTO characterDTO) {
         Character character = characterMapper.toDomain(characterDTO);
 
-        User user = userRepository.findById((long)1).get();
+
+        User user = getLoggedUser();
 
         user.setCharacter(character);
         userRepository.save(user);
@@ -181,7 +182,7 @@ public class UserService {
 
     //returns the character of the current user
     public CharacterDTO getCharacter() {
-        return characterMapper.toDTO(userRepository.findById((long)1).get().getCharacter());
+        return characterMapper.toDTO(getLoggedUser().getCharacter());
     }
 
     //returns if the user has a specific weapon or armor
@@ -212,7 +213,7 @@ public class UserService {
     //updates an user's name when edited
     public void updateName(UserDTO updatedUserDTO, String userName){
 
-        User updatedUser = mapper.toDomain(updatedUserDTO);
+        User updatedUser = getLoggedUser();
         updatedUser.setUserName(userName);;
 
         userRepository.save(updatedUser);

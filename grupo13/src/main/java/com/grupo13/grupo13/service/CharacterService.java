@@ -38,6 +38,8 @@ import java.nio.file.Paths;
 @Service
 public class CharacterService {
 
+    private final UserService userService;
+
        private static final Path BACKUP_FOLDER = 
         
         Paths.get("").toAbsolutePath()
@@ -65,6 +67,10 @@ public class CharacterService {
     private WeaponMapper weaponMapper;
     @Autowired
     private armorMapper armorMapper;
+
+    CharacterService(UserService userService) {
+        this.userService = userService;
+    }
 
     // returns all characters in a list
     public List<CharacterBasicDTO> findAll() {
@@ -171,7 +177,7 @@ public class CharacterService {
 
     public void saveUser(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);
-        character.setUser(userRepository.findById((long)1).get());
+        character.setUser(userService.getLoggedUser());
         characterRepository.save(character);
     }
 
