@@ -28,7 +28,7 @@ public class Weapon {
     private int strength;
     private int price;
     private int intimidation;
-    private String imageName;
+    //private String imageName;
 
     @JsonIgnore
     @Lob
@@ -114,9 +114,11 @@ public class Weapon {
         return intimidation;
     }
 
+    /*
     public String getImageName(){
         return imageName;
     }
+    */
 
     //setters
     public void setId(long id) {
@@ -159,8 +161,10 @@ public class Weapon {
         this.imageFile = imageFile;
     }
 
+    /* 
     public void setImageName(String imageName){
         this.imageName = imageName;
     }
+    */
 
 }

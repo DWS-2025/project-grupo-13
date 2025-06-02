@@ -76,8 +76,6 @@ public class sessionController {
  @Autowired
     private WeaponRepository weaponRepository;
 
-
-
     @GetMapping("/character")
     public String index(Model model, HttpSession session) {
 
@@ -119,27 +117,22 @@ public class sessionController {
         }
         // creates the character
         nameOfCharacter= InputSanitizer.whitelistSanitize(nameOfCharacter);
-
-
-        
         characterDesc= InputSanitizer.sanitizeRichText(characterDesc);
+
         if (!InputSanitizer.isImageValid(characterImage)) {
             model.addAttribute("message", "File not allowed or missing: you must upload a jpg file.");
             return "sp_errors";
         }
 
-        String originalFilename = characterImage.getOriginalFilename();
-        int dotIndex = originalFilename.lastIndexOf('.');
-        String baseName = (dotIndex == -1) ? originalFilename : originalFilename.substring(0, dotIndex);
-        String extension = (dotIndex == -1) ? "" : originalFilename.substring(dotIndex);
-        String imageName = baseName + "-" + userService.getLoggedUser().getUserName() + extension;
-      
-        
-  
+        String imageName = InputSanitizer.whitelistSanitize(characterImage.getOriginalFilename() + '-' + userService.getLoggedUserDTO().userName());
+        Path imagePath = BACKUP_FOLDER.resolve(imageName).normalize().resolve(".jpg");
+        if (Files.exists(imagePath)) {
+            model.addAttribute("message", "Choose a different image name.");
+            return "sp_errors";
+        }
 
         Character character = new Character(characterDesc, nameOfCharacter,imageName);
         CharacterDTO characterDTO = characterMapper.toDTO(character);
-
         CharacterDTO savedCharacterDTO = characterService.save(characterDTO);
 
         // saves the character in the repository
@@ -255,11 +248,9 @@ public String searchWeapons(Model model, @RequestParam(required = false) String 
         model.addAttribute("weapons", weaponRepository.findAll());
     }
     return "search";
-}
-
-
+    }
         
-  @GetMapping("weaponview/{id}")
+    @GetMapping("weaponview/{id}")
     public String showWeapon(Model model, @PathVariable long id){
         WeaponDTO weapon = weaponService.findById(id);
 

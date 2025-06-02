@@ -103,11 +103,9 @@ public class CharacterService {
     public String backupImage(MultipartFile imageFile, String imageName) throws IOException {
         // sanitize name
         String baseName = Paths.get(imageName).getFileName().toString();
-
-        
- if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
-    throw new SecurityException("Invalid file name: " + imageName);
-}
+        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
+            throw new SecurityException("Invalid file name: " + imageName);
+        }
 
         String orig = imageFile.getOriginalFilename();
         String ext = "";
@@ -117,7 +115,6 @@ public class CharacterService {
                 ext = orig.substring(i); 
             }
         }
-
         // check if file is using right extension
         String finalName;
         int dot = baseName.lastIndexOf('.');
@@ -128,15 +125,12 @@ public class CharacterService {
             
             finalName = baseName + ext;
         }
-
         
         Path target = BACKUP_FOLDER.resolve(finalName).normalize();
-
         //final validation to check file exists in the right folder
         if (!target.startsWith(BACKUP_FOLDER)) {
             throw new IOException("Path Traversal detected: " + imageName);
         }
-
         // save file
         Files.createDirectories(target.getParent());
         imageFile.transferTo(target.toFile());
@@ -144,36 +138,22 @@ public class CharacterService {
         return finalName;
     }
 
-//show image 
-
+    //show image 
     public ResponseEntity<Object> returnImage(String imageName) throws MalformedURLException {
-
         if (!imageName.contains(".")) {
-        imageName= imageName + ".jpg";
-    }
+            imageName= imageName + ".jpg";
+        }
+        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
+            throw new SecurityException("Invalid file name: " + imageName);
+        }
+        Path normalized = BACKUP_FOLDER.resolve(imageName).normalize();
 
-    if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
-    throw new SecurityException("Invalid file name: " + imageName);
-}
- 
-
-		 Path normalized = BACKUP_FOLDER.resolve(imageName).normalize();
-
-    
-    if (!normalized.startsWith(BACKUP_FOLDER)) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid image path.");
-    }
-	    
-
-
-		
-		Resource file = new UrlResource(normalized.toUri());
-
-		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(file);
+        if (!normalized.startsWith(BACKUP_FOLDER)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid image path.");
+        }
+	    Resource file = new UrlResource(normalized.toUri());
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(file);
 	}
-
-
-
 
     public void saveUser(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);

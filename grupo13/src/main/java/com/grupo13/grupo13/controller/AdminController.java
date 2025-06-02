@@ -90,7 +90,7 @@ public class AdminController {
     @PostMapping("/weapon/new")
     public String newWeapon(Model model, @RequestParam String name, @RequestParam int intimidation,
             @RequestParam int strength, @RequestParam String description, @RequestParam int price, 
-            @RequestParam String imageName, @RequestParam MultipartFile weaponImage) throws IOException {
+            @RequestParam MultipartFile weaponImage) throws IOException {
 
         if (name.isBlank()||description.isBlank()|| weaponImage.isEmpty() || !InputSanitizer.isImageValid(weaponImage)) {
             model.addAttribute("message", "Some or all parameters were left blank");
@@ -98,10 +98,10 @@ public class AdminController {
         }
         name = InputSanitizer.whitelistSanitize(name);
         description = InputSanitizer.whitelistSanitize(description);
-        imageName= InputSanitizer.whitelistSanitize(imageName);
+        //String imageName= InputSanitizer.whitelistSanitize(weaponImage.getName());
         
         Weapon weapon = new Weapon(name, description, intimidation, strength, price);
-        weapon.setImageName(imageName);
+        //weapon.setImageName(imageName);
         WeaponDTO weaponDTO = weaponMapper.toDTO(weapon);
         
         weaponService.save(weaponDTO, weaponImage);
@@ -112,7 +112,7 @@ public class AdminController {
     @PostMapping("/armor/new")
     public String newArmor(Model model, @RequestParam String name, @RequestParam int style,
             @RequestParam int defense, @RequestParam String description, @RequestParam int price,
-            @RequestParam String imageName, @RequestParam MultipartFile armorImage) throws IOException {
+            @RequestParam MultipartFile armorImage) throws IOException {
 
         if (name.isBlank()||description.isBlank()|| armorImage.isEmpty() || !InputSanitizer.isImageValid(armorImage)) {
             model.addAttribute("message", "Some or all parameters were left blank");
@@ -120,10 +120,10 @@ public class AdminController {
         }
         name = InputSanitizer.whitelistSanitize(name);
         description = InputSanitizer.whitelistSanitize(description);
-        imageName= InputSanitizer.whitelistSanitize(imageName);
+        //String imageName= InputSanitizer.whitelistSanitize(armorImage.getName());
         
         Armor armor = new Armor(name, description, style, defense, price);
-        armor.setImageName(imageName);
+        //armor.setImageName(imageName);
         ArmorDTO armorDTO = armorMapper.toDTO(armor);
         
         armorService.save(armorDTO, armorImage);
