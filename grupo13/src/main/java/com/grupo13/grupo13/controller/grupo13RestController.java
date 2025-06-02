@@ -133,6 +133,7 @@ public class grupo13RestController {
     try {
         InputSanitizer.validateWhitelist(weaponDTO.name());
         InputSanitizer.validateWhitelist(weaponDTO.description());
+		InputSanitizer.validateWhitelist(weaponDTO.imageName());
 
         weaponService.save(weaponDTO);
         Weapon weapon = weaponMapper.toDomain(weaponDTO);
@@ -150,7 +151,7 @@ public class grupo13RestController {
 	try {
         InputSanitizer.validateWhitelist(armorDTO.name());
         InputSanitizer.validateWhitelist(armorDTO.description());
-
+		InputSanitizer.validateWhitelist(armorDTO.imageName());
         armorService.save(armorDTO);
         Armor armor = armorMapper.toDomain(armorDTO);
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(armor.getId()).toUri();
@@ -189,6 +190,7 @@ public class grupo13RestController {
 	try {
 		InputSanitizer.validateWhitelist(updatedWeaponDTO.name());
 		InputSanitizer.validateWhitelist(updatedWeaponDTO.description());
+		InputSanitizer.validateWhitelist(updatedWeaponDTO.imageName());
 
 		weaponService.update(id, updatedWeaponDTO);
 		return ResponseEntity.ok(updatedWeaponDTO);
@@ -203,6 +205,7 @@ public class grupo13RestController {
 	try {
 		InputSanitizer.validateWhitelist(updatedArmorDTO.name());
 		InputSanitizer.validateWhitelist(updatedArmorDTO.description());
+		InputSanitizer.validateWhitelist(updatedArmorDTO.imageName());
 
 		armorService.update(id, updatedArmorDTO);
 		return ResponseEntity.ok(updatedArmorDTO);

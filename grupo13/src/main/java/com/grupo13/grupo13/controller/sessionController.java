@@ -118,7 +118,7 @@ public class sessionController {
             return "sp_errors";
         }
         // creates the character
-        nameOfCharacter= InputSanitizer.whitelistSanitize(nameOfCharacter);
+        InputSanitizer.validateWhitelist(nameOfCharacter);
 
 
         
@@ -240,6 +240,7 @@ public class sessionController {
 
 @GetMapping("/search")
 public String searchWeapons(Model model, @RequestParam(required = false) String name) {
+    InputSanitizer.validateWhitelist(name);
     if (name != null && !name.isEmpty()) {
         Weapon probe = new Weapon();
         probe.setName(name);
@@ -397,7 +398,7 @@ public String searchWeapons(Model model, @RequestParam(required = false) String 
         Path imagePath = IMP_IMAGES_FOLDER.resolve(imageName);
         Resource image = new UrlResource(imagePath.toUri());
         String contentType;
-
+InputSanitizer.validateWhitelist(imageName);
         try { // gets the type of the image
             contentType = Files.probeContentType(imagePath);
             if (contentType == null) {
@@ -465,7 +466,7 @@ public String searchWeapons(Model model, @RequestParam(required = false) String 
 
     @PostMapping("/editUser")
 	public String updateUser(Model model, @RequestParam String userName) throws IOException{
-
+InputSanitizer.validateWhitelist(userName);
         if(userName.isBlank()){
             model.addAttribute("message", "The name cannot be left blank");
             return "sp_errors";

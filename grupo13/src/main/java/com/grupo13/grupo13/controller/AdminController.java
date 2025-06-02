@@ -96,9 +96,9 @@ public class AdminController {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-        name = InputSanitizer.whitelistSanitize(name);
-        description = InputSanitizer.whitelistSanitize(description);
-        imageName= InputSanitizer.whitelistSanitize(imageName);
+       InputSanitizer.validateWhitelist(name);
+       InputSanitizer.validateWhitelist(description);
+       InputSanitizer.validateWhitelist(imageName);
         
         Weapon weapon = new Weapon(name, description, intimidation, strength, price);
         weapon.setImageName(imageName);
@@ -118,9 +118,9 @@ public class AdminController {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-        name = InputSanitizer.whitelistSanitize(name);
-        description = InputSanitizer.whitelistSanitize(description);
-        imageName= InputSanitizer.whitelistSanitize(imageName);
+         InputSanitizer.validateWhitelist(name);
+         InputSanitizer.validateWhitelist(description);
+         InputSanitizer.validateWhitelist(imageName);
         
         Armor armor = new Armor(name, description, style, defense, price);
         armor.setImageName(imageName);
@@ -186,8 +186,10 @@ public class AdminController {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-        updatedWeapon.setName(InputSanitizer.whitelistSanitize(updatedWeapon.getName()));
-        updatedWeapon.setDescription(InputSanitizer.whitelistSanitize(updatedWeapon.getDescription()));
+
+        InputSanitizer.validateWhitelist(updatedWeapon.getName());
+        InputSanitizer.validateWhitelist(updatedWeapon.getDescription());
+ 
 
         WeaponDTO editedWeapon = weaponService.findById(id);
         if(editedWeapon != null){
@@ -212,8 +214,8 @@ public class AdminController {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-        updatedArmor.setName(InputSanitizer.whitelistSanitize(updatedArmor.getName()));
-        updatedArmor.setDescription(InputSanitizer.whitelistSanitize(updatedArmor.getDescription()));
+        InputSanitizer.validateWhitelist(updatedArmor.getName());
+        InputSanitizer.validateWhitelist(updatedArmor.getDescription());
         ArmorDTO editedArmor = armorService.findById(id);
         if(editedArmor != null){
             if(!armorImage.isEmpty()){

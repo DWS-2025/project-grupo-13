@@ -23,6 +23,8 @@ import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.repository.UserRepository;
+import com.grupo13.grupo13.util.InputSanitizer;
+
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,6 +47,7 @@ public class UserService {
     private armorMapper armorMapper;
     @Autowired
     private CharacterMapper characterMapper;
+    
 
     // returns a specific user by its id
     public UserDTO findById(long id) {
@@ -212,7 +215,7 @@ public class UserService {
 
     //updates an user's name when edited
     public void updateName(UserDTO updatedUserDTO, String userName){
-
+InputSanitizer.validateWhitelist(userName);
         User updatedUser = getLoggedUser();
         updatedUser.setUserName(userName);;
 

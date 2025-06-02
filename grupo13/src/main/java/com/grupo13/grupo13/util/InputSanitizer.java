@@ -16,11 +16,7 @@ public class InputSanitizer {
         }
     }
     
-    public static String whitelistSanitize(String input) {
-        if (input == null) return "";
-
-        return input.replaceAll("[^a-zA-Z0-9 _.,-]", "");
-    }
+   
 
    
     public static String sanitizeRichText(String input) {
