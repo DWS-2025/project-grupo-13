@@ -237,8 +237,12 @@ public class AdminController {
     
     @PostMapping("/admin/user/{id}/delete")
 	public String deleteUser(Model model, @PathVariable long id) throws IOException{
-       userService.deleteUser(id);
-
-       return "deleted_user";
+        if(userService.getLoggedUserDTO().id() != id){
+            userService.deleteUser(id);
+            return "deleted_user";
+        }else{
+            userService.deleteUser(id);
+            return "/logout";
+        }
 	}
 }

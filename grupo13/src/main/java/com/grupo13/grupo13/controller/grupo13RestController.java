@@ -74,26 +74,15 @@ public class grupo13RestController {
 	// SHOW ALL -------------------------------------------------
 
 	@GetMapping("/weapons")
-	public List<WeaponBasicDTO> getWeapons() {
-		return weaponService.findAll();
-	}
-
-	@GetMapping("/armors")
-	public List<ArmorBasicDTO> getArmors() {
-		return armorService.findAll();
-	}
-
-	@GetMapping("/list_weapons")
 	public Page<WeaponBasicDTO> getPageWeapons(Pageable pageable) {
 		return weaponService.findAllBasic(pageable);
 	}
 
-	@GetMapping("/list_armors")
+	@GetMapping("/armors")
 	public Page<ArmorBasicDTO> getPageArmors(Pageable pageable) {
 		return armorService.findAllBasic(pageable);
 	}
 
-	
 	// SHOW 1 -------------------------------------------------
 
 	@GetMapping("/weapon/{id}")
