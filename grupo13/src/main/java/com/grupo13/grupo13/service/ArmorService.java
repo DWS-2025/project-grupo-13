@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.repository.ArmorRepository;
+import com.grupo13.grupo13.util.InputSanitizer;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
@@ -35,7 +36,8 @@ public class ArmorService {
 
 	//saves in repository
     public void save(ArmorDTO armorDTO){
-
+        InputSanitizer.validateWhitelist(armorDTO.name());
+        InputSanitizer.validateWhitelist(armorDTO.description());
         Armor armor = mapper.toDomain(armorDTO);
         armorRepository.save(armor);
     }

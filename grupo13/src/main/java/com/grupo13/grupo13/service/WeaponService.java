@@ -22,6 +22,7 @@ import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.repository.WeaponRepository;
+import com.grupo13.grupo13.util.InputSanitizer;
 
 @Service
 public class WeaponService {
@@ -36,8 +37,10 @@ public class WeaponService {
 
 
     //saves in repository
-    public void save(WeaponDTO weapondto){
-        Weapon weapon = mapper.toDomain(weapondto);
+    public void save(WeaponDTO weaponDTO){
+        InputSanitizer.validateWhitelist(weaponDTO.name());
+        InputSanitizer.validateWhitelist(weaponDTO.description());
+        Weapon weapon = mapper.toDomain(weaponDTO);
         weaponRepository.save(weapon);
     }
 

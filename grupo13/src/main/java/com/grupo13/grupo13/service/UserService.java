@@ -1,7 +1,6 @@
 package com.grupo13.grupo13.service;
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +22,8 @@ import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.repository.UserRepository;
+import com.grupo13.grupo13.util.InputSanitizer;
+
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -173,7 +174,6 @@ public class UserService {
     public void saveCharacter(CharacterDTO characterDTO) {
         Character character = characterMapper.toDomain(characterDTO);
 
-
         User user = getLoggedUser();
 
         user.setCharacter(character);
@@ -212,7 +212,7 @@ public class UserService {
 
     //updates an user's name when edited
     public void updateName(UserDTO updatedUserDTO, String userName){
-
+        InputSanitizer.validateWhitelist(userName);
         User updatedUser = getLoggedUser();
         updatedUser.setUserName(userName);;
 
@@ -220,11 +220,11 @@ public class UserService {
     }
 
     public void deleteUser(long id) {
-    if (userRepository.existsById(id)) {
-        userRepository.deleteById(id);
-    } else {
-        throw new NoSuchElementException("User doesn't exist " + id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new NoSuchElementException("User doesn't exist " + id);
+        }
     }
-}
 
 }

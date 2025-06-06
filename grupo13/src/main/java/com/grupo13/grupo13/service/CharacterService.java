@@ -2,7 +2,6 @@ package com.grupo13.grupo13.service;
 import java.io.IOException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -33,14 +32,16 @@ import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.repository.CharacterRepository;
 import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.repository.WeaponRepository;
+import com.grupo13.grupo13.util.InputSanitizer;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 @Service
 public class CharacterService {
 
     private final UserService userService;
-
-       private static final Path BACKUP_FOLDER = 
+    private static final Path BACKUP_FOLDER = 
         
         Paths.get("").toAbsolutePath()
              .resolve("backups")
@@ -84,6 +85,8 @@ public class CharacterService {
 
     // creates a new character
     public CharacterDTO save(CharacterDTO characterDTO) {
+        InputSanitizer.validateWhitelist(characterDTO.name());
+        InputSanitizer.validateWhitelist(characterDTO.description());
         Character character = mapper.toDomain(characterDTO);
         Character savedCharacter = characterRepository.save(character);
         return mapper.toDTO(savedCharacter);
@@ -92,7 +95,7 @@ public class CharacterService {
     //saves the character's image
     public void save(CharacterDTO characterDTO, MultipartFile imageFile, String imageName) throws IOException {
         Character character = mapper.toDomain(characterDTO);
-
+        InputSanitizer.validateWhitelist(imageName);
         if (!imageFile.isEmpty()) {
             character.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
