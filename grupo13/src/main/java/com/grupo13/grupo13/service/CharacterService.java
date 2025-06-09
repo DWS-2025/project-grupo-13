@@ -279,5 +279,18 @@ public class CharacterService {
 		character.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		characterRepository.save(character);
 	}
+
+    public void editCharacterName(String name){
+
+        if(userService.getCharacter() == null){
+            throw new IllegalStateException("El usuario aún no tiene un personaje creado.");
+        }else{
+            Character newCharacter = characterRepository.findById(userService.getCharacter().id()).get();
+            newCharacter.setName(name);
+            characterRepository.save(newCharacter);
+        }
+
+
+    }
 	
 }

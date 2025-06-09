@@ -499,4 +499,18 @@ public class sessionController {
         
 		return characterService.returnImage(imageName);
 	}
+
+    @PostMapping("/editCharacter")
+	public String editCharacter(Model model, @RequestParam String name){
+        
+        CharacterDTO characterDTO = userService.getCharacter();
+        if (characterDTO == null) {
+            model.addAttribute("message", "Some or all parameters were left blank");
+            return "sp_errors";
+        } else {
+            characterService.editCharacterName(name);
+            return "redirect:/character";
+        }
+	}
+
 }

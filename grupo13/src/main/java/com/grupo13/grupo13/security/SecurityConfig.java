@@ -115,6 +115,7 @@ public class SecurityConfig {
 						.requestMatchers("/list_weapons/**").permitAll()
 						.requestMatchers("/error").permitAll()
 						.requestMatchers("/image/**").permitAll()
+						.requestMatchers("/register").permitAll()
 
 						/////// PRIVATE PAGES
 						//USER PAGES

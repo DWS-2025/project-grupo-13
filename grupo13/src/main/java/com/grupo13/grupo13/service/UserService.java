@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
@@ -45,6 +46,8 @@ public class UserService {
     private armorMapper armorMapper;
     @Autowired
     private CharacterMapper characterMapper;
+    @Autowired
+	private PasswordEncoder passwordEncoder;
 
     // returns a specific user by its id
     public UserDTO findById(long id) {
@@ -225,6 +228,23 @@ public class UserService {
             throw new NoSuchElementException("User doesn't exist " + id);
         }
     }
-
-
+    
+    //creates user
+    public void createUser(String user, String pass){
+        userRepository.save(new User(user, passwordEncoder.encode(pass), "USER"));
+    }
+    
+    //checks if username is already in use
+    public boolean userExists(String userName){
+        List<User> userList = userRepository.findAll();
+		User placeholder;
+		boolean result = false;
+        for(int i = 0; i < userList.size(); i++){
+            placeholder = userList.get(i);
+			if (placeholder.getUserName().equals(userName)) {
+				result = true;
+			}
+        }
+		return result;
+    }
 }
