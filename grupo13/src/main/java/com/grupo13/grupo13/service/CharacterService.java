@@ -33,9 +33,7 @@ import com.grupo13.grupo13.repository.CharacterRepository;
 import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.repository.WeaponRepository;
 import com.grupo13.grupo13.util.InputSanitizer;
-
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Service
 public class CharacterService {

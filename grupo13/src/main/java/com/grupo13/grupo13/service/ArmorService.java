@@ -73,7 +73,7 @@ public class ArmorService {
     }
 
     //returns a page with all the armors only with the public info
-    public Page<ArmorBasicDTO> findAllBasic(Pageable pageable) {
+    public Page<ArmorBasicDTO> findAllBasic(Pageable pageable){
         return armorRepository.findAll(pageable).map(armor -> mapper.toBasicDTO(armor));
     }
 
@@ -150,5 +150,29 @@ public class ArmorService {
 		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		armorRepository.save(armor);
 	}
+
+    public int maxDefense(){
+        int maxDef=0;
+        for(ArmorBasicDTO arm : mapper.toBasicDTOs(armorRepository.findAll())){
+            maxDef = arm.defense()>maxDef?arm.defense():maxDef;
+        }
+        return maxDef;
+    }
+
+    public int maxPrice(){
+        int maxPrice=0;
+        for(ArmorBasicDTO arm : mapper.toBasicDTOs(armorRepository.findAll())){
+            maxPrice = arm.price()>maxPrice?arm.price():maxPrice;
+        }
+        return maxPrice;
+    }
+
+    public int maxStyle(){
+        int maxStyle=0;
+        for(ArmorBasicDTO arm : mapper.toBasicDTOs(armorRepository.findAll())){
+            maxStyle = arm.style()>maxStyle?arm.style():maxStyle;
+        }
+        return maxStyle;
+    }
 
 }

@@ -9,6 +9,6 @@ public record WeaponDTO(
     int intimidation,
     int price,
     List<UserBasicDTO> users,
-    List<CharacterBasicDTO> characters,
-    String imageName
+    List<CharacterBasicDTO> characters
+    //String imageName
 ) {}

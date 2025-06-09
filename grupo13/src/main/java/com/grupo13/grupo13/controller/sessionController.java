@@ -110,7 +110,18 @@ public class sessionController {
     public String procesarFormulario(Model model, HttpSession session, @RequestParam String nameOfCharacter,
             @RequestParam String characterDesc,
             @RequestParam MultipartFile characterImage) throws IOException {
+        
 
+        if (nameOfCharacter.length()>255) {
+            model.addAttribute("message", "You have 4 457 328 976 628 032 310 960 505 682 458 941 198 711 991 549 516 106 627 559 418 874 736 854 616 990 926 154 563 233 442 050 001 775 332 602 367 762 026 062 514 350 490 020 288 118 293 032 540 896 850 538 206 460 041 208 241 186 662 921 960 227 090 636 748 910 840 240 756 196 348 773 114 755 617 650 747 164 485 025 018 892 794 341 880 385 569 578 419 234 397 708 485 601 847 108 758 503 103 414 694 794 735 059 509 671 326 329 177 465 338 412 391 856 003 420 968 070 605 896 652 214 953 420 282 507 508 205 447 599 347 588 543 298 651 133 082 200 882 973 508 651 096 860 161 307 061 515 481 851 387 590 630 802 753 643 options and still want a longer name?");
+            return "sp_errors";
+        }
+
+        if (characterDesc.length()>255) {
+            model.addAttribute("message", "We don't want your life story, be brief.");
+            return "sp_errors";
+        }
+        
         if (nameOfCharacter.isBlank() || characterDesc.isBlank()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
@@ -123,13 +134,18 @@ public class sessionController {
             model.addAttribute("message", "File not allowed or missing: you must upload a jpg file.");
             return "sp_errors";
         }
-
-        String imageName = InputSanitizer.whitelistSanitize(characterImage.getOriginalFilename() + '-' + userService.getLoggedUserDTO().userName());
+        
+        String imageName = InputSanitizer.whitelistSanitize(characterImage.getOriginalFilename().substring(0, characterImage.getOriginalFilename().length()-4) + '-' + userService.getLoggedUserDTO().userName());
+        if(imageName.equals(null)){
+            model.addAttribute("message", "Make sure the image has a valid name.");
+            return "sp_errors";
+        }
         Path imagePath = BACKUP_FOLDER.resolve(imageName).normalize().resolve(".jpg");
         if (Files.exists(imagePath)) {
             model.addAttribute("message", "Choose a different image name.");
             return "sp_errors";
         }
+        
 
         Character character = new Character(characterDesc, nameOfCharacter,imageName);
         CharacterDTO characterDTO = characterMapper.toDTO(character);
@@ -164,7 +180,7 @@ public class sessionController {
    
     //used to show the weapons on the shop
     @GetMapping("/list_weapons")
-    public String showWeapons(Model model, @PageableDefault(size = 3) Pageable pageable) {
+    public String showWeapons(Model model, @PageableDefault(size = 9) Pageable pageable) {
         Page<WeaponBasicDTO> allWeapons = weaponService.findAllBasic(pageable);
         Page<WeaponBasicDTO> showedWeapons;
         boolean hasNext;
@@ -194,12 +210,12 @@ public class sessionController {
         return "listing_weapons";
     }
 
+    
     //used to show the armors on the shop
     @GetMapping("/list_armors")
-    public String showArmors(Model model, @PageableDefault(size = 2) Pageable pageable) {
+    public String showArmors(Model model, Pageable pageable) {
         Page<ArmorBasicDTO> allArmors = armorService.findAllBasic(pageable);
         Page<ArmorBasicDTO> showedArmors;
-        boolean hasNext;
         if(userService.getLoggedUserDTOOrNull() != null){
             List<ArmorBasicDTO> armorsList = new LinkedList<>();
             for(ArmorBasicDTO arm : allArmors){
@@ -209,45 +225,32 @@ public class sessionController {
             }
             showedArmors = new PageImpl<>(armorsList, pageable, allArmors.getNumberOfElements()-armorsList.size());
             model.addAttribute("user", userService.getLoggedUserDTO());
-            hasNext = (showedArmors.getNumber() + 1) <= (showedArmors.getTotalPages());
         } else{
             showedArmors = allArmors;
-            hasNext = showedArmors.hasNext();
         }
         model.addAttribute("armor", showedArmors);
         
-        //buttons
-        boolean hasPrev = showedArmors.hasPrevious();
-        model.addAttribute("hasPrev", hasPrev);
-        model.addAttribute("prev", showedArmors.getNumber() - 1);
-        model.addAttribute("hasNext", hasNext);
-        model.addAttribute("next", showedArmors.getNumber() + 1);
-        model.addAttribute("size", showedArmors.getSize());
         return "listing_armors";
     }
+    
 
+    @GetMapping("/search")
+    public String searchWeapons(Model model, @RequestParam(required = false) String name) {
+        if (name != null && !name.isEmpty()) {
+            Weapon probe = new Weapon();
+            probe.setName(name);
 
+            ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnorePaths("description", "strength", "price", "intimidation", "imageName", "imageFile", "id", "characters", "users")
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 
+            Example<Weapon> example = Example.of(probe, matcher);
 
-
-
-@GetMapping("/search")
-public String searchWeapons(Model model, @RequestParam(required = false) String name) {
-    if (name != null && !name.isEmpty()) {
-        Weapon probe = new Weapon();
-        probe.setName(name);
-
-        ExampleMatcher matcher = ExampleMatcher.matching()
-            .withIgnorePaths("description", "strength", "price", "intimidation", "imageName", "imageFile", "id", "characters", "users")
-            .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-
-        Example<Weapon> example = Example.of(probe, matcher);
-
-        model.addAttribute("weapons", weaponRepository.findAll(example));
-    } else {
-        model.addAttribute("weapons", weaponRepository.findAll());
-    }
-    return "search";
+            model.addAttribute("weapons", weaponRepository.findAll(example));
+        } else {
+            model.addAttribute("weapons", weaponRepository.findAll());
+        }
+        return "search";
     }
         
     @GetMapping("weaponview/{id}")
@@ -266,16 +269,14 @@ public String searchWeapons(Model model, @RequestParam(required = false) String 
     public String purchaseWeapon(@RequestParam long id, Model model) {
         WeaponDTO weaponDTO = weaponService.findById(id);
         
-            // checks if the user has enough money or not
-            if (weaponDTO == null) {
+        if (weaponDTO == null) {
             model.addAttribute("message", "Could not purchase, doesnt exist");
             return "sp_errors";
-            }
-            if(userService.hasWeapon(id)){
+        }
+        if(userService.hasWeapon(id)){
             model.addAttribute("message", "You alredy own that weapon");
             return "sp_errors";
-
-            }else {
+        }else {
             long urid=userService.getLoggedUser().getId();
             if (userService.getMoney(urid) >= weaponDTO.price()) {
                 userService.setMoney(urid, userService.getMoney(urid)-weaponDTO.price());

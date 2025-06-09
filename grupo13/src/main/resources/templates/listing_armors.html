@@ -1,37 +1,92 @@
 {{>header}}
 
-	<h1 style="color:rgb(0, 0, 0); text-align: center; font-weight: bold; font-family: Arial, sans-serif;">Store</h1>
-		<div class="row row-cols-auto g-4 justify-content-center">
-			{{#armor}}			
-			<div class="col">
-				<form action="/purchaseArmor" method="post" enctype="multipart/form-data">
-				<div class="card" style="width:18rem;">
-					<img src="api/armor/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
-					<div class="card-body">
-						<h5 class="card-title">{{name}}</h5>
-						<p class="card-text">{{description}}</p>
-						<h6 class="card-price">Price: {{price}}</h6>
-						<h6 class="card-defense">Defense: {{defense}}</h6>
-						<h6 class="card-style">Style: {{style}}</h6>
-						<!--Hidden inputs to avoid sending the data of every object-->
-						<input type="hidden" name="id" value="{{id}}">
-						<input type="hidden" name="_csrf" value="{{token}}"/>
+    <h1 style="color:rgb(0, 0, 0); text-align: center; font-weight: bold; font-family: Arial, sans-serif;">Armors Store</h1>       
+        <div id="armor-list" class="row row-cols-auto g-4 justify-content-center" ></div>        
+            <!-- The armors are loaded here with AJAX -->      
+        </div>   
+        
+        <nav aria-label="Page navigation">
+            <div id="pagination" class="pagination">
+                <button class="btn-next-prev" id="prevPage">Prev</button>
+                <button class="btn-next-prev" id="nextPage">Next</button>
+            </div>
+        </nav>
+    
+                        <!--    
+                        <input type="hidden" name="id" value="${armor.id}">
+						<input type="hidden" name="_csrf" value="${token}"/>
+                        -->
+    
+    <!--script src="../../resources/static\js/ArmorShop.js"></script-->
+    <script>
+        let currentPage = 0
+        let totalPages = 0;
+        const itemsPerPage = 7; // Change here to change the numbers per page
 
-						<!--end of hidden inputs-->
-						<input type='submit' value='Add'>
-					</div>
-				</div>
-				</form>
-			</div>			
-			{{/armor}}	
-		</div>		
-		<div>
-			<nobr>					
-				{{#hasPrev}}<a class="btn-next-prev" href="/list_armors?page={{prev}}&size={{size}}">Prev</a>{{/hasPrev}}
-				{{#hasNext}}<a class="btn-next-prev" href="/list_armors?page={{next}}&size={{size}}">Next</a>{{/hasNext}}
-				<hr>
-			</nobr>
-		</div>
-		<body class="bg-dark" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('image/test_bg.jpg') no-repeat center center / cover;"></body>
-		
+        document.addEventListener('DOMContentLoaded', function() {
+            loadArmors(currentPage);
+        });
+
+        function loadArmors(page) {
+            fetch(`/api/armors?page=${page}&size=${itemsPerPage}`)
+                .then(response => response.json())
+                .then(data => {
+
+                armors = data.content;
+                const armorList = document.getElementById('armor-list');
+                armorList.innerHTML = '';
+                            
+                if (armors.length === 0) {
+                    armorList.innerHTML = '<div class="col-12 text-center"><p>Nothing here. If you wanna spend more money, I acept bizum, paypal or revolut.</p></div>';
+                    return;
+                }
+                            
+                armors.forEach(armor => {
+                    const armorCard = document.createElement('div');
+                    armorCard.className = 'col';
+                    armorCard.innerHTML = `                        
+                        <form action="/purchaseArmor" method="post" enctype="multipart/form-data">
+                        <div class="card" style="width:18rem;">
+                            <img src="api/armor/${armor.id}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+                            <div class="card-body">
+                                <h5 class="card-title">${armor.name}</h5>
+                                <p class="card-text">${armor.description}</p>
+                                <h6 class="card-price">Price: ${armor.price}</h6>
+                                <h6 class="card-defense">Defense: ${armor.defense}</h6>
+                                <h6 class="card-style">Style: ${armor.style}</h6>
+                                          
+                                <input type='submit' value='Buy'>
+                            </div>
+                        </div>         
+                    `;                    
+                    armorList.appendChild(armorCard);
+                });
+                totalPages=data.page.totalPages;
+                currentPage=page;
+
+                document.getElementById('prevPage').disabled = data.first;
+                document.getElementById('nextPage').disabled = data.last;
+            });
+        }
+
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                loadArmors(currentPage);
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                loadArmors(currentPage);
+            }
+        });
+
+
+        loadArmors(currentPage);
+    </script>
+    
+    <body class="bg-dark" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('image/test_bg.jpg') no-repeat center center / cover;"></body>
+
 {{>footer}}
