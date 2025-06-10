@@ -81,7 +81,7 @@ public class CharacterService {
     // creates a new character
     public CharacterDTO save(CharacterDTO characterDTO) {
         InputSanitizer.validateWhitelist(characterDTO.name());
-        InputSanitizer.validateWhitelist(characterDTO.description());
+        InputSanitizer.sanitizeRichText(characterDTO.description());
         Character character = mapper.toDomain(characterDTO);
         Character savedCharacter = characterRepository.save(character);
         return mapper.toDTO(savedCharacter);
@@ -90,7 +90,6 @@ public class CharacterService {
     //saves the character's image
     public void save(CharacterDTO characterDTO, MultipartFile imageFile, String imageName) throws IOException {
         Character character = mapper.toDomain(characterDTO);
-        InputSanitizer.validateWhitelist(imageName);
         if (!imageFile.isEmpty()) {
             character.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }

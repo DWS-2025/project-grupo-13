@@ -140,7 +140,7 @@ public class sessionController {
         Character character = new Character(characterDesc, nameOfCharacter,imageName);
         CharacterDTO characterDTO = characterMapper.toDTO(character);
         CharacterDTO savedCharacterDTO = characterService.save(characterDTO);
-
+        
         // saves the character in the repository
         userService.saveCharacter(savedCharacterDTO);
         characterService.saveUser(savedCharacterDTO);    
@@ -160,7 +160,7 @@ public class sessionController {
         model.addAttribute("currentA", currentArmor);
         model.addAttribute("user", userService.getLoggedUserDTO());
 
-        return "redirect:/weaponshop";
+        return "redirect:/character";
     }
 
     @GetMapping("/")
