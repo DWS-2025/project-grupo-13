@@ -10,5 +10,4 @@ public record WeaponDTO(
     int price,
     List<UserBasicDTO> users,
     List<CharacterBasicDTO> characters
-    //String imageName
 ) {}

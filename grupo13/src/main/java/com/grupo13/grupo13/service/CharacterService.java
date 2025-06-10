@@ -30,7 +30,6 @@ import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.repository.CharacterRepository;
-import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.repository.WeaponRepository;
 import com.grupo13.grupo13.util.InputSanitizer;
 import java.nio.file.Path;
@@ -58,8 +57,6 @@ public class CharacterService {
     private WeaponService weaponService;
     @Autowired
     private ArmorService armorService;
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private CharacterMapper mapper;
     @Autowired

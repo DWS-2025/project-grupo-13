@@ -1,7 +1,6 @@
 package com.grupo13.grupo13.controller;
 import java.io.IOException;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,17 +62,6 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/equipment_manager")
-    public String iterationObj(Model model) {
-
-        //gets all equipments and characters
-        model.addAttribute("weapon", weaponService.findAll());
-        model.addAttribute("armor", armorService.findAll());
-        model.addAttribute("character", userService.getCharacter());
-
-        return "equipment_manager";
-    }
-
     @GetMapping("/new_armor")
     public String newArmor(Model model) {
         model.addAttribute("user", userService.getLoggedUserDTO());
@@ -106,12 +94,15 @@ public class AdminController {
             return "sp_errors";
         }
 
+        if(strength>2147483647 || price>2147483647 || intimidation>2147483647 || strength<0 || intimidation<0 || price<0){
+            model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
+            return "sp_errors";            
+        }
+
         name = InputSanitizer.whitelistSanitize(name);
         description = InputSanitizer.whitelistSanitize(description);
-        //String imageName= InputSanitizer.whitelistSanitize(weaponImage.getName());
         
         Weapon weapon = new Weapon(name, description, intimidation, strength, price);
-        //weapon.setImageName(imageName);
         WeaponDTO weaponDTO = weaponMapper.toDTO(weapon);
         
         weaponService.save(weaponDTO, weaponImage);
@@ -139,12 +130,15 @@ public class AdminController {
             return "sp_errors";
         }
 
+        if(defense>2147483647 || price>2147483647 || style>2147483647 || defense<0 || style<0 || price<0){
+            model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
+            return "sp_errors";            
+        }
+
         name = InputSanitizer.whitelistSanitize(name);
         description = InputSanitizer.whitelistSanitize(description);
-        //String imageName= InputSanitizer.whitelistSanitize(armorImage.getName());
         
         Armor armor = new Armor(name, description, style, defense, price);
-        //armor.setImageName(imageName);
         ArmorDTO armorDTO = armorMapper.toDTO(armor);
         
         armorService.save(armorDTO, armorImage);
@@ -259,7 +253,7 @@ public class AdminController {
         ArmorDTO editedArmor = armorService.findById(id);
         if(editedArmor != null){
             if(!armorImage.isEmpty()){
-                weaponService.replaceImage(id, armorImage.getInputStream(), armorImage.getSize());
+                armorService.replaceImage(id, armorImage.getInputStream(), armorImage.getSize());
             }
 
             armorService.update(id, updatedArmorDTO);

@@ -24,7 +24,6 @@ public class Armor{
     private int defense;
     private int price;
     private int style;
-    //private String imageName;
     
     @JsonIgnore 
     @Lob
@@ -109,12 +108,6 @@ public class Armor{
         return characters;
     }
 
-    /* 
-    public String getImageName(){
-        return imageName;
-    }
-    */
-
     //set functions
     public void setId(long id) {
         this.id = id;
@@ -151,11 +144,5 @@ public class Armor{
     public void setImageFile(Blob imageFile) {
         this.imageFile = imageFile;
     }
-
-    /*
-    public void setImageName(String imageName){
-        this.imageName = imageName;
-    }
-    */
 
 }

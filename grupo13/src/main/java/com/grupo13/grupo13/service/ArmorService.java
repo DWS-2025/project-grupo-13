@@ -49,8 +49,6 @@ public class ArmorService {
         if(!imageFile.isEmpty()){
             armor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
-        //armor.setImageName("/Armor/" + armor.getId() + "/image");
-
         armorRepository.save(armor);
     }
 
@@ -131,22 +129,13 @@ public class ArmorService {
 
     //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
-
 		Armor armor = armorRepository.findById(id).orElseThrow();
-        /* 
-		if(armor.getImageName() == null){
-			throw new NoSuchElementException();
-		}
-        */
-		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
+        armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		armorRepository.save(armor);
 	}
 
     public void createArmorImage(long id, URI location, InputStream inputStream, long size) {
-
 		Armor armor = armorRepository.findById(id).orElseThrow();
-
-		//armor.setImageName(location.toString());
 		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		armorRepository.save(armor);
 	}

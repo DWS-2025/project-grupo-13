@@ -51,8 +51,6 @@ public class WeaponService {
         if(!imageFile.isEmpty()){
             weapon.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
-        //weapon.setImageName("/Weapon/" + weapon.getId() + "/image");
-
         weaponRepository.save(weapon);
     }
 
@@ -136,23 +134,14 @@ public class WeaponService {
 
     //change the image of the id given
     public void replaceImage(long id, InputStream inputStream, long size) {
-
 		Weapon weapon = weaponRepository.findById(id).orElseThrow();
-        /*
-		if(weapon.getImageName() == null){
-			throw new NoSuchElementException();
-		}
-        */
 		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
-
 		weaponRepository.save(weapon);
 	}
 
     public void createWeaponImage(long id, URI location, InputStream inputStream, long size) {
 
 		Weapon weapon = weaponRepository.findById(id).orElseThrow();
-
-		//weapon.setImageName(location.toString());
 		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
 		weaponRepository.save(weapon);
 	}

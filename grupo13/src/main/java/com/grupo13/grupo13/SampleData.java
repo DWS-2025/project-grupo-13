@@ -166,6 +166,66 @@ public class SampleData {
                 7894, 11454, 389);
                 weapon19.setimageFile(localImageToBlob("images/imp_imgs/w19.png"));
                 weaponRepository.save(weapon19);
+
+                //w20.png
+                Weapon weapon20 = new Weapon("Crystal Shard Blade", "Forged from the ancient crystals of the Frostspire Caverns, this shimmering blade channels icy winds with every swing. Light but deadly, it freezes enemies on contact and leaves a trail of frost in its wake.", 
+                180, 160, 130);
+                weapon20.setimageFile(localImageToBlob("images/imp_imgs/w20.png"));
+                weaponRepository.save(weapon20);
+
+                //w21.png
+                Weapon weapon21 = new Weapon("Saturn's Antlers", "", 
+                100314, 142, 274414);
+                weapon21.setimageFile(localImageToBlob("images/imp_imgs/w21.png"));
+                weaponRepository.save(weapon21);
+
+                //w22.png
+                Weapon weapon22 = new Weapon("Dark Saturn's Antlers", "", 
+                980314, 1401, 614454);
+                weapon22.setimageFile(localImageToBlob("images/imp_imgs/w22.png"));
+                weaponRepository.save(weapon22);
+
+                //w23.png
+                Weapon weapon23 = new Weapon("", "", 
+                20, 6, 5);
+                weapon23.setimageFile(localImageToBlob("images/imp_imgs/w23.png"));
+                weaponRepository.save(weapon23);
+
+                //w24.png
+                Weapon weapon24 = new Weapon("", "", 
+                10, 3401, 802);
+                weapon24.setimageFile(localImageToBlob("images/imp_imgs/w24.png"));
+                weaponRepository.save(weapon24);
+
+                //w25.png
+                Weapon weapon25 = new Weapon("", "", 
+                1104, 4210, 254);
+                weapon25.setimageFile(localImageToBlob("images/imp_imgs/w25.png"));
+                weaponRepository.save(weapon25);
+
+                //w26.png
+                Weapon weapon26 = new Weapon("", "",
+                2010, 9170, 20);
+                weapon26.setimageFile(localImageToBlob("images/imp_imgs/w26.png"));
+                weaponRepository.save(weapon26);
+                
+                //w27.png
+                Weapon weapon27 = new Weapon("", "", 
+                25, 120, 1);
+                weapon27.setimageFile(localImageToBlob("images/imp_imgs/w27.png"));
+                weaponRepository.save(weapon27);
+
+                //w28.png
+                Weapon weapon28 = new Weapon("", "", 
+                5641, 5247, 69);
+                weapon28.setimageFile(localImageToBlob("images/imp_imgs/w28.png"));
+                weaponRepository.save(weapon28);
+
+                //w29.png
+                Weapon weapon29 = new Weapon("", "",                                         
+                7894, 11454, 389);
+                weapon29.setimageFile(localImageToBlob("images/imp_imgs/w29.png"));
+                weaponRepository.save(weapon29);
                 
                 //a1.png
                 Armor armor = new Armor("Wood Armor", "Crafted from sturdy oak wood, this lightweight armor offers modest protection and great mobility. Ideal for novice adventurers or scouts who need speed over strength. Fragile against strong attacks but easy to replace and affordable.", 

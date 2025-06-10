@@ -44,8 +44,6 @@ public class Weapon {
     public Weapon(){}
 
     //constructor
-
-    
     public Weapon(String name, String description, int strength, int price, int intimidation) {
         this.name = name;
         this.description = description;
@@ -114,12 +112,6 @@ public class Weapon {
         return intimidation;
     }
 
-    /*
-    public String getImageName(){
-        return imageName;
-    }
-    */
-
     //setters
     public void setId(long id) {
         this.id = id;
@@ -160,11 +152,5 @@ public class Weapon {
     public void setImageFile(Blob imageFile) {
         this.imageFile = imageFile;
     }
-
-    /* 
-    public void setImageName(String imageName){
-        this.imageName = imageName;
-    }
-    */
 
 }

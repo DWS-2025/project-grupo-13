@@ -24,8 +24,6 @@ import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.util.InputSanitizer;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 @Service
@@ -144,8 +142,6 @@ public class UserService {
             WeaponDTO weaponDTO = weaponService.findById(id);
             if (weaponDTO != null) {
                 Weapon weapon = weaponMapper.toDomain(weaponDTO);
-                int price = weaponDTO.price();
-                //user.setMoney(user.getMoney() - price);
                 user.getInventoryWeapon().add(weapon);
                 weapon.getUsers().add(user);
                 userRepository.save(user);
@@ -162,8 +158,6 @@ public class UserService {
             ArmorDTO armorDTO = armorService.findById(id);
             if (armorDTO != null) {
                 Armor armor = armorMapper.toDomain(armorDTO);
-                int price = armorDTO.price();
-                //user.setMoney(user.getMoney() - price);
                 user.getInventoryArmor().add(armor);
                 armor.getUsers().add(user);
                 userRepository.save(user);

@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -15,8 +14,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +25,6 @@ import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.WeaponRepository;
-import com.grupo13.grupo13.security.jwt.AuthResponse;
-import com.grupo13.grupo13.security.jwt.AuthResponse.Status;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
@@ -43,7 +38,6 @@ import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,7 +53,6 @@ public class sessionController {
              .resolve("characters")
              .normalize();
 
-
     // attributes
     @Autowired
     private UserService userService;
@@ -73,7 +66,7 @@ public class sessionController {
     private CharacterMapper characterMapper;
     @Autowired
     private UserMapper userMapper;
- @Autowired
+    @Autowired
     private WeaponRepository weaponRepository;
 
     @GetMapping("/character")
@@ -111,7 +104,6 @@ public class sessionController {
             @RequestParam String characterDesc,
             @RequestParam MultipartFile characterImage) throws IOException {
         
-
         if (nameOfCharacter.length()>255) {
             model.addAttribute("message", "You have 4 457 328 976 628 032 310 960 505 682 458 941 198 711 991 549 516 106 627 559 418 874 736 854 616 990 926 154 563 233 442 050 001 775 332 602 367 762 026 062 514 350 490 020 288 118 293 032 540 896 850 538 206 460 041 208 241 186 662 921 960 227 090 636 748 910 840 240 756 196 348 773 114 755 617 650 747 164 485 025 018 892 794 341 880 385 569 578 419 234 397 708 485 601 847 108 758 503 103 414 694 794 735 059 509 671 326 329 177 465 338 412 391 856 003 420 968 070 605 896 652 214 953 420 282 507 508 205 447 599 347 588 543 298 651 133 082 200 882 973 508 651 096 860 161 307 061 515 481 851 387 590 630 802 753 643 options and still want a longer name?");
             return "sp_errors";
@@ -121,7 +113,7 @@ public class sessionController {
             model.addAttribute("message", "We don't want your life story, be brief.");
             return "sp_errors";
         }
-        
+
         if (nameOfCharacter.isBlank() || characterDesc.isBlank()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
@@ -135,17 +127,15 @@ public class sessionController {
             return "sp_errors";
         }
         
-        String imageName = InputSanitizer.whitelistSanitize(characterImage.getOriginalFilename().substring(0, characterImage.getOriginalFilename().length()-4) + '-' + userService.getLoggedUserDTO().userName());
+        String originalFilename = characterImage.getOriginalFilename();
+        int dotIndex = originalFilename.lastIndexOf('.');
+        String baseName = (dotIndex == -1) ? originalFilename : originalFilename.substring(0, dotIndex);
+        String extension = (dotIndex == -1) ? "" : originalFilename.substring(dotIndex);
+        String imageName = baseName + "-" + userService.getLoggedUser().getUserName() + extension;
         if(imageName.equals(null)){
             model.addAttribute("message", "Make sure the image has a valid name.");
             return "sp_errors";
         }
-        Path imagePath = BACKUP_FOLDER.resolve(imageName).normalize().resolve(".jpg");
-        if (Files.exists(imagePath)) {
-            model.addAttribute("message", "Choose a different image name.");
-            return "sp_errors";
-        }
-        
 
         Character character = new Character(characterDesc, nameOfCharacter,imageName);
         CharacterDTO characterDTO = characterMapper.toDTO(character);
@@ -170,66 +160,24 @@ public class sessionController {
         model.addAttribute("currentA", currentArmor);
         model.addAttribute("user", userService.getLoggedUserDTO());
 
-        return "redirect:/list_weapons";
+        return "redirect:/weaponshop";
     }
 
     @GetMapping("/")
     public String redirectToProfile() {
-        return "redirect:/list_weapons";
+        return "redirect:/weaponshop";
     }
    
     //used to show the weapons on the shop
-    @GetMapping("/list_weapons")
+    @GetMapping("/weaponshop")
     public String showWeapons(Model model, @PageableDefault(size = 9) Pageable pageable) {
-        Page<WeaponBasicDTO> allWeapons = weaponService.findAllBasic(pageable);
-        Page<WeaponBasicDTO> showedWeapons;
-        boolean hasNext;
-        if(userService.getLoggedUserDTOOrNull() != null){
-            List<WeaponBasicDTO> weaponsList = new LinkedList<>();
-            for(WeaponBasicDTO weap : allWeapons){
-                if(!userService.hasWeapon(weap.id())){
-                    weaponsList.addLast(weap);
-                }
-            }
-            showedWeapons = new PageImpl<>(weaponsList, pageable, allWeapons.getNumberOfElements()-weaponsList.size());
-            model.addAttribute("user", userService.getLoggedUserDTO());
-            hasNext = (showedWeapons.getNumber() + 1) <= (showedWeapons.getTotalPages());
-        } else{
-            showedWeapons = allWeapons;
-            hasNext = showedWeapons.hasNext();
-        }
-        model.addAttribute("weapon", showedWeapons);
-        
-        //buttons
-        boolean hasPrev = showedWeapons.hasPrevious();
-        model.addAttribute("hasPrev", hasPrev);
-        model.addAttribute("prev", showedWeapons.getNumber() - 1);
-        model.addAttribute("hasNext", hasNext);
-        model.addAttribute("next", showedWeapons.getNumber() + 1);
-        model.addAttribute("size", showedWeapons.getSize());
         return "listing_weapons";
     }
 
     
     //used to show the armors on the shop
-    @GetMapping("/list_armors")
+    @GetMapping("/armorshop")
     public String showArmors(Model model, Pageable pageable) {
-        Page<ArmorBasicDTO> allArmors = armorService.findAllBasic(pageable);
-        Page<ArmorBasicDTO> showedArmors;
-        if(userService.getLoggedUserDTOOrNull() != null){
-            List<ArmorBasicDTO> armorsList = new LinkedList<>();
-            for(ArmorBasicDTO arm : allArmors){
-                if(!userService.hasArmor(arm.id())){
-                    armorsList.addLast(arm);
-                }
-            }
-            showedArmors = new PageImpl<>(armorsList, pageable, allArmors.getNumberOfElements()-armorsList.size());
-            model.addAttribute("user", userService.getLoggedUserDTO());
-        } else{
-            showedArmors = allArmors;
-        }
-        model.addAttribute("armor", showedArmors);
-        
         return "listing_armors";
     }
     
@@ -281,7 +229,7 @@ public class sessionController {
             if (userService.getMoney(urid) >= weaponDTO.price()) {
                 userService.setMoney(urid, userService.getMoney(urid)-weaponDTO.price());
                 userService.saveWeapon(id);
-                return "redirect:/list_weapons";
+                return "redirect:/weaponshop";
             } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
@@ -308,7 +256,7 @@ public class sessionController {
                  userService.setMoney(urid, userService.getMoney(urid)-armorDTO.price());
                  userService.saveArmor(id);
                  armorService.save(armorDTO);
-                 return "redirect:/list_armors";
+                 return "redirect:/armorshop";
             } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
@@ -457,18 +405,14 @@ public class sessionController {
 
     @PostMapping("/editUser")
 	public String updateUser(Model model, @RequestParam String userName) throws IOException{
-
         if(userName.isBlank()){
             model.addAttribute("message", "The name cannot be left blank");
             return "sp_errors";
         }
-
         UserDTO oldUserDTO = userService.getLoggedUserDTO();
         User oldUser = userMapper.toDomain(oldUserDTO);
-
         if(oldUser != null){
             userService.updateName(oldUserDTO, userName);
-
             return "redirect:/logout";   
         }else{
             model.addAttribute("message", "Could not manage, not found");
@@ -478,31 +422,20 @@ public class sessionController {
 
     @PostMapping("/deleteUser")
 	public String deleteUser(Model model) throws IOException{
-
        User u= userService.getLoggedUser();
-
        userService.deleteUser(u.getId());
-
        return "/logout";
-
 	}
-    
     
 	@GetMapping("/userImage")
 	public ResponseEntity<Object> downloadUserImage() throws MalformedURLException {
-         Character c = userService.getLoggedUser().getCharacter();
-
-
-        
-
-        String imageName = c.getImageName();
-        
+        Character c = userService.getLoggedUser().getCharacter();
+        String imageName = c.getImageName();        
 		return characterService.returnImage(imageName);
 	}
 
     @PostMapping("/editCharacter")
-	public String editCharacter(Model model, @RequestParam String name){
-        
+	public String editCharacter(Model model, @RequestParam String name){       
         CharacterDTO characterDTO = userService.getCharacter();
         if (characterDTO == null) {
             model.addAttribute("message", "Some or all parameters were left blank");

@@ -7,5 +7,4 @@ public record ArmorBasicDTO(
     int defense,
     int style,
     int price
-    //String imageName
 ) {}
