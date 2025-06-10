@@ -1,9 +1,9 @@
 {{>header}}
 
 <div class="col">
-    <form action="/purchaseWeapon" method="post" enctype="multipart/form-data">
+    <form action="/purchaseArmor" method="post" enctype="multipart/form-data">
 		<div class="card" style="width:18rem;">
-			<img src="/api/weapon/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+			<img src="/api/armor/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
 			<div class="card-body">
 				<h5 class="card-title">{{armor.name}}</h5>
 				<p class="card-text">{{armor.description}}</p>
@@ -22,7 +22,7 @@
 
 {{#admin}}
     <div class="col">
-        
+        <!--div>  
             <a href="#" class="card-link">
             <form action="/armor/{{id}}/delete" method="post" enctype="multipart/form-data">
             <input type="hidden" name="id" value="{{id}}">
@@ -34,10 +34,9 @@
 			<input type="hidden" name="_csrf" value="{{token}}"/>
 		    <input type='submit' value='Edit armor'>
             </form>
-            </a>
-         
-
-        <!--div>  
+            </a>       
+ 		</div-->
+        
             <a href="#" class="card-link">
             <form action="/armor/{{id}}/delete" method="post">
             <input type="hidden" name="id" value="{{id}}">
@@ -47,7 +46,7 @@
             <a href="/armor/{{id}}/edit">Edit armor</a>            
             </a>
 
-        </div-->
+       
         
     </div>
 {{/admin}}

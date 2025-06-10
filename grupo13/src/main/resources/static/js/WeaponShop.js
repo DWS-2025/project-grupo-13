@@ -1,6 +1,6 @@
 let currentPage = 0
 let totalPages = 0;
-const itemsPerPage = 7; // Change here to change the numbers per page
+const itemsPerPage = 12; // Change here to change the numbers per page
 
 document.addEventListener('DOMContentLoaded', function() {
     loadWeapons(currentPage);

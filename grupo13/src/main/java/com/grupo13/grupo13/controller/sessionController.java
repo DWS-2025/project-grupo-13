@@ -413,7 +413,7 @@ public class sessionController {
         User oldUser = userMapper.toDomain(oldUserDTO);
         if(oldUser != null){
             userService.updateName(oldUserDTO, userName);
-            return "redirect:/logout";   
+            return "/logout";   
         }else{
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
