@@ -216,7 +216,6 @@ public class sessionController {
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
         WeaponDTO weaponDTO = weaponService.findById(id);
-        
         if (weaponDTO == null) {
             model.addAttribute("message", "Could not purchase, doesnt exist");
             return "sp_errors";
@@ -248,21 +247,17 @@ public class sessionController {
          if(userService.hasArmor(id)){
             model.addAttribute("message", "You alredy own that armor");
             return "sp_errors";
-
-            } else {
-             long urid=userService.getLoggedUser().getId();
-
+        } else {
+            long urid=userService.getLoggedUser().getId();
             if (userService.getMoney(urid) >= armorDTO.price()) {
-                 userService.setMoney(urid, userService.getMoney(urid)-armorDTO.price());
-                 userService.saveArmor(id);
-                 armorService.save(armorDTO);
-                 return "redirect:/armorshop";
+                userService.setMoney(urid, userService.getMoney(urid)-armorDTO.price());
+                userService.saveArmor(id);
+                return "redirect:/armorshop";
             } else {
                 model.addAttribute("message", "You don't have any money left, go work or something");
                 return "sp_errors";
             }
         }
-
     }
 
     @PostMapping("/equipWeapon")
