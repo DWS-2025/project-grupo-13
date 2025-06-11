@@ -174,56 +174,56 @@ public class SampleData {
                 weaponRepository.save(weapon20);
 
                 //w21.png
-                Weapon weapon21 = new Weapon("Saturn's Antlers", "", 
+                Weapon weapon21 = new Weapon("Saturn's Antlers", "A whimsical staff crowned with a cow head, orbiting rings, and a golden bell. Infused with stardust and pastoral magic, it channels celestial energy with every swing, bringing both charm and cosmic might to its wielder.", 
                 100314, 142, 274414);
                 weapon21.setimageFile(localImageToBlob("images/imp_imgs/w21.png"));
                 weaponRepository.save(weapon21);
 
                 //w22.png
-                Weapon weapon22 = new Weapon("Dark Saturn's Antlers", "", 
+                Weapon weapon22 = new Weapon("Dark Saturn's Antlers", "A mystical staff born from the depths of the cosmos, featuring a star-speckled purple cow head and golden rings. Its eerie bell tolls with dark energy, summoning the silent power of the night sky and forgotten constellations.", 
                 980314, 1401, 614454);
                 weapon22.setimageFile(localImageToBlob("images/imp_imgs/w22.png"));
                 weaponRepository.save(weapon22);
 
                 //w23.png
-                Weapon weapon23 = new Weapon("", "", 
-                20, 6, 5);
+                Weapon weapon23 = new Weapon("Gum Rapier", "A sword crafted entirely from enchanted bubblegump. Its sticky surface traps enemies, while its chewy core allows for lightning-fast strikes. The perfect weapon for warriors who prefer style and surprise in battle. Deadly, delicious, and unpredictable.", 
+                2041, 476, 5);
                 weapon23.setimageFile(localImageToBlob("images/imp_imgs/w23.png"));
                 weaponRepository.save(weapon23);
 
                 //w24.png
-                Weapon weapon24 = new Weapon("", "", 
-                10, 3401, 802);
+                Weapon weapon24 = new Weapon("Rubber Ducky Stick", "A hilariously absurd weapon: a plain stick topped with a cheerful rubber duck. It won't deal much damage, but it's perfect for confusing foes or unsettling those with duck-related fears. Victory through psychological quackery!", 
+                11, 7054, 8012);
                 weapon24.setimageFile(localImageToBlob("images/imp_imgs/w24.png"));
                 weaponRepository.save(weapon24);
 
                 //w25.png
-                Weapon weapon25 = new Weapon("", "", 
-                1104, 4210, 254);
+                Weapon weapon25 = new Weapon("Fish Flail", "An unconventional weapon crafted from a slippery fish chained to a wooden handle. It swings wildly and unpredictably, making it hard to master—but devastatingly effective. Smells awful, but leaves a lasting impression on enemies.", 
+                14, 21, 2);
                 weapon25.setimageFile(localImageToBlob("images/imp_imgs/w25.png"));
                 weaponRepository.save(weapon25);
 
                 //w26.png
-                Weapon weapon26 = new Weapon("", "",
-                2010, 9170, 20);
+                Weapon weapon26 = new Weapon("Chicken Sword", "An utterly bizarre weapon that fuses poultry with combat. It’s not sharp, swift, or smart—but it is unforgettable. Causes mild bruises, loud clucking, and occasional existential crises in enemies. A true farmyard fiasco in blade form.",
+                2010, 70, 2);
                 weapon26.setimageFile(localImageToBlob("images/imp_imgs/w26.png"));
                 weaponRepository.save(weapon26);
                 
                 //w27.png
-                Weapon weapon27 = new Weapon("", "", 
-                25, 120, 1);
+                Weapon weapon27 = new Weapon("Banana Boomerang", "A bizarre yet surprisingly aerodynamic weapon shaped like a ripe banana. Can be thrown with precision and returns swiftly to the user. However, repeated use may bruise the banana, reducing both damage and appeal over time.", 
+                27, 20, 1);
                 weapon27.setimageFile(localImageToBlob("images/imp_imgs/w27.png"));
                 weaponRepository.save(weapon27);
 
                 //w28.png
-                Weapon weapon28 = new Weapon("", "", 
-                5641, 5247, 69);
+                Weapon weapon28 = new Weapon("Solar Rooster's Crown", "Forged in the heart of a sun, this blazing staff bears the crowned head of a celestial rooster. Its radiant ring and ember bell summon solar flares and dawnfire, awakening ancient light to scorch the darkness of space.", 
+                514411641, 524147, 69141);
                 weapon28.setimageFile(localImageToBlob("images/imp_imgs/w28.png"));
                 weaponRepository.save(weapon28);
 
                 //w29.png
-                Weapon weapon29 = new Weapon("", "",                                         
-                7894, 11454, 389);
+                Weapon weapon29 = new Weapon("Arcane Entangler", "An enigmatic staff carved from ancient wood, crowned by a radiant crystal entangled in living strands of arcane energy. It pulses with eldritch force, capable of unraveling magic and binding spells with every swirl of its luminous threads.",                                         
+                4144, 1144, 89);
                 weapon29.setimageFile(localImageToBlob("images/imp_imgs/w29.png"));
                 weaponRepository.save(weapon29);
                 
