@@ -83,11 +83,6 @@ public class AdminController {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-<<<<<<< HEAD
-       InputSanitizer.validateWhitelist(name);
-       InputSanitizer.validateWhitelist(description);
-       InputSanitizer.validateWhitelist(imageName);
-=======
 
         if (name.length()>255) {
             model.addAttribute("message", "You have 4 457 328 976 628 032 310 960 505 682 458 941 198 711 991 549 516 106 627 559 418 874 736 854 616 990 926 154 563 233 442 050 001 775 332 602 367 762 026 062 514 350 490 020 288 118 293 032 540 896 850 538 206 460 041 208 241 186 662 921 960 227 090 636 748 910 840 240 756 196 348 773 114 755 617 650 747 164 485 025 018 892 794 341 880 385 569 578 419 234 397 708 485 601 847 108 758 503 103 414 694 794 735 059 509 671 326 329 177 465 338 412 391 856 003 420 968 070 605 896 652 214 953 420 282 507 508 205 447 599 347 588 543 298 651 133 082 200 882 973 508 651 096 860 161 307 061 515 481 851 387 590 630 802 753 643 options and still want a longer name?");
@@ -104,9 +99,8 @@ public class AdminController {
             return "sp_errors";            
         }
 
-        name = InputSanitizer.whitelistSanitize(name);
-        description = InputSanitizer.whitelistSanitize(description);
->>>>>>> main
+       InputSanitizer.validateWhitelist(name);
+      InputSanitizer.validateWhitelist(description);
         
         Weapon weapon = new Weapon(name, description, intimidation, strength, price);
         WeaponDTO weaponDTO = weaponMapper.toDTO(weapon);
@@ -125,11 +119,6 @@ public class AdminController {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         }
-<<<<<<< HEAD
-         InputSanitizer.validateWhitelist(name);
-         InputSanitizer.validateWhitelist(description);
-         InputSanitizer.validateWhitelist(imageName);
-=======
 
         if (name.length()>255) {
             model.addAttribute("message", "You have 4 457 328 976 628 032 310 960 505 682 458 941 198 711 991 549 516 106 627 559 418 874 736 854 616 990 926 154 563 233 442 050 001 775 332 602 367 762 026 062 514 350 490 020 288 118 293 032 540 896 850 538 206 460 041 208 241 186 662 921 960 227 090 636 748 910 840 240 756 196 348 773 114 755 617 650 747 164 485 025 018 892 794 341 880 385 569 578 419 234 397 708 485 601 847 108 758 503 103 414 694 794 735 059 509 671 326 329 177 465 338 412 391 856 003 420 968 070 605 896 652 214 953 420 282 507 508 205 447 599 347 588 543 298 651 133 082 200 882 973 508 651 096 860 161 307 061 515 481 851 387 590 630 802 753 643 options and still want a longer name?");
@@ -146,9 +135,8 @@ public class AdminController {
             return "sp_errors";            
         }
 
-        name = InputSanitizer.whitelistSanitize(name);
-        description = InputSanitizer.whitelistSanitize(description);
->>>>>>> main
+        InputSanitizer.validateWhitelist(name);
+        InputSanitizer.validateWhitelist(description);
         
         Armor armor = new Armor(name, description, style, defense, price);
         ArmorDTO armorDTO = armorMapper.toDTO(armor);
@@ -224,8 +212,8 @@ public class AdminController {
             return "sp_errors";
         }
 
-        updatedWeapon.setName(InputSanitizer.whitelistSanitize(updatedWeapon.getName()));
-        updatedWeapon.setDescription(InputSanitizer.whitelistSanitize(updatedWeapon.getDescription()));
+        InputSanitizer.validateWhitelist(updatedWeapon.getName());
+        InputSanitizer.validateWhitelist(updatedWeapon.getDescription());
 
         WeaponDTO editedWeapon = weaponService.findById(id);
         if(editedWeapon != null || !InputSanitizer.isImageValid(weaponImage) ){
@@ -260,8 +248,8 @@ public class AdminController {
             model.addAttribute("message", "This is not wikipedia. Be brief.");
             return "sp_errors";
         }
-        updatedArmor.setName(InputSanitizer.whitelistSanitize(updatedArmor.getName()));
-        updatedArmor.setDescription(InputSanitizer.whitelistSanitize(updatedArmor.getDescription()));
+        InputSanitizer.validateWhitelist(updatedArmor.getName());
+        InputSanitizer.validateWhitelist(updatedArmor.getDescription());
         ArmorDTO editedArmor = armorService.findById(id);
         if(editedArmor != null){
             if(!armorImage.isEmpty()){

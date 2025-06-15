@@ -119,7 +119,7 @@ public class sessionController {
             return "sp_errors";
         }
         // creates the character
-        nameOfCharacter= InputSanitizer.whitelistSanitize(nameOfCharacter);
+        InputSanitizer.validateWhitelist(nameOfCharacter);
         characterDesc= InputSanitizer.sanitizeRichText(characterDesc);
 
         if (!InputSanitizer.isImageValid(characterImage)) {
