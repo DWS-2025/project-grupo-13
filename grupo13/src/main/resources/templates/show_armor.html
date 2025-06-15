@@ -1,20 +1,56 @@
 {{>header}}
-{{#logged}}
-{{#admin}}
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title">{{armor.name}}</h5>
-        <p class="card-text"><p>Style: {{armor.style}}</p>
-        <p>Defense: {{armor.defense}}</p>
-        <p>Description: {{armor.description}}</p>
-        <p>Price: {{armor.price}}</p></p>
-        <a href="#" class="card-link"><form action="/armor/{{id}}/delete" method="post">
-            <input type='submit' value='Delete armor' />
-        </form></a>
-        <a href="#" class="card-link"><a href="/armor/{{id}}/edit">Edit armor</a></a>
-    </div>
+
+<div class="col">
+    <form action="/purchaseArmor" method="post" enctype="multipart/form-data">
+		<div class="card" style="width:18rem;">
+			<img src="/api/armor/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+			<div class="card-body">
+				<h5 class="card-title">{{armor.name}}</h5>
+				<p class="card-text">{{armor.description}}</p>
+				<h6 class="card-price">Price: {{armor.price}}</h6>
+				<h6 class="card-damage">Defense: {{armor.defense}}</h6>
+				<h6 class="card-intimidation">Style: {{armor.style}}</h6>
+				<!--Hidden inputs to avoid sending the data of every object-->
+				<input type="hidden" name="id" value="{{id}}">
+				<input type="hidden" name="_csrf" value="{{token}}"/>
+				<!--end of hidden inputs-->
+				<input type='submit' value='Buy'>
+			</div>
+		</div>
+	</form>
 </div>
-<a href="/equipment_manager">Return to manage equipment</a>
+
+{{#admin}}
+    <div class="col">
+        <!--div>  
+            <a href="#" class="card-link">
+            <form action="/armor/{{id}}/delete" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="{{id}}">
+			<input type="hidden" name="_csrf" value="{{token}}"/>
+		    <input type='submit' value='Delete armor'>
+            </form>
+            <form action="/armor/{{id}}/edit" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="{{id}}">
+			<input type="hidden" name="_csrf" value="{{token}}"/>
+		    <input type='submit' value='Edit armor'>
+            </form>
+            </a>       
+ 		</div-->
+        
+            <a href="#" class="card-link">
+            <form action="/armor/{{id}}/delete" method="post">
+            <input type="hidden" name="id" value="{{id}}">
+			<input type="hidden" name="_csrf" value="{{token}}"/>
+            <input type='submit' value='Delete armor' />
+            </form>
+            <a href="/armor/{{id}}/edit">Edit armor</a>            
+            </a>
+
+       
+        
+    </div>
 {{/admin}}
-{{/logged}}
+
+<a href="/armorshop">Go back to shop</a><p>&nbsp;</p>
+
 {{>footer}}

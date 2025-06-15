@@ -22,6 +22,7 @@ import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.repository.WeaponRepository;
+import com.grupo13.grupo13.util.InputSanitizer;
 
 @Service
 public class WeaponService {
@@ -36,8 +37,10 @@ public class WeaponService {
 
 
     //saves in repository
-    public void save(WeaponDTO weapondto){
-        Weapon weapon = mapper.toDomain(weapondto);
+    public void save(WeaponDTO weaponDTO){
+        InputSanitizer.validateWhitelist(weaponDTO.name());
+        InputSanitizer.validateWhitelist(weaponDTO.description());
+        Weapon weapon = mapper.toDomain(weaponDTO);
         weaponRepository.save(weapon);
     }
 
@@ -48,8 +51,6 @@ public class WeaponService {
         if(!imageFile.isEmpty()){
             weapon.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
-        weapon.setImageName("/Weapon/" + weapon.getId() + "/image");
-
         weaponRepository.save(weapon);
     }
 
@@ -133,23 +134,14 @@ public class WeaponService {
 
     //change the image of the id given
     public void replaceImage(long id, InputStream inputStream, long size) {
-
 		Weapon weapon = weaponRepository.findById(id).orElseThrow();
-
-		if(weapon.getImageName() == null){
-			throw new NoSuchElementException();
-		}
-
 		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
-
 		weaponRepository.save(weapon);
 	}
 
     public void createWeaponImage(long id, URI location, InputStream inputStream, long size) {
 
 		Weapon weapon = weaponRepository.findById(id).orElseThrow();
-
-		weapon.setImageName(location.toString());
 		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
 		weaponRepository.save(weapon);
 	}

@@ -1,20 +1,55 @@
 {{>header}}
-{{#logged}}
-{{#admin}}
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title">{{weapon.name}}</h5>
-        <p class="card-text"><p>Intimidation: {{weapon.intimidation}}</p>
-        <p>Strength: {{weapon.strength}}</p>
-        <p>Description: {{weapon.description}}</p>
-        <p>Price: {{weapon.price}}</p></p>
-        <a href="#" class="card-link"><form action="/weapon/{{id}}/delete" method="post">
-            <input type='submit' value='Delete weapon' />
-        </form></a>
-        <a href="#" class="card-link"><a href="/weapon/{{id}}/edit">Edit weapon</a></a>
-    </div>
+
+<div class="col">
+    <form action="/purchaseWeapon" method="post" enctype="multipart/form-data">
+		<div class="card" style="width:18rem;">
+			<img src="/api/weapon/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+			<div class="card-body">
+				<h5 class="card-title">{{weapon.name}}</h5>
+				<p class="card-text">{{weapon.description}}</p>
+				<h6 class="card-price">Price: {{weapon.price}}</h6>
+				<h6 class="card-damage">Strength: {{weapon.strength}}</h6>
+				<h6 class="card-intimidation">Intimidation: {{weapon.intimidation}}</h6>
+				<!--Hidden inputs to avoid sending the data of every object-->
+				<input type="hidden" name="id" value="{{id}}">
+				<input type="hidden" name="_csrf" value="{{token}}"/>
+				<!--end of hidden inputs-->
+				<input type='submit' value='Buy'>
+			</div>
+		</div>
+	</form>
 </div>
-<a href="/equipment_manager">Return to manage equipment</a>
+
+{{#admin}}
+    <div class="col">
+        <!--div>
+            <a href="#" class="card-link">
+            <form action="/weapon/{{id}}/delete" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="{{id}}">
+			<input type="hidden" name="_csrf" value="{{token}}"/>
+		    <input type='submit' value='Delete weapon'>
+            </form>
+            <form action="/weapon/{{id}}/edit" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="{{id}}">
+			<input type="hidden" name="_csrf" value="{{token}}"/>
+		    <input type='submit' value='Edit weapon'>
+            </form>
+            </a>
+        </div-->
+
+            <a href="#" class="card-link">
+            <form action="/weapon/{{id}}/delete" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="{{id}}">
+			<input type="hidden" name="_csrf" value="{{token}}"/>
+            <input type='submit' value='Delete weapon' />
+            </form>
+            <a href="/weapon/{{id}}/edit">Edit weapon</a>            
+            </a>
+       
+               
+    </div>
 {{/admin}}
-{{/logged}}
+
+<a href="/weaponshop">Go back to shop</a><p>&nbsp;</p>
+
 {{>footer}}

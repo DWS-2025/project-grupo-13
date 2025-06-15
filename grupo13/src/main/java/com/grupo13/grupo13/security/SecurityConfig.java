@@ -111,10 +111,11 @@ public class SecurityConfig {
 						/////// PUBLIC PAGES
 						.requestMatchers("/images/**").permitAll()
 						.requestMatchers("/css/**").permitAll()
-						.requestMatchers("/list_armors/**").permitAll()
-						.requestMatchers("/list_weapons/**").permitAll()
+						.requestMatchers("/armorshop/**").permitAll()
+						.requestMatchers("/weaponshop/**").permitAll()
 						.requestMatchers("/error").permitAll()
 						.requestMatchers("/image/**").permitAll()
+						.requestMatchers("/register").permitAll()
 
 						/////// PRIVATE PAGES
 						//USER PAGES
@@ -130,11 +131,15 @@ public class SecurityConfig {
 						.requestMatchers("/unEquipArmor/**").hasAnyRole("USER")
 						.requestMatchers("/character/**").hasAnyRole("USER")
 						.requestMatchers("editUser").hasAnyRole("USER")
+						
+						.requestMatchers("/weapon/**").permitAll()
+						.requestMatchers("/armor/**").permitAll()
+
 						//ADMIN PAGES
-						.requestMatchers("/weapon/**").hasAnyRole("ADMIN")
-						.requestMatchers("/armor/**").hasAnyRole("ADMIN")
 						.requestMatchers("/equipment_manager/**").hasAnyRole("ADMIN")
 						.requestMatchers("/userList").hasAnyRole("ADMIN")
+						//.requestMatchers("/armor/*/edit").hasAnyRole("ADMIN")
+						//.requestMatchers("/weapon/*/edit").hasAnyRole("ADMIN")
 
 						//with all this should cover all adminController and etc, but keep checking, regular tests
 						.anyRequest().authenticated()

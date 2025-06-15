@@ -9,7 +9,7 @@ public record ArmorDTO(
     int style,
     int price,
     List<UserBasicDTO> users,
-    List<CharacterBasicDTO> characters,
-    String imageName
+    List<CharacterBasicDTO> characters
+
 ) {}
 

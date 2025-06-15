@@ -2,7 +2,6 @@ package com.grupo13.grupo13.service;
 import java.io.IOException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -31,16 +30,15 @@ import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.repository.CharacterRepository;
-import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.repository.WeaponRepository;
+import com.grupo13.grupo13.util.InputSanitizer;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
 @Service
 public class CharacterService {
 
     private final UserService userService;
-
-       private static final Path BACKUP_FOLDER = 
+    private static final Path BACKUP_FOLDER = 
         
         Paths.get("").toAbsolutePath()
              .resolve("backups")
@@ -59,8 +57,6 @@ public class CharacterService {
     private WeaponService weaponService;
     @Autowired
     private ArmorService armorService;
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private CharacterMapper mapper;
     @Autowired
@@ -84,6 +80,8 @@ public class CharacterService {
 
     // creates a new character
     public CharacterDTO save(CharacterDTO characterDTO) {
+        InputSanitizer.validateWhitelist(characterDTO.name());
+        InputSanitizer.sanitizeRichText(characterDTO.description());
         Character character = mapper.toDomain(characterDTO);
         Character savedCharacter = characterRepository.save(character);
         return mapper.toDTO(savedCharacter);
@@ -92,7 +90,6 @@ public class CharacterService {
     //saves the character's image
     public void save(CharacterDTO characterDTO, MultipartFile imageFile, String imageName) throws IOException {
         Character character = mapper.toDomain(characterDTO);
-
         if (!imageFile.isEmpty()) {
             character.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
@@ -103,11 +100,9 @@ public class CharacterService {
     public String backupImage(MultipartFile imageFile, String imageName) throws IOException {
         // sanitize name
         String baseName = Paths.get(imageName).getFileName().toString();
-
-        
- if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
-    throw new SecurityException("Invalid file name: " + imageName);
-}
+        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
+            throw new SecurityException("Invalid file name: " + imageName);
+        }
 
         String orig = imageFile.getOriginalFilename();
         String ext = "";
@@ -117,7 +112,6 @@ public class CharacterService {
                 ext = orig.substring(i); 
             }
         }
-
         // check if file is using right extension
         String finalName;
         int dot = baseName.lastIndexOf('.');
@@ -128,15 +122,12 @@ public class CharacterService {
             
             finalName = baseName + ext;
         }
-
         
         Path target = BACKUP_FOLDER.resolve(finalName).normalize();
-
         //final validation to check file exists in the right folder
         if (!target.startsWith(BACKUP_FOLDER)) {
             throw new IOException("Path Traversal detected: " + imageName);
         }
-
         // save file
         Files.createDirectories(target.getParent());
         imageFile.transferTo(target.toFile());
@@ -144,36 +135,22 @@ public class CharacterService {
         return finalName;
     }
 
-//show image 
-
+    //show image 
     public ResponseEntity<Object> returnImage(String imageName) throws MalformedURLException {
-
         if (!imageName.contains(".")) {
-        imageName= imageName + ".jpg";
-    }
+            imageName= imageName + ".jpg";
+        }
+        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
+            throw new SecurityException("Invalid file name: " + imageName);
+        }
+        Path normalized = BACKUP_FOLDER.resolve(imageName).normalize();
 
-    if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
-    throw new SecurityException("Invalid file name: " + imageName);
-}
- 
-
-		 Path normalized = BACKUP_FOLDER.resolve(imageName).normalize();
-
-    
-    if (!normalized.startsWith(BACKUP_FOLDER)) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid image path.");
-    }
-	    
-
-
-		
-		Resource file = new UrlResource(normalized.toUri());
-
-		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(file);
+        if (!normalized.startsWith(BACKUP_FOLDER)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid image path.");
+        }
+	    Resource file = new UrlResource(normalized.toUri());
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(file);
 	}
-
-
-
 
     public void saveUser(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);
@@ -298,5 +275,18 @@ public class CharacterService {
 		character.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		characterRepository.save(character);
 	}
+
+    public void editCharacterName(String name){
+
+        if(userService.getCharacter() == null){
+            throw new IllegalStateException("El usuario aún no tiene un personaje creado.");
+        }else{
+            Character newCharacter = characterRepository.findById(userService.getCharacter().id()).get();
+            newCharacter.setName(name);
+            characterRepository.save(newCharacter);
+        }
+
+
+    }
 	
 }

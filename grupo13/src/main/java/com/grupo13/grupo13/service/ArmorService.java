@@ -37,7 +37,8 @@ public class ArmorService {
 
 	//saves in repository
     public void save(ArmorDTO armorDTO){
-
+        InputSanitizer.validateWhitelist(armorDTO.name());
+        InputSanitizer.validateWhitelist(armorDTO.description());
         Armor armor = mapper.toDomain(armorDTO);
         armorRepository.save(armor);
     }
@@ -49,8 +50,6 @@ public class ArmorService {
         if(!imageFile.isEmpty()){
             armor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
-        armor.setImageName("/Armor/" + armor.getId() + "/image");
-
         armorRepository.save(armor);
     }
 
@@ -73,7 +72,7 @@ public class ArmorService {
     }
 
     //returns a page with all the armors only with the public info
-    public Page<ArmorBasicDTO> findAllBasic(Pageable pageable) {
+    public Page<ArmorBasicDTO> findAllBasic(Pageable pageable){
         return armorRepository.findAll(pageable).map(armor -> mapper.toBasicDTO(armor));
     }
 
@@ -132,24 +131,39 @@ public class ArmorService {
 
     //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
-
 		Armor armor = armorRepository.findById(id).orElseThrow();
-
-		if(armor.getImageName() == null){
-			throw new NoSuchElementException();
-		}
-
-		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
+        armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		armorRepository.save(armor);
 	}
 
     public void createArmorImage(long id, URI location, InputStream inputStream, long size) {
-
 		Armor armor = armorRepository.findById(id).orElseThrow();
-
-		armor.setImageName(location.toString());
 		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		armorRepository.save(armor);
 	}
+
+    public int maxDefense(){
+        int maxDef=0;
+        for(ArmorBasicDTO arm : mapper.toBasicDTOs(armorRepository.findAll())){
+            maxDef = arm.defense()>maxDef?arm.defense():maxDef;
+        }
+        return maxDef;
+    }
+
+    public int maxPrice(){
+        int maxPrice=0;
+        for(ArmorBasicDTO arm : mapper.toBasicDTOs(armorRepository.findAll())){
+            maxPrice = arm.price()>maxPrice?arm.price():maxPrice;
+        }
+        return maxPrice;
+    }
+
+    public int maxStyle(){
+        int maxStyle=0;
+        for(ArmorBasicDTO arm : mapper.toBasicDTOs(armorRepository.findAll())){
+            maxStyle = arm.style()>maxStyle?arm.style():maxStyle;
+        }
+        return maxStyle;
+    }
 
 }

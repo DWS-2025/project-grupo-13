@@ -1,11 +1,11 @@
 package com.grupo13.grupo13.service;
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
@@ -24,9 +24,6 @@ import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.util.InputSanitizer;
-
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 @Service
@@ -47,7 +44,8 @@ public class UserService {
     private armorMapper armorMapper;
     @Autowired
     private CharacterMapper characterMapper;
-    
+    @Autowired
+	private PasswordEncoder passwordEncoder;
 
     // returns a specific user by its id
     public UserDTO findById(long id) {
@@ -144,8 +142,6 @@ public class UserService {
             WeaponDTO weaponDTO = weaponService.findById(id);
             if (weaponDTO != null) {
                 Weapon weapon = weaponMapper.toDomain(weaponDTO);
-                int price = weaponDTO.price();
-                user.setMoney(user.getMoney() - price);
                 user.getInventoryWeapon().add(weapon);
                 weapon.getUsers().add(user);
                 userRepository.save(user);
@@ -162,8 +158,6 @@ public class UserService {
             ArmorDTO armorDTO = armorService.findById(id);
             if (armorDTO != null) {
                 Armor armor = armorMapper.toDomain(armorDTO);
-                int price = armorDTO.price();
-                user.setMoney(user.getMoney() - price);
                 user.getInventoryArmor().add(armor);
                 armor.getUsers().add(user);
                 userRepository.save(user);
@@ -175,7 +169,6 @@ public class UserService {
     //set a character to the current user
     public void saveCharacter(CharacterDTO characterDTO) {
         Character character = characterMapper.toDomain(characterDTO);
-
 
         User user = getLoggedUser();
 
@@ -215,7 +208,7 @@ public class UserService {
 
     //updates an user's name when edited
     public void updateName(UserDTO updatedUserDTO, String userName){
-InputSanitizer.validateWhitelist(userName);
+        InputSanitizer.validateWhitelist(userName);
         User updatedUser = getLoggedUser();
         updatedUser.setUserName(userName);;
 
@@ -223,11 +216,29 @@ InputSanitizer.validateWhitelist(userName);
     }
 
     public void deleteUser(long id) {
-    if (userRepository.existsById(id)) {
-        userRepository.deleteById(id);
-    } else {
-        throw new NoSuchElementException("User doesn't exist " + id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new NoSuchElementException("User doesn't exist " + id);
+        }
     }
-}
-
+    
+    //creates user
+    public void createUser(String user, String pass){
+        userRepository.save(new User(user, passwordEncoder.encode(pass), "USER"));
+    }
+    
+    //checks if username is already in use
+    public boolean userExists(String userName){
+        List<User> userList = userRepository.findAll();
+		User placeholder;
+		boolean result = false;
+        for(int i = 0; i < userList.size(); i++){
+            placeholder = userList.get(i);
+			if (placeholder.getUserName().equals(userName)) {
+				result = true;
+			}
+        }
+		return result;
+    }
 }

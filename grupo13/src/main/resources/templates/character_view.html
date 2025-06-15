@@ -4,9 +4,18 @@
    <div class="d-flex col-5">
       <div class="card w-100 border-dark" style="background-color:  rgb(249, 196, 164);">
         	<img src="/userImage" ></img>
+         <form action="/editCharacter" method="POST">
+         <h5 class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.name}}</h5>
+         <input type="hidden" name="_csrf" value="{{token}}"/>
+         <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> <input type="text" name="name"
+               value="{{character.name}}" class="form-control" style="width: 100%;" /></li>
+
+         <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+            <button type="submit" class="btn btn-primary">Actualizar nombre</button>
+         </li>
+         </form>
          
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> <h5 class="card-title">{{character.name}}</h5></li>
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">    <p class="card-text">{{{character.description}}}</p></li> <!--Shows rich text -->
+         <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">    <p class="card-text">{{{character.description}}}</p></li> <!--Shows rich text -->
          
          <ul class="list-group list-group-flush">
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">MONEY - {{user.money}}</li>
