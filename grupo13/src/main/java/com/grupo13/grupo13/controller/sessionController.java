@@ -203,7 +203,7 @@ public class sessionController {
         
     @GetMapping("weaponview/{id}")
     public String showWeapon(Model model, @PathVariable long id){
-        WeaponDTO weapon = weaponService.findById(id);
+        WeaponDTO weapon = weaponService.findByIdDTO(id);
 
         if (weapon != null) {
             model.addAttribute("weapon", weapon);
@@ -215,7 +215,7 @@ public class sessionController {
 
     @PostMapping("/purchaseWeapon")
     public String purchaseWeapon(@RequestParam long id, Model model) {
-        WeaponDTO weaponDTO = weaponService.findById(id);
+        WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
         if (weaponDTO == null) {
             model.addAttribute("message", "Could not purchase, doesnt exist");
             return "sp_errors";
@@ -238,7 +238,7 @@ public class sessionController {
 
     @PostMapping("/purchaseArmor")
     public String purchaseArmor(@RequestParam long id, Model model) {
-        ArmorDTO armorDTO = armorService.findById(id);
+        ArmorDTO armorDTO = armorService.findByIdDTO(id);
         // checks if the user has enough money or not
         if (armorDTO == null) {
             model.addAttribute("message", "Could not purchase, doesnt exist");
@@ -264,11 +264,11 @@ public class sessionController {
     public String equipWeapon(@RequestParam long id, Model model) {
         CharacterDTO characterDTO = userService.getCharacter();
         Character character = characterMapper.toDomain(characterDTO);
-        WeaponDTO weaponDTO = weaponService.findById(id);
+        WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
 
         if (weaponDTO != null) { // if it exists
             characterService.equipWeapon(weaponDTO, character.getId()); // equips it, adding the necessary attributes
-            weaponService.addCharacter(characterDTO, weaponDTO);
+            //weaponService.addCharacter(characterDTO, weaponDTO);
 
             return "redirect:/character";
         } else {
@@ -281,11 +281,11 @@ public class sessionController {
     public String equipArmor(@RequestParam long id, Model model) {
         CharacterDTO characterDTO= userService.getCharacter();
         Character character = characterMapper.toDomain(characterDTO);
-        ArmorDTO armorDTO = armorService.findById(id);
+        ArmorDTO armorDTO = armorService.findByIdDTO(id);
 
         if (armorDTO != null) { // if it exists
             characterService.equipArmor(armorDTO, character.getId()); // equips it, adding the necessary attributes
-            armorService.addCharacter(characterDTO, armorDTO);
+            //armorService.addCharacter(characterDTO, armorDTO);
 
             return "redirect:/character";
         } else {
@@ -298,7 +298,7 @@ public class sessionController {
     public String unEquipWeapon(@RequestParam long id, Model model) {
         CharacterDTO characterDTO = userService.getCharacter();
         Character character = characterMapper.toDomain(characterDTO);
-        WeaponDTO weaponDTO = weaponService.findById(id);
+        WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
 
         if (weaponDTO != null) {
             characterService.unEquipWeapon(character.getId(), id); // unequips it
@@ -314,7 +314,7 @@ public class sessionController {
     public String unEquipArmor(@RequestParam long id, Model model) {
         CharacterDTO characterDTO = userService.getCharacter();
         Character character = characterMapper.toDomain(characterDTO);
-        ArmorDTO armorDTO = armorService.findById(id);
+        ArmorDTO armorDTO = armorService.findByIdDTO(id);
 
         if (armorDTO != null) {
             characterService.unEquipArmor(character.getId(), id); // unequips it
@@ -377,7 +377,7 @@ public class sessionController {
  */
     @GetMapping("/character/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
-        CharacterDTO characterDTO = characterService.findById(id);
+        CharacterDTO characterDTO = characterService.findByIdDTO(id);
         Character character = characterMapper.toDomain(characterDTO);
 
         if (character != null && character.getImageFile() != null) {

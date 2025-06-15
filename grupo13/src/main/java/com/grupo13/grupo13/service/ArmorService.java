@@ -22,6 +22,7 @@ import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.Weapon;
 
 @Service
 public class ArmorService {
@@ -35,15 +36,21 @@ public class ArmorService {
     private CharacterMapper characterMapper;
 
 	//saves in repository
-    public void save(ArmorDTO armorDTO){
+    public void saveDTO(ArmorDTO armorDTO){
         InputSanitizer.validateWhitelist(armorDTO.name());
         InputSanitizer.validateWhitelist(armorDTO.description());
         Armor armor = mapper.toDomain(armorDTO);
         armorRepository.save(armor);
     }
+    //for the package to other services
+    void save(Armor armor){
+        InputSanitizer.validateWhitelist(armor.getName());
+        InputSanitizer.validateWhitelist(armor.getDescription());
+        armorRepository.save(armor);
+    }
 
     //saves the armor's image
-    public void save(ArmorDTO armorDTO, MultipartFile imageFile) throws IOException{
+    public void saveDTO(ArmorDTO armorDTO, MultipartFile imageFile) throws IOException{
         
         Armor armor = mapper.toDomain(armorDTO);
         if(!imageFile.isEmpty()){
@@ -52,9 +59,18 @@ public class ArmorService {
         armorRepository.save(armor);
     }
 
+    //without dtos for other services
+    void save (Armor armor, MultipartFile imageFile) throws IOException{
+        
+        if(!imageFile.isEmpty()){
+            armor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+        }
+        armorRepository.save(armor);
+    }
+
     public void addCharacter(CharacterDTO characterDTO, ArmorDTO armorDTO){
-        Armor armor = mapper.toDomain(armorDTO);
-        Character character = characterMapper.toDomain(characterDTO);
+        Armor armor = findById(armorDTO.id());
+        Character character = characterMapper.toDomain(characterDTO); ////////////////////////////////////////////////////
 
         armor.getCharacters().add(character);
         armorRepository.save(armor);
@@ -76,8 +92,12 @@ public class ArmorService {
     }
 
 	//searches an armor by its id
-    public ArmorDTO findById(long id){
-        return mapper.toDTO(armorRepository.findById(id).get());
+    public ArmorDTO findByIdDTO(long id){
+        return mapper.toDTO(findById(id));
+    }
+
+    Armor findById (long id){
+        return armorRepository.findById(id).orElseThrow();
     }
 
     //deletes an armor by its id
@@ -88,16 +108,24 @@ public class ArmorService {
     //updates an armor when edited
     public void update(Long oldArmorId, ArmorDTO updatedArmorDTO){
         
-        if(armorRepository.existsById(oldArmorId)){
+        /*if(armorRepository.existsById(oldArmorId)){
 
-            Armor updatedArmor = mapper.toDomain(updatedArmorDTO);
+            Armor updatedArmor = findById(updatedArmorDTO.id());
             updatedArmor.setId(oldArmorId);
 
             armorRepository.save(updatedArmor);
 
         }else{
             throw new NoSuchElementException();
-        }
+        }*/
+
+        Armor oldArmor = findById(oldArmorId);
+        oldArmor.setName(updatedArmorDTO.name());
+        oldArmor.setDescription(updatedArmorDTO.description());
+        oldArmor.setDefense(updatedArmorDTO.defense());
+        oldArmor.setPrice(updatedArmorDTO.price());
+        oldArmor.setStyle(updatedArmorDTO.style());
+        armorRepository.save(oldArmor);
     }
 
     //deletes an armor

@@ -40,7 +40,7 @@ public class AdminController {
       
     @GetMapping("weapon/{id}")
     public String showWeapon(Model model, @PathVariable long id){
-        WeaponDTO weapon = weaponService.findById(id);
+        WeaponDTO weapon = weaponService.findByIdDTO(id);
 
         if (weapon != null) {
             model.addAttribute("weapon", weapon);
@@ -52,7 +52,7 @@ public class AdminController {
     
     @GetMapping("/armor/{id}")
     public String showArmor(Model model, @PathVariable long id) {
-        ArmorDTO armor = armorService.findById(id);
+        ArmorDTO armor = armorService.findByIdDTO(id);
         
         if(armor != null){
             model.addAttribute("armor", armor);
@@ -105,7 +105,7 @@ public class AdminController {
         Weapon weapon = new Weapon(name, description, intimidation, strength, price);
         WeaponDTO weaponDTO = weaponMapper.toDTO(weapon);
         
-        weaponService.save(weaponDTO, weaponImage);
+        weaponService.saveDTO(weaponDTO, weaponImage);
 
         return "saved_weapon";
     }
@@ -141,28 +141,28 @@ public class AdminController {
         Armor armor = new Armor(name, description, style, defense, price);
         ArmorDTO armorDTO = armorMapper.toDTO(armor);
         
-        armorService.save(armorDTO, armorImage);
+        armorService.saveDTO(armorDTO, armorImage);
 
         return "saved_armor";
     }
 
     @PostMapping("/weapon/{id}/delete")
     public String deleteWeapon(Model model, @PathVariable long id) throws IOException{
-        weaponService.deleteById(id);
+        weaponService.delete(id);
         
         return "deleted_weapon";
     }
 
     @PostMapping("/armor/{id}/delete")
     public String deleteArmor(Model model, @PathVariable long id) throws IOException{
-        armorService.deleteById(id);
+        armorService.delete(id);
         
         return "deleted_armor";
     }
     
     @GetMapping("/weapon/{id}/edit")
     public String editWeapon(Model model, @PathVariable long id) {
-        WeaponDTO weapon = weaponService.findById(id);
+        WeaponDTO weapon = weaponService.findByIdDTO(id);
 
         if(weapon != null){
             model.addAttribute("weapon", weapon);
@@ -174,7 +174,7 @@ public class AdminController {
 
     @GetMapping("/armor/{id}/edit")
     public String editArmor(Model model, @PathVariable long id) {
-        ArmorDTO armor = armorService.findById(id);
+        ArmorDTO armor = armorService.findByIdDTO(id);
 
         if(armor != null){
             model.addAttribute("armor", armor);
@@ -215,7 +215,7 @@ public class AdminController {
         updatedWeapon.setName(InputSanitizer.whitelistSanitize(updatedWeapon.getName()));
         updatedWeapon.setDescription(InputSanitizer.whitelistSanitize(updatedWeapon.getDescription()));
 
-        WeaponDTO editedWeapon = weaponService.findById(id);
+        WeaponDTO editedWeapon = weaponService.findByIdDTO(id);
         if(editedWeapon != null || !InputSanitizer.isImageValid(weaponImage) ){
             weaponService.update(id, updatedWeaponDTO);
 
@@ -250,7 +250,7 @@ public class AdminController {
         }
         updatedArmor.setName(InputSanitizer.whitelistSanitize(updatedArmor.getName()));
         updatedArmor.setDescription(InputSanitizer.whitelistSanitize(updatedArmor.getDescription()));
-        ArmorDTO editedArmor = armorService.findById(id);
+        ArmorDTO editedArmor = armorService.findByIdDTO(id);
         if(editedArmor != null){
             if(!armorImage.isEmpty()){
                 armorService.replaceImage(id, armorImage.getInputStream(), armorImage.getSize());

@@ -74,8 +74,12 @@ public class CharacterService {
     }
 
     // returns a specific character by its id
-    public CharacterDTO findById(long id) {
-        return mapper.toDTO(characterRepository.findById(id).get());
+    public CharacterDTO findByIdDTO(long id) {
+        return mapper.toDTO(findById(id));
+    }
+
+    Character findById(long id) {
+        return characterRepository.findById(id).orElseThrow();
     }
 
     // creates a new character
@@ -162,18 +166,24 @@ public class CharacterService {
     // and adds the character to the equipment
     public void equipWeapon(WeaponDTO weaponDTO, long charId) {
         Character character = characterRepository.findById(charId).get();
+        Weapon weapon = weaponService.findById(weaponDTO.id());
         character.setWeaponEquiped(true);
         character.setStrength(weaponDTO.strength());
-        character.setWeapon(weaponRepository.findById(weaponDTO.id()).get());
+        character.setWeapon(weapon);
+        weapon.getCharacters().add(character);
+        weaponService.save(weapon);
         characterRepository.save(character);
     }
 
     // equips an armor to the character that recives
     public void equipArmor(ArmorDTO armorDTO, long charId) {
         Character character = characterRepository.findById(charId).get();
+        Armor armor = armorService.findById(armorDTO.id());
         character.setArmorEquiped(true);
         character.setDefense(armorDTO.defense());
-        character.setArmor(armorRepository.findById(armorDTO.id()).get());
+        character.setArmor(armor);
+        armor.getCharacters().add(character);
+        armorService.save(armor);
         characterRepository.save(character);
     }
 
@@ -193,31 +203,41 @@ public class CharacterService {
 
     // unequips the weapon in use
     public void unEquipWeapon(long charId, long id) {
-        Character character = characterRepository.findById(charId).get();
+        Character character = findById(charId);
         character.setWeapon(null);
         character.setStrength(0);
         character.setWeaponEquiped(false);
         // removes the character from the list
-        if (weaponRepository.findById(id).isPresent()) {
+        /*if (weaponRepository.findById(id).isPresent()) {
             weaponRepository.findById(id).get().getCharacters().remove(character);
 
-            weaponService.save(weaponMapper.toDTO(weaponRepository.findById(id).get()));
-        }
+            weaponService.saveDTO(weaponMapper.toDTO(weaponRepository.findById(id).get()));
+        }*/
+        Weapon weapon = weaponService.findById(id);
+        weapon.getCharacters().remove(character);
+        weaponService.save(weapon);
+        characterRepository.save(character);
         characterRepository.save(character);
     }
 
     // unequips the armor in use
     public void unEquipArmor(long charId, long id) {
-        Character character = characterRepository.findById(charId).get();
+        Character character = findById(charId);
         character.setArmor(null);
         character.setDefense(0);
         character.setArmorEquiped(false);
         // removes the character from the list
-        if (armorRepository.findById(id).isPresent()) {
+        /*if (armorRepository.findById(id).isPresent()) {
             armorRepository.findById(id).get().getCharacters().remove(character);
-            armorService.save(armorMapper.toDTO(armorRepository.findById(id).get()));
-        }
+            armorService.saveDTO(armorMapper.toDTO(armorRepository.findById(id).get()));
+        } */
+
+        Armor armor = armorService.findById(id);
+        armor.getCharacters().remove(character);
+        armorService.save(armor);
         characterRepository.save(character);
+
+
     }
 
     /*// deletes the given character

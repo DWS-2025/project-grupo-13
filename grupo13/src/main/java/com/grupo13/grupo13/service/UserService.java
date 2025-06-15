@@ -99,7 +99,7 @@ public class UserService {
     //returns true if a character (located by its id) has a equipment in use
     public boolean hasWeapon(long id) {
         User user = getLoggedUser();
-        WeaponDTO weaponDTO = weaponService.findById(id);
+        WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
 
         if (weaponDTO != null) {
             return user.getInventoryWeapon().contains(weaponMapper.toDomain(weaponDTO));
@@ -110,7 +110,7 @@ public class UserService {
     //returns if the user has an armor given by an id
     public boolean hasArmor(long id) {
         User user = getLoggedUser();
-        ArmorDTO armorDTO = armorService.findById(id);
+        ArmorDTO armorDTO = armorService.findByIdDTO(id);
 
         if (armorDTO != null) {
             return user.getInventoryArmor().contains(armorMapper.toDomain(armorDTO));
@@ -139,30 +139,23 @@ public class UserService {
         User user = getLoggedUser();
 
         if (!hasWeapon(id)) {
-            WeaponDTO weaponDTO = weaponService.findById(id);
-            if (weaponDTO != null) {
-                Weapon weapon = weaponMapper.toDomain(weaponDTO);
-                user.getInventoryWeapon().add(weapon);
-                weapon.getUsers().add(user);
-                userRepository.save(user);
-
-            }
+            Weapon weapon = weaponService.findById(id);
+            user.getInventoryWeapon().add(weapon);
+            weapon.getUsers().add(user);
+            userRepository.save(user);
+            weaponService.save(weapon);
         }
     }
 
     //save an armor
     public void saveArmor(long id) {
         User user = getLoggedUser();
-
         if (!hasArmor(id)) {
-            ArmorDTO armorDTO = armorService.findById(id);
-            if (armorDTO != null) {
-                Armor armor = armorMapper.toDomain(armorDTO);
-                user.getInventoryArmor().add(armor);
-                armor.getUsers().add(user);
-                userRepository.save(user);
-
-            }
+            Armor armor = armorService.findById(id);
+            user.getInventoryArmor().add(armor);
+            armor.getUsers().add(user);
+            userRepository.save(user);
+            armorService.save(armor);
         }
     }
 

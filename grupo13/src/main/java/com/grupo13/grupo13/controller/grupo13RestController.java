@@ -83,7 +83,7 @@ public class grupo13RestController {
 
 	@GetMapping("/weapon/{id}")
 	public WeaponDTO getWeapon(@PathVariable long id) {
-		return weaponService.findById(id);
+		return weaponService.findByIdDTO(id);
 	}
 
 	@GetMapping("/weapon/{id}/image")
@@ -98,7 +98,7 @@ public class grupo13RestController {
 
 	@GetMapping("/armor/{id}")
 	public ArmorDTO getArmor(@PathVariable long id) {
-		return armorService.findById(id);
+		return armorService.findByIdDTO(id);
 	}
 
 	@GetMapping("/armor/{id}/image")
@@ -119,7 +119,7 @@ public class grupo13RestController {
         	InputSanitizer.validateWhitelist(weaponDTO.name());
         	InputSanitizer.validateWhitelist(weaponDTO.description());
 
-        	weaponService.save(weaponDTO);
+        	weaponService.saveDTO(weaponDTO);
         	Weapon weapon = weaponMapper.toDomain(weaponDTO);
         	URI location = fromCurrentRequest().path("/{id}").buildAndExpand(weapon.getId()).toUri();
 
@@ -136,7 +136,7 @@ public class grupo13RestController {
         	InputSanitizer.validateWhitelist(armorDTO.name());
         	InputSanitizer.validateWhitelist(armorDTO.description());
 
-        	armorService.save(armorDTO);
+        	armorService.saveDTO(armorDTO);
        		Armor armor = armorMapper.toDomain(armorDTO);
         	URI location = fromCurrentRequest().path("/{id}").buildAndExpand(armor.getId()).toUri();
 
@@ -241,7 +241,7 @@ public class grupo13RestController {
 
 	@GetMapping("/character/")
 	public CharacterDTO getCharacter() {
-		return characterService.findById(userService.getLoggedUser().getId());
+		return characterService.findByIdDTO(userService.getLoggedUser().getId());
 	}
 
 	@GetMapping("/character/image")
@@ -308,7 +308,7 @@ public class grupo13RestController {
 
 	@PostMapping("/weapon/purchase/{id}")
 	public WeaponDTO purchaseWeapon(@PathVariable long id) {
-		WeaponDTO weaponDTO = weaponService.findById(id);
+		WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
 		// checks if the user has enough money or not
 		if (weaponDTO == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
@@ -317,7 +317,7 @@ public class grupo13RestController {
 		if (money >= weaponDTO.price()) {
 			if (!userService.hasWeapon(id)) {
 				userService.saveWeapon(id);
-				return weaponService.findById(id);
+				return weaponService.findByIdDTO(id);
 			} else {
 				throw new ResponseStatusException(HttpStatus.CONFLICT, "Already purchased");
 			}
@@ -330,7 +330,7 @@ public class grupo13RestController {
 
 	@PostMapping("/armor/purchase/{id}")
 	public ArmorDTO purchaseArmor(@PathVariable long id) {
-		ArmorDTO armorDTO = armorService.findById(id);
+		ArmorDTO armorDTO = armorService.findByIdDTO(id);
 		// checks if the user has enough money or not
 		if (armorDTO == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
@@ -339,7 +339,7 @@ public class grupo13RestController {
 		if (money >= armorDTO.price()) {
 			if (!userService.hasArmor(id)) {
 				userService.saveArmor(id);
-				return armorService.findById(id);
+				return armorService.findByIdDTO(id);
 			} else {
 				throw new ResponseStatusException(HttpStatus.CONFLICT, "Already purchased");
 			}
@@ -357,12 +357,12 @@ public class grupo13RestController {
 		CharacterDTO characterDTO = userService.getCharacter();
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
-		WeaponDTO equipment = weaponService.findById(id);
+		WeaponDTO equipment = weaponService.findByIdDTO(id);
 
 		if (equipment != null) { // if it exists
 			if (userService.hasWeapon(id)) {
 				characterService.equipWeapon(equipment, charId); // equips it, adding the necessary attributes
-				weaponService.addCharacter(characterDTO, equipment);
+				//weaponService.addCharacter(characterDTO, equipment);
 				return equipment;
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
@@ -379,12 +379,12 @@ public class grupo13RestController {
 		CharacterDTO characterDTO = userService.getCharacter();
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
-		ArmorDTO equipment = armorService.findById(id);
+		ArmorDTO equipment = armorService.findByIdDTO(id);
 
 		if (equipment != null) { // if it exists
 			if (userService.hasArmor(id)) {
 				characterService.equipArmor(equipment, charId); // equips it, adding the necessary attributes
-				armorService.addCharacter(characterDTO, equipment);
+				//armorService.addCharacter(characterDTO, equipment);
 				return equipment;
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
@@ -403,7 +403,7 @@ public class grupo13RestController {
 		CharacterDTO characterDTO = userService.getCharacter();
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
-		ArmorDTO equipment = armorService.findById(id);
+		ArmorDTO equipment = armorService.findByIdDTO(id);
 
 		if (equipment != null) { // if it exists
 			if (userService.hasArmor(id)) {
@@ -424,7 +424,7 @@ public class grupo13RestController {
 		CharacterDTO characterDTO = userService.getCharacter();
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
-		WeaponDTO equipment = weaponService.findById(id);
+		WeaponDTO equipment = weaponService.findByIdDTO(id);
 
 		if (equipment != null) { // if it exists
 			if (userService.hasWeapon(id)) {
