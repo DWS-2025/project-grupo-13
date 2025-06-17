@@ -31,6 +31,7 @@ import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.DTOs.WeaponSearchDTO;
 import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.UserMapper;
 import com.grupo13.grupo13.service.ArmorService;
@@ -40,6 +41,7 @@ import com.grupo13.grupo13.service.WeaponService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import com.grupo13.grupo13.util.InputSanitizer;
@@ -181,25 +183,48 @@ public class sessionController {
         return "listing_armors";
     }
     
+@GetMapping("/search")
+public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) {
+    // Tratar campos numéricos con valor 0 como si fueran null
+    Integer strength = (probe.strength() != null && probe.strength() != 0) ? probe.strength() : null;
+    Integer price = (probe.price() != null && probe.price() != 0) ? probe.price() : null;
+    Integer intimidation = (probe.intimidation() != null && probe.intimidation() != 0) ? probe.intimidation() : null;
 
-    @GetMapping("/search")
-    public String searchWeapons(Model model, @RequestParam(required = false) String name) {
-        if (name != null && !name.isEmpty()) {
-            Weapon probe = new Weapon();
-            probe.setName(name);
+    String name = (probe.name() != null && !probe.name().isBlank()) ? probe.name() : null;
+    String description = (probe.description() != null && !probe.description().isBlank()) ? probe.description() : null;
 
-            ExampleMatcher matcher = ExampleMatcher.matching()
-                .withIgnorePaths("description", "strength", "price", "intimidation", "imageName", "imageFile", "id", "characters", "users")
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+    // Contamos cuántos campos válidos hay
+    int nonNullFields = 0;
+    if (name != null) nonNullFields++;
+    if (description != null) nonNullFields++;
+    if (strength != null) nonNullFields++;
+    if (price != null) nonNullFields++;
+    if (intimidation != null) nonNullFields++;
 
-            Example<Weapon> example = Example.of(probe, matcher);
+    if (nonNullFields >= 2) {
+        Weapon weaponExample = new Weapon();
+        weaponExample.setName(name);
+        weaponExample.setDescription(description);
+        if (strength != null) weaponExample.setstrength(strength);
+        if (price != null) weaponExample.setPrice(price);
+        if (intimidation != null) weaponExample.setIntimidation(intimidation);
 
-            model.addAttribute("weapons", weaponRepository.findAll(example));
-        } else {
-            model.addAttribute("weapons", weaponRepository.findAll());
-        }
-        return "search";
+        ExampleMatcher matcher = ExampleMatcher.matchingAll()
+            .withIgnoreNullValues()
+            .withIgnorePaths("id", "imageName", "imageFile", "characters", "users")
+            .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+            .withMatcher("description", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+
+        Example<Weapon> example = Example.of(weaponExample, matcher);
+        model.addAttribute("weapons", weaponRepository.findAll(example));
+    } else {
+        model.addAttribute("error", "Search with at least 2 fields");
+        model.addAttribute("weapons", weaponRepository.findAll());
     }
+
+    return "search";
+}
+
         
     @GetMapping("weaponview/{id}")
     public String showWeapon(Model model, @PathVariable long id){
