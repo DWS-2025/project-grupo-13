@@ -20,6 +20,7 @@ import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
+import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.repository.WeaponRepository;
 import com.grupo13.grupo13.util.InputSanitizer;
@@ -37,15 +38,22 @@ public class WeaponService {
 
 
     //saves in repository
-    public void save(WeaponDTO weaponDTO){
+    public void saveDTO(WeaponDTO weaponDTO){
         InputSanitizer.validateWhitelist(weaponDTO.name());
         InputSanitizer.validateWhitelist(weaponDTO.description());
         Weapon weapon = mapper.toDomain(weaponDTO);
         weaponRepository.save(weapon);
     }
 
+    //without dtos
+    void save(Weapon weapon){
+        InputSanitizer.validateWhitelist(weapon.getName());
+        InputSanitizer.validateWhitelist(weapon.getDescription());
+        weaponRepository.save(weapon);
+    }    
+
     //saves the weapon's image
-    public void save(WeaponDTO weaponDTO, MultipartFile imageFile) throws IOException{
+    public void saveDTO(WeaponDTO weaponDTO, MultipartFile imageFile) throws IOException{
 
         Weapon weapon = mapper.toDomain(weaponDTO);
         if(!imageFile.isEmpty()){
@@ -54,16 +62,20 @@ public class WeaponService {
         weaponRepository.save(weapon);
     }
 
-    public void addCharacter(CharacterDTO characterDTO, WeaponDTO weaponDTO){
-        long id = weaponDTO.id();
-        Optional<Weapon> weaponOP = weaponRepository.findById(id);
-        Character character = characterMapper.toDomain(characterDTO);
+    public void save(Weapon weapon, MultipartFile imageFile) throws IOException{
 
-        if (weaponOP.isPresent()) {
-            Weapon weapon = weaponOP.get();
-            weapon.getCharacters().add(character);
-            weaponRepository.save(weapon);
+        if(!imageFile.isEmpty()){
+            weapon.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
+        weaponRepository.save(weapon);
+    }
+
+    public void addCharacter(CharacterDTO characterDTO, WeaponDTO weaponDTO){
+        
+        Weapon weapon = findById(weaponDTO.id());
+        Character character = characterMapper.toDomain(characterDTO); ////////////////////////////////////////////////////
+        weapon.getCharacters().add(character);
+        weaponRepository.save(weapon);
     }
     
 	//returns all weapons in a list
@@ -82,8 +94,12 @@ public class WeaponService {
     }
     
 	//searches a weapon by its id
-    public WeaponDTO findById(long id){
-        return mapper.toDTO(weaponRepository.findById(id).get());
+    public WeaponDTO findByIdDTO(long id){
+        return mapper.toDTO(findById(id));
+    }
+
+    Weapon findById (long id){
+        return weaponRepository.findById(id).orElseThrow();
     }
 
     //deletes a weapon by its id
@@ -94,14 +110,23 @@ public class WeaponService {
     //updates a weapon when edited
     public void update(Long oldWeaponid, WeaponDTO updatedWeaponDTO){
         
-        if (weaponRepository.existsById(oldWeaponid)) {
-            Weapon updatedWeapon = mapper.toDomain(updatedWeaponDTO);
+        /*if (weaponRepository.existsById(oldWeaponid)) {
+            Weapon updatedWeapon = findById(updatedWeaponDTO.id());
             updatedWeapon.setId(oldWeaponid);
 
             weaponRepository.save(updatedWeapon);
         }else{
             throw new NoSuchElementException();
-        }
+        } */
+
+        Weapon oldWeapon = findById(oldWeaponid);
+        oldWeapon.setName(updatedWeaponDTO.name());
+        oldWeapon.setDescription(updatedWeaponDTO.description());
+        oldWeapon.setstrength(updatedWeaponDTO.strength());
+        oldWeapon.setPrice(updatedWeaponDTO.price());
+        oldWeapon.setIntimidation(updatedWeaponDTO.intimidation());
+        weaponRepository.save(oldWeapon);
+
     }
 
     //deletes a weapon
