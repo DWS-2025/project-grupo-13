@@ -1,11 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+
     <title>Weapon Search</title>
 </head>
 {{>header}}
 <body>
+    <h3>Search Weapons</h3>
+
+    <form action="/search" method="get">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name"><br>
+
+        <label for="description">Description:</label>
+        <input type="text" name="description" id="description"><br>
+
+        <label for="strength">Strength:</label>
+        <input type="number" name="strength" id="strength"><br>
+
+        <label for="price">Price:</label>
+        <input type="number" name="price" id="price"><br>
+
+        <label for="intimidation">Intimidation:</label>
+        <input type="number" name="intimidation" id="intimidation"><br>
+
+        <button type="submit">Search</button>
+    </form>
+
+    {{#error}}
+    <p style="color: red">{{.}}</p>
+    {{/error}}
+
     <h3>Weapons</h3>
     {{#weapons}}
         {{name}}<br>
