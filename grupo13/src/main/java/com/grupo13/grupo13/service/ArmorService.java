@@ -72,6 +72,8 @@ public class ArmorService {
     //without dtos for other services
     void save (Armor armor, MultipartFile imageFile) throws IOException{
          if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+            InputSanitizer.validateWhitelist(armor.getName());
+        InputSanitizer.validateWhitelist(armor.getDescription());
         
         if(!imageFile.isEmpty()&&InputSanitizer.isImageValid(imageFile)){
             armor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));

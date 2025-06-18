@@ -66,7 +66,7 @@ public class CharacterService {
     private WeaponMapper weaponMapper;
     @Autowired
     private armorMapper armorMapper;
-
+    
     CharacterService(UserService userService, NoSuchElementExceptionCA noSuchElementExceptionCA) {
         this.userService = userService;
         this.noSuchElementExceptionCA = noSuchElementExceptionCA;
@@ -88,32 +88,30 @@ public class CharacterService {
 
     // creates a new character
     public CharacterDTO save(CharacterDTO characterDTO) {
-      if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+    
         InputSanitizer.validateWhitelist(characterDTO.name());
         InputSanitizer.sanitizeRichText(characterDTO.description());
         Character character = mapper.toDomain(characterDTO);
         Character savedCharacter = characterRepository.save(character);
-        return mapper.toDTO(savedCharacter);}else{
-          throw new SecurityException("User does not have permission to perform this action.");
-        }
+        return mapper.toDTO(savedCharacter);
     }
 
     //saves the character's image
     public void save(CharacterDTO characterDTO, MultipartFile imageFile, String imageName) throws IOException {
-        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+       
         Character character = mapper.toDomain(characterDTO);
-        if (!imageFile.isEmpty()) {
+        if (!imageFile.isEmpty()&& InputSanitizer.isImageValid(imageFile)) {
             character.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
        
         backupImage(imageFile, imageName);
         characterRepository.save(character);}
-    }
+    
     public String backupImage(MultipartFile imageFile, String imageName) throws IOException {
-        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+        
         // sanitize name
         String baseName = Paths.get(imageName).getFileName().toString();
-        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
+        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")|| !InputSanitizer.isImageValid(imageFile)) {
             throw new SecurityException("Invalid file name: " + imageName);
         }
 
@@ -145,10 +143,8 @@ public class CharacterService {
         Files.createDirectories(target.getParent());
         imageFile.transferTo(target.toFile());
 
-        return finalName;}
-        else{
-          throw new SecurityException("User does not have permission to perform this action.");
-        }
+        return finalName;
+       
     }
 
     //show image 
@@ -169,10 +165,10 @@ public class CharacterService {
 	}
 
     public void saveUser(CharacterDTO characterDTO) {
-        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+       
         Character character = mapper.toDomain(characterDTO);
         character.setUser(userService.getLoggedUser());
-        characterRepository.save(character);}
+        characterRepository.save(character);
     }
 
     // for equipping armor or weapon, sets the necessary values from the equipment
@@ -220,6 +216,7 @@ public class CharacterService {
 
     // unequips the weapon in use
     public void unEquipWeapon(long charId, long id) {
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==charId){
         Character character = findById(charId);
         character.setWeapon(null);
         character.setStrength(0);
@@ -236,10 +233,11 @@ public class CharacterService {
         characterRepository.save(character);
         characterRepository.save(character);
     }
+    }
 
     // unequips the armor in use
     public void unEquipArmor(long charId, long id) {
-         if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.hasArmor(id)){
+         if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==charId){
         Character character = findById(charId);
         character.setArmor(null);
         character.setDefense(0);
@@ -322,7 +320,7 @@ public class CharacterService {
 	}
 
     public void editCharacterName(String name){
-
+InputSanitizer.validateWhitelist(name);
         if(userService.getCharacter() == null){
             throw new IllegalStateException("El usuario aún no tiene un personaje creado.");
         }else{

@@ -94,7 +94,7 @@ public class UserService {
 
     public void save(UserDTO userDTO) {
         User user = getLoggedUser();
-
+        InputSanitizer.validateWhitelist(user.getUserName());
         userRepository.save(user);
     }
 
@@ -165,7 +165,8 @@ public class UserService {
     //set a character to the current user
     public void saveCharacter(CharacterDTO characterDTO) {
         Character character = characterMapper.toDomain(characterDTO);
-
+        InputSanitizer.sanitizeRichText(character.getDescription());
+        InputSanitizer.sanitizeRichText(character.getName());
         User user = getLoggedUser();
 
         user.setCharacter(character);
@@ -204,6 +205,7 @@ public class UserService {
 
     //updates an user's name when edited
     public void updateName(UserDTO updatedUserDTO, String userName){
+        
         InputSanitizer.validateWhitelist(userName);
         User updatedUser = getLoggedUser();
         updatedUser.setUserName(userName);;
@@ -224,6 +226,8 @@ public class UserService {
     
     //creates user
     public void createUser(String user, String pass){
+        InputSanitizer.validateWhitelist(user);
+        InputSanitizer.validateWhitelist(pass);
         userRepository.save(new User(user, passwordEncoder.encode(pass), "USER"));
     }
     

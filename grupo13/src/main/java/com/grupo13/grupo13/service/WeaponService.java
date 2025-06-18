@@ -72,6 +72,8 @@ public class WeaponService {
 
     public void save(Weapon weapon, MultipartFile imageFile) throws IOException{
 if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+      InputSanitizer.validateWhitelist(weapon.getName());
+        InputSanitizer.validateWhitelist(weapon.getDescription());
         
         if(!imageFile.isEmpty()){
             weapon.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
