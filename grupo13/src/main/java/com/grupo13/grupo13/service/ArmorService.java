@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.repository.ArmorRepository;
@@ -34,46 +36,57 @@ public class ArmorService {
     private armorMapper mapper;
     @Autowired
     private CharacterMapper characterMapper;
+    @Lazy
+    @Autowired
+    private UserService userService;
 
 	//saves in repository
     public void saveDTO(ArmorDTO armorDTO){
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         InputSanitizer.validateWhitelist(armorDTO.name());
         InputSanitizer.validateWhitelist(armorDTO.description());
         Armor armor = mapper.toDomain(armorDTO);
         armorRepository.save(armor);
     }
+    }
     //for the package to other services
     void save(Armor armor){
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         InputSanitizer.validateWhitelist(armor.getName());
         InputSanitizer.validateWhitelist(armor.getDescription());
         armorRepository.save(armor);
     }
+    }
 
     //saves the armor's image
     public void saveDTO(ArmorDTO armorDTO, MultipartFile imageFile) throws IOException{
-        
+         if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         Armor armor = mapper.toDomain(armorDTO);
-        if(!imageFile.isEmpty()){
+        if(!imageFile.isEmpty()&&InputSanitizer.isImageValid(imageFile)){
             armor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         armorRepository.save(armor);
+      }
     }
 
     //without dtos for other services
     void save (Armor armor, MultipartFile imageFile) throws IOException{
+         if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         
-        if(!imageFile.isEmpty()){
+        if(!imageFile.isEmpty()&&InputSanitizer.isImageValid(imageFile)){
             armor.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         armorRepository.save(armor);
     }
+    }
 
     public void addCharacter(CharacterDTO characterDTO, ArmorDTO armorDTO){
+        if (characterDTO.equals(userService.getLoggedUserDTO().character())||userService.getLoggedUser().getRoles().contains("ADMIN")){
         Armor armor = findById(armorDTO.id());
         Character character = characterMapper.toDomain(characterDTO); ////////////////////////////////////////////////////
 
         armor.getCharacters().add(character);
-        armorRepository.save(armor);
+        armorRepository.save(armor);}
     }
 
 	//returns all armors in a list
@@ -102,7 +115,8 @@ public class ArmorService {
 
     //deletes an armor by its id
     public void deleteById(long id){
-        armorRepository.deleteById(id);
+       if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+        armorRepository.deleteById(id);}
     }
 	
     //updates an armor when edited
@@ -118,7 +132,7 @@ public class ArmorService {
         }else{
             throw new NoSuchElementException();
         }*/
-
+  if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         Armor oldArmor = findById(oldArmorId);
         oldArmor.setName(updatedArmorDTO.name());
         oldArmor.setDescription(updatedArmorDTO.description());
@@ -127,9 +141,11 @@ public class ArmorService {
         oldArmor.setStyle(updatedArmorDTO.style());
         armorRepository.save(oldArmor);
     }
+    }
 
     //deletes an armor
     public void delete(long id){
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         if(armorRepository.findById(id).isPresent()){
             Armor armor = armorRepository.findById(id).get();
             
@@ -144,7 +160,7 @@ public class ArmorService {
 		}
         armorRepository.deleteById(id);
     }   
-    
+}
     public Resource getImageFile(long id) throws SQLException  {
         Armor armor = armorRepository.findById(id).orElseThrow();
 
@@ -157,17 +173,19 @@ public class ArmorService {
 
     //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
 		Armor armor = armorRepository.findById(id).orElseThrow();
         armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		armorRepository.save(armor);
 	}
-
+    }
     public void createArmorImage(long id, URI location, InputStream inputStream, long size) {
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
 		Armor armor = armorRepository.findById(id).orElseThrow();
 		armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		armorRepository.save(armor);
 	}
-
+    }
     public int maxDefense(){
         int maxDef=0;
         for(ArmorBasicDTO arm : mapper.toBasicDTOs(armorRepository.findAll())){

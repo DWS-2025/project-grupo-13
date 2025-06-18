@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.core.io.InputStreamResource;
@@ -35,47 +36,58 @@ public class WeaponService {
     private WeaponMapper mapper;
     @Autowired
     private CharacterMapper characterMapper;
-
+    @Lazy
+    @Autowired
+    private UserService userService;
 
     //saves in repository
     public void saveDTO(WeaponDTO weaponDTO){
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         InputSanitizer.validateWhitelist(weaponDTO.name());
         InputSanitizer.validateWhitelist(weaponDTO.description());
         Weapon weapon = mapper.toDomain(weaponDTO);
         weaponRepository.save(weapon);
     }
+    }
 
     //without dtos
     void save(Weapon weapon){
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         InputSanitizer.validateWhitelist(weapon.getName());
         InputSanitizer.validateWhitelist(weapon.getDescription());
         weaponRepository.save(weapon);
+        }
     }    
 
     //saves the weapon's image
     public void saveDTO(WeaponDTO weaponDTO, MultipartFile imageFile) throws IOException{
-
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         Weapon weapon = mapper.toDomain(weaponDTO);
         if(!imageFile.isEmpty()){
             weapon.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         weaponRepository.save(weapon);
     }
+}
 
     public void save(Weapon weapon, MultipartFile imageFile) throws IOException{
-
+if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+        
         if(!imageFile.isEmpty()){
             weapon.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         weaponRepository.save(weapon);
     }
 
+}
+
     public void addCharacter(CharacterDTO characterDTO, WeaponDTO weaponDTO){
-        
+         if (characterDTO.equals(userService.getLoggedUserDTO().character())||userService.getLoggedUser().getRoles().contains("ADMIN")){
         Weapon weapon = findById(weaponDTO.id());
         Character character = characterMapper.toDomain(characterDTO); ////////////////////////////////////////////////////
         weapon.getCharacters().add(character);
         weaponRepository.save(weapon);
+    }
     }
     
 	//returns all weapons in a list
@@ -104,7 +116,9 @@ public class WeaponService {
 
     //deletes a weapon by its id
     public void deleteById(long id){
+         if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         weaponRepository.deleteById(id);
+    }
     }
 	
     //updates a weapon when edited
@@ -118,7 +132,7 @@ public class WeaponService {
         }else{
             throw new NoSuchElementException();
         } */
-
+ if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         Weapon oldWeapon = findById(oldWeaponid);
         oldWeapon.setName(updatedWeaponDTO.name());
         oldWeapon.setDescription(updatedWeaponDTO.description());
@@ -126,11 +140,13 @@ public class WeaponService {
         oldWeapon.setPrice(updatedWeaponDTO.price());
         oldWeapon.setIntimidation(updatedWeaponDTO.intimidation());
         weaponRepository.save(oldWeapon);
+    }
 
     }
 
     //deletes a weapon
     public void delete(long id){
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         if(weaponRepository.findById(id).isPresent()){
             Weapon weapon = weaponRepository.findById(id).get();
             
@@ -144,6 +160,7 @@ public class WeaponService {
             }
             weaponRepository.deleteById(id);
         }
+    }
     }
     
     //returns the image of the id given
@@ -159,16 +176,18 @@ public class WeaponService {
 
     //change the image of the id given
     public void replaceImage(long id, InputStream inputStream, long size) {
+         if( userService.getLoggedUser().getRoles().contains("ADMIN")){
 		Weapon weapon = weaponRepository.findById(id).orElseThrow();
 		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
 		weaponRepository.save(weapon);
+        }
 	}
 
     public void createWeaponImage(long id, URI location, InputStream inputStream, long size) {
-
+if( userService.getLoggedUser().getRoles().contains("ADMIN")){
 		Weapon weapon = weaponRepository.findById(id).orElseThrow();
 		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
 		weaponRepository.save(weapon);
 	}
-
+}
 }

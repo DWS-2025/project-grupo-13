@@ -2,6 +2,7 @@ package com.grupo13.grupo13.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,6 +33,7 @@ public class UserService {
     //attributes
     @Autowired
     private UserRepository userRepository;
+    @Lazy
     @Autowired
     private WeaponService weaponService;
     @Autowired
@@ -136,6 +138,7 @@ public class UserService {
 
     //put a equipment in the inventory of an scpecific user
     public void saveWeapon(long id) {
+        
         User user = getLoggedUser();
 
         if (!hasWeapon(id)) {
@@ -209,11 +212,14 @@ public class UserService {
     }
 
     public void deleteUser(long id) {
+        if( getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId().equals(id)){
+
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
         } else {
             throw new NoSuchElementException("User doesn't exist " + id);
         }
+    }
     }
     
     //creates user

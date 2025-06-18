@@ -99,8 +99,8 @@ public class AdminController {
             return "sp_errors";            
         }
 
-        name = InputSanitizer.whitelistSanitize(name);
-        description = InputSanitizer.whitelistSanitize(description);
+        InputSanitizer.validateWhitelist(name);
+        InputSanitizer.validateWhitelist(description);
         
         Weapon weapon = new Weapon(name, description, intimidation, strength, price);
         WeaponDTO weaponDTO = weaponMapper.toDTO(weapon);
@@ -134,9 +134,8 @@ public class AdminController {
             model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
             return "sp_errors";            
         }
-
-        name = InputSanitizer.whitelistSanitize(name);
-        description = InputSanitizer.whitelistSanitize(description);
+        InputSanitizer.validateWhitelist(name);
+        InputSanitizer.validateWhitelist(description);
         
         Armor armor = new Armor(name, description, style, defense, price);
         ArmorDTO armorDTO = armorMapper.toDTO(armor);
@@ -212,8 +211,8 @@ public class AdminController {
             return "sp_errors";
         }
 
-        updatedWeapon.setName(InputSanitizer.whitelistSanitize(updatedWeapon.getName()));
-        updatedWeapon.setDescription(InputSanitizer.whitelistSanitize(updatedWeapon.getDescription()));
+        InputSanitizer.validateWhitelist(updatedWeapon.getName());
+        InputSanitizer.validateWhitelist(updatedWeapon.getDescription());
 
         WeaponDTO editedWeapon = weaponService.findByIdDTO(id);
         if(editedWeapon != null || !InputSanitizer.isImageValid(weaponImage) ){
@@ -248,8 +247,8 @@ public class AdminController {
             model.addAttribute("message", "This is not wikipedia. Be brief.");
             return "sp_errors";
         }
-        updatedArmor.setName(InputSanitizer.whitelistSanitize(updatedArmor.getName()));
-        updatedArmor.setDescription(InputSanitizer.whitelistSanitize(updatedArmor.getDescription()));
+        InputSanitizer.validateWhitelist(updatedArmor.getName());
+        InputSanitizer.validateWhitelist(updatedArmor.getDescription());
         ArmorDTO editedArmor = armorService.findByIdDTO(id);
         if(editedArmor != null){
             if(!armorImage.isEmpty()){
