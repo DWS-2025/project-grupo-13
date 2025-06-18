@@ -292,7 +292,7 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
         WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
 
         if (weaponDTO != null) { // if it exists
-            characterService.equipWeapon(weaponDTO, character.getId()); // equips it, adding the necessary attributes
+            characterService.equipWeapon(weaponDTO, characterDTO.id()); // equips it, adding the necessary attributes
             //weaponService.addCharacter(characterDTO, weaponDTO);
 
             return "redirect:/character";

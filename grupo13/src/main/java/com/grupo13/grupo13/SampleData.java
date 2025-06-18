@@ -60,7 +60,7 @@ public class SampleData {
                 weaponRepository.save(weapon);
 
                 //w2.png
-                Weapon weapon2 = new Weapon("Iron Longsword", "Forged from tempered iron, this longsword offers a great balance between durability and usability. Designed for consistent damage and solid defense, it's a favorite among mercenaries and town guards. Reliable in most combats, it rarely disappoints.", 
+                Weapon weapon2 = new Weapon("Iron Longsword", "Forged from tempered iron, this longsword offers a great balance between durability and usability. Designed for consistent damage and solid defense, its a favorite among mercenaries and town guards. Reliable in most combats, it rarely disappoints.", 
                 10, 15, 50);
                 weapon2.setimageFile(localImageToBlob("images/imp_imgs/w2.png"));
                 weaponRepository.save(weapon2);
@@ -102,7 +102,7 @@ public class SampleData {
                 weaponRepository.save(weapon8);
 
                 //w9.png
-                Weapon weapon9 = new Weapon("Torch", "Mostly a tool for illumination. It can be used in desperate combat situations, though it’s far from ideal. The flame offers minor burns to enemies, but it's best used to light paths, burn obstacles, or drive away creatures sensitive to light and fire.", 
+                Weapon weapon9 = new Weapon("Torch", "Mostly a tool for illumination. It can be used in desperate combat situations, though it’s far from ideal. The flame offers minor burns to enemies, but its best used to light paths, burn obstacles, or drive away creatures sensitive to light and fire.", 
                 1, 10, 10);
                 weapon9.setimageFile(localImageToBlob("images/imp_imgs/w9.png"));
                 weaponRepository.save(weapon9);
@@ -144,7 +144,7 @@ public class SampleData {
                 weaponRepository.save(weapon15);
 
                 //w16.png
-                Weapon weapon16 = new Weapon("Winged Piglet", "Is it a hammer or an adorable little pig? It's both! This unusual (and very cute) hammer is infused with celestial magic, allowing it to deal heavy blows to enemies and occasionally knock them far away.",
+                Weapon weapon16 = new Weapon("Winged Piglet", "Is it a hammer or an adorable little pig? Its both! This unusual (and very cute) hammer is infused with celestial magic, allowing it to deal heavy blows to enemies and occasionally knock them far away.",
                 2010, 9170, 20);
                 weapon16.setimageFile(localImageToBlob("images/imp_imgs/w16.png"));
                 weaponRepository.save(weapon16);
@@ -156,7 +156,7 @@ public class SampleData {
                 weaponRepository.save(weapon17);
 
                 //w18.png
-                Weapon weapon18 = new Weapon("Cactus Cannon", "A cannon with a large barrel made from a cactus. It can launch spiky projectiles and is mounted on a sturdy wooden base with a single wheel. The desert's vengeance, loaded and ready. Each shot leaves behind the scent of scorched sap and arid winds.", 
+                Weapon weapon18 = new Weapon("Cactus Cannon", "A cannon with a large barrel made from a cactus. It can launch spiky projectiles and is mounted on a sturdy wooden base with a single wheel. The deserts vengeance, loaded and ready. Each shot leaves behind the scent of scorched sap and arid winds.", 
                 5641, 5247, 69);
                 weapon18.setimageFile(localImageToBlob("images/imp_imgs/w18.png"));
                 weaponRepository.save(weapon18);
@@ -174,13 +174,13 @@ public class SampleData {
                 weaponRepository.save(weapon20);
 
                 //w21.png
-                Weapon weapon21 = new Weapon("Saturn's Antlers", "A whimsical staff crowned with a cow head, orbiting rings, and a golden bell. Infused with stardust and pastoral magic, it channels celestial energy with every swing, bringing both charm and cosmic might to its wielder.", 
+                Weapon weapon21 = new Weapon("Saturns Antlers", "A whimsical staff crowned with a cow head, orbiting rings, and a golden bell. Infused with stardust and pastoral magic, it channels celestial energy with every swing, bringing both charm and cosmic might to its wielder.", 
                 100314, 142, 274414);
                 weapon21.setimageFile(localImageToBlob("images/imp_imgs/w21.png"));
                 weaponRepository.save(weapon21);
 
                 //w22.png
-                Weapon weapon22 = new Weapon("Dark Saturn's Antlers", "A mystical staff born from the depths of the cosmos, featuring a star-speckled purple cow head and golden rings. Its eerie bell tolls with dark energy, summoning the silent power of the night sky and forgotten constellations.", 
+                Weapon weapon22 = new Weapon("Dark Saturns Antlers", "A mystical staff born from the depths of the cosmos, featuring a star-speckled purple cow head and golden rings. Its eerie bell tolls with dark energy, summoning the silent power of the night sky and forgotten constellations.", 
                 980314, 1401, 614454);
                 weapon22.setimageFile(localImageToBlob("images/imp_imgs/w22.png"));
                 weaponRepository.save(weapon22);
@@ -192,7 +192,7 @@ public class SampleData {
                 weaponRepository.save(weapon23);
 
                 //w24.png
-                Weapon weapon24 = new Weapon("Rubber Ducky Stick", "A hilariously absurd weapon: a plain stick topped with a cheerful rubber duck. It won't deal much damage, but it's perfect for confusing foes or unsettling those with duck-related fears. Victory through psychological quackery!", 
+                Weapon weapon24 = new Weapon("Rubber Ducky Stick", "A hilariously absurd weapon: a plain stick topped with a cheerful rubber duck. It wont deal much damage, but its perfect for confusing foes or unsettling those with duck-related fears. Victory through psychological quackery!", 
                 11, 7054, 8012);
                 weapon24.setimageFile(localImageToBlob("images/imp_imgs/w24.png"));
                 weaponRepository.save(weapon24);
@@ -216,7 +216,7 @@ public class SampleData {
                 weaponRepository.save(weapon27);
 
                 //w28.png
-                Weapon weapon28 = new Weapon("Solar Rooster's Crown", "Forged in the heart of a sun, this blazing staff bears the crowned head of a celestial rooster. Its radiant ring and ember bell summon solar flares and dawnfire, awakening ancient light to scorch the darkness of space.", 
+                Weapon weapon28 = new Weapon("Solar Roosters Crown", "Forged in the heart of a sun, this blazing staff bears the crowned head of a celestial rooster. Its radiant ring and ember bell summon solar flares and dawnfire, awakening ancient light to scorch the darkness of space.", 
                 514411641, 524147, 69141);
                 weapon28.setimageFile(localImageToBlob("images/imp_imgs/w28.png"));
                 weaponRepository.save(weapon28);
@@ -300,7 +300,7 @@ public class SampleData {
                 armorRepository.save(armor12);
 
                 //a13.png
-                Armor armor13 = new Armor("Laurel Armor", "Forged from celestial bronze, this legendary breastplate is crowned with a living laurel wreath whose leaves never wither. Lighter than standard plate armor, it radiates divine favor, bolstering the wearer's courage in battle and inspiring allies nearby.", 
+                Armor armor13 = new Armor("Laurel Armor", "Forged from celestial bronze, this legendary breastplate is crowned with a living laurel wreath whose leaves never wither. Lighter than standard plate armor, it radiates divine favor, bolstering the wearers courage in battle and inspiring allies nearby.", 
                 24, 40014, 750);
                 armor13.setImageFile(localImageToBlob("images/imp_imgs/a13.png"));
                 armorRepository.save(armor13);

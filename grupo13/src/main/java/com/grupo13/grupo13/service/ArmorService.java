@@ -153,9 +153,9 @@ public class ArmorService {
             armor.getUsers().forEach(user -> user.getInventoryArmor().remove(armor));
 
             for(Character character : armor.getCharacters()){
-					character.setWeapon(null);
-        			character.setStrength(0);
-        			character.setWeaponEquiped(false);
+					character.setArmor(null);
+        			character.setDefense(0);
+        			character.setArmorEquiped(false);
 			}
 		}
         armorRepository.deleteById(id);

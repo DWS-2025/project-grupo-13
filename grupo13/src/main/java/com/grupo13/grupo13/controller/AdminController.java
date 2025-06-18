@@ -211,6 +211,16 @@ public class AdminController {
             return "sp_errors";
         }
 
+        if(updatedWeapon.getstrength()>2147483647 || updatedWeapon.getPrice()>2147483647 || updatedWeapon.getIntimidation()>2147483647 || updatedWeapon.getstrength()<0 || updatedWeapon.getIntimidation()<0 || updatedWeapon.getPrice()<0){
+            model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
+            return "sp_errors";            
+        }
+
+        if(updatedWeapon.getstrength()>2147483647 || updatedWeapon.getPrice()>2147483647 || updatedWeapon.getIntimidation()>2147483647 || updatedWeapon.getstrength()<0 || updatedWeapon.getIntimidation()<0 || updatedWeapon.getPrice()<0){
+            model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
+            return "sp_errors";            
+        }
+
         InputSanitizer.validateWhitelist(updatedWeapon.getName());
         InputSanitizer.validateWhitelist(updatedWeapon.getDescription());
 
@@ -247,20 +257,31 @@ public class AdminController {
             model.addAttribute("message", "This is not wikipedia. Be brief.");
             return "sp_errors";
         }
+
+        if(updatedArmor.getDefense()>2147483647 || updatedArmor.getPrice()>2147483647 || updatedArmor.getStyle()>2147483647 || updatedArmor.getDefense()<0 || updatedArmor.getStyle()<0 || updatedArmor.getPrice()<0){
+            model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
+            return "sp_errors";            
+        }
+
         InputSanitizer.validateWhitelist(updatedArmor.getName());
         InputSanitizer.validateWhitelist(updatedArmor.getDescription());
+
         ArmorDTO editedArmor = armorService.findByIdDTO(id);
-        if(editedArmor != null){
+        if(editedArmor != null || !InputSanitizer.isImageValid(armorImage)){
+            armorService.update(id, updatedArmorDTO);
+            
             if(!armorImage.isEmpty()){
                 armorService.replaceImage(id, armorImage.getInputStream(), armorImage.getSize());
             }
 
-            armorService.update(id, updatedArmorDTO);
+            
             return "redirect:/armor/" + id;
         }else{
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
-        } 
+        }
+        
+        
 	}
 
     @GetMapping("/userList")
