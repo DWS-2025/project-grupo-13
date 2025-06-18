@@ -262,17 +262,21 @@ public class AdminController {
         updatedArmor.setName(InputSanitizer.whitelistSanitize(updatedArmor.getName()));
         updatedArmor.setDescription(InputSanitizer.whitelistSanitize(updatedArmor.getDescription()));
         ArmorDTO editedArmor = armorService.findByIdDTO(id);
-        if(editedArmor != null){
+        if(editedArmor != null || !InputSanitizer.isImageValid(armorImage)){
+            armorService.update(id, updatedArmorDTO);
+            
             if(!armorImage.isEmpty()){
                 armorService.replaceImage(id, armorImage.getInputStream(), armorImage.getSize());
             }
 
-            armorService.update(id, updatedArmorDTO);
+            
             return "redirect:/armor/" + id;
         }else{
             model.addAttribute("message", "Could not manage, not found");
             return "sp_errors";
-        } 
+        }
+        
+        
 	}
 
     @GetMapping("/userList")
