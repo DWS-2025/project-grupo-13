@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -185,7 +186,7 @@ public class sessionController {
     
 @GetMapping("/search")
 public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) {
-    // Tratar campos numéricos con valor 0 como si fueran null
+//set 0 as null
     Integer strength = (probe.strength() != null && probe.strength() != 0) ? probe.strength() : null;
     Integer price = (probe.price() != null && probe.price() != 0) ? probe.price() : null;
     Integer intimidation = (probe.intimidation() != null && probe.intimidation() != 0) ? probe.intimidation() : null;
@@ -193,7 +194,6 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
     String name = (probe.name() != null && !probe.name().isBlank()) ? probe.name() : null;
     String description = (probe.description() != null && !probe.description().isBlank()) ? probe.description() : null;
 
-    // Contamos cuántos campos válidos hay
     int nonNullFields = 0;
     if (name != null) nonNullFields++;
     if (description != null) nonNullFields++;
@@ -205,13 +205,18 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
         Weapon weaponExample = new Weapon();
         weaponExample.setName(name);
         weaponExample.setDescription(description);
+        
         if (strength != null) weaponExample.setstrength(strength);
         if (price != null) weaponExample.setPrice(price);
         if (intimidation != null) weaponExample.setIntimidation(intimidation);
-
+// creating a list with ignored parameters
+        List<String> ignoredPaths = new ArrayList<>(List.of("id", "imageName", "imageFile", "characters", "users"));
+        if (strength == null || strength == 0) ignoredPaths.add("strength");
+        if (price == null || price == 0) ignoredPaths.add("price");
+        if (intimidation == null || intimidation == 0) ignoredPaths.add("intimidation");
         ExampleMatcher matcher = ExampleMatcher.matchingAll()
             .withIgnoreNullValues()
-            .withIgnorePaths("id", "imageName", "imageFile", "characters", "users")
+            .withIgnorePaths(ignoredPaths.toArray(new String[0]))            
             .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
             .withMatcher("description", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 
