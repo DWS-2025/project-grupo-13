@@ -311,7 +311,8 @@ public class AdminController {
         if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         if(userService.getLoggedUserDTO().id() != id){
             userService.updateName(userService.findById(id), newName);
-            return "userAdminList";
+           return "redirect:/userList";
+
         }else{
             userService.updateName(userService.findById(id), newName);
             return "/logout";

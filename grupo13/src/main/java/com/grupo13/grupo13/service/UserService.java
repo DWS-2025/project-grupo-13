@@ -55,6 +55,8 @@ public class UserService {
         return mapper.toDTO(userRepository.findById(id).get());
     }
 
+
+
     public UserDTO getUser(String name) {
 		return mapper.toDTO(userRepository.findByUserName(name).orElseThrow());
 	}
@@ -209,7 +211,8 @@ public class UserService {
         if(!userExists(userName)){
             if(updatedUserDTO.equals(getLoggedUserDTO())||getLoggedUser().getRoles().contains("ADMIN")){
         InputSanitizer.validateWhitelist(userName);
-        User updatedUser= userMapper.toDomain(updatedUserDTO);
+       User updatedUser=  userRepository.findById(updatedUserDTO.id()).get();
+    
         updatedUser.setUserName(userName);;
 
         userRepository.save(updatedUser);}
