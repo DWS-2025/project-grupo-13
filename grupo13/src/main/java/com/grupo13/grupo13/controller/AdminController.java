@@ -293,6 +293,7 @@ public class AdminController {
     
     @PostMapping("/admin/user/{id}/delete")
 	public String deleteUser(Model model, @PathVariable long id) throws IOException{
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
         if(userService.getLoggedUserDTO().id() != id){
             userService.deleteUser(id);
             return "deleted_user";
@@ -300,5 +301,27 @@ public class AdminController {
             userService.deleteUser(id);
             return "/logout";
         }
+     }else{
+        return "/logout";
+     }
+    }
+
+        @PostMapping("/admin/user/{id}/editName")
+	    public String editUser(Model model, @PathVariable long id, @RequestParam String newName) throws IOException{
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+        if(userService.getLoggedUserDTO().id() != id){
+            userService.updateName(userService.findById(id), newName);
+            return "userAdminList";
+        }else{
+            userService.updateName(userService.findById(id), newName);
+            return "/logout";
+        }
+	}else{
+        return "/logout";
 	}
+
+    }
+
 }
+
+

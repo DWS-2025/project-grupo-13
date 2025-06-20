@@ -48,7 +48,8 @@ public class UserService {
     private CharacterMapper characterMapper;
     @Autowired
 	private PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private UserMapper userMapper;
     // returns a specific user by its id
     public UserDTO findById(long id) {
         return mapper.toDTO(userRepository.findById(id).get());
@@ -205,12 +206,14 @@ public class UserService {
 
     //updates an user's name when edited
     public void updateName(UserDTO updatedUserDTO, String userName){
-        
+        if(!userExists(userName)){
+            if(updatedUserDTO.equals(getLoggedUserDTO())||getLoggedUser().getRoles().contains("ADMIN")){
         InputSanitizer.validateWhitelist(userName);
-        User updatedUser = getLoggedUser();
+        User updatedUser= userMapper.toDomain(updatedUserDTO);
         updatedUser.setUserName(userName);;
 
-        userRepository.save(updatedUser);
+        userRepository.save(updatedUser);}
+    }
     }
 
     public void deleteUser(long id) {
