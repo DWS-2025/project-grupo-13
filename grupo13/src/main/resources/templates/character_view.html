@@ -1,5 +1,6 @@
 {{>header}}
 {{#logged}}
+
 <div class="d-flex vh-100 p-4">
    <div class="d-flex col-5">
       <div class="card w-100 border-dark" style="background-color:  rgb(249, 196, 164);">
@@ -7,32 +8,30 @@
          <form action="/editCharacter" method="POST">
             <h5 class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.name}}</h5>
             <input type="hidden" name="_csrf" value="{{token}}" />
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> <input type="text" name="name"
-                  value="{{character.name}}" class="form-control" style="width: 100%;" /></li>
-
-         <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
-            <button type="submit" class="btn btn-primary">Change Name</button>
-         </li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> 
+               <input type="text" name="name" value="{{character.name}}" class="form-control" style="width: 100%;" />
+            </li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+               <input type='submit' class="btn btn-primary" value='Change name'/>
+            </li>
          </form>
          <form action="/deleteCharacter" method="POST">
-         <input type="hidden" name="_csrf" value="{{token}}" />
-         <button type="submit" class="btn btn-primary">Delete character</button>
+            <input type="hidden" name="_csrf" value="{{token}}"/>
+            <input type='submit' class="btn btn-primary" value='Delete character'/>
          </form>
          <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
             <p class="card-text">{{{character.description}}}</p>
          </li> <!--Shows rich text -->
-
          <ul class="list-group list-group-flush">
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">MONEY - {{user.money}}</li>
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Strength - {{character.strength}}
-            </li>
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Defense - {{character.defense}}
-            </li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Strength - {{character.strength}}</li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Defense - {{character.defense}}</li>
+            
             {{#character.armor}}
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
-               <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardA"
-                  style="background-color:  rgb(255, 179, 132);" ; aria-expanded="true" aria-controls="collapseCardA">
-                  Equipped armor</button>
+            <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardA" style="background-color:  rgb(255, 179, 132);" ; aria-expanded="true" aria-controls="collapseCardA">
+               Equipped armor
+            </button>
                <div class="collapse" id="collapseCardA">
                   <form action="/unEquipArmor" method="post" enctype="multipart/form-data">
                      <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
@@ -64,10 +63,9 @@
 
             {{#character.weapon}}
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
-
-               <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardW"
-                  style="background-color:  rgb(255, 179, 132);" ; aria-expanded="true" aria-controls="collapseCardW">
-                  Equipped weapon </button>
+               <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardW" style="background-color:  rgb(255, 179, 132);" ; aria-expanded="true" aria-controls="collapseCardW">
+                  Equipped weapon 
+               </button>
                <div class="collapse" id="collapseCardW">
                   <form action="/unEquipWeapon" method="post" enctype="multipart/form-data">
                      <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
@@ -96,10 +94,12 @@
             {{^character.weapon}}
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">No weapon equipped</li>
             {{/character.weapon}}
+
          </ul>
       </div>
    </div>
    <div class="col-8 row row-cols-auto g-4 justify-content-center">
+
       {{#currentWeapon}}
       <div class="col">
          <form action="/equipWeapon" method="post" enctype="multipart/form-data">
@@ -108,10 +108,8 @@
                <div class="card-body">
                   <h5 class="card-title">{{name}}</h5>
                   <p class="card-text">{{description}}</p>
-                  {{#intimidation}}
                   <h6 class="card-style">Attack: {{strength}}</h6>
                   <h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
-                  {{/intimidation}}
                   <!-- Hidden inputs to avoid sending the data of every object-->
                   <input type="hidden" name="id" value="{{id}}">
                   <input type="hidden" name="_csrf" value="{{token}}" />
@@ -122,6 +120,7 @@
          </form>
       </div>
       {{/currentWeapon}}
+
       {{#currentArmor}}
       <div class="col">
          <form action="/equipArmor" method="post" enctype="multipart/form-data">
@@ -130,10 +129,8 @@
                <div class="card-body">
                   <h5 class="card-title">{{name}}</h5>
                   <p class="card-text">{{description}}</p>
-                  {{#style}}
                   <h6 class="card-style">Defense: {{defense}}</h6>
                   <h6 class="card-style">Style: {{style}}</h6>
-                  {{/style}}
                   <!-- Hidden inputs to avoid sending the data of every object-->
                   <input type="hidden" name="id" value="{{id}}">
                   <input type="hidden" name="_csrf" value="{{token}}" />
@@ -144,11 +141,13 @@
          </form>
       </div>
       {{/currentArmor}}
+
    </div>
 </div>
 
 <body class="bg-dark"
    style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/image/ch_background.jpg') no-repeat center center / cover;">
 </body>
+
 {{/logged}}
 {{>footer}}

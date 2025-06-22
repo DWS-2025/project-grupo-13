@@ -8,5 +8,4 @@ import com.grupo13.grupo13.model.Weapon;
 public interface WeaponRepository extends JpaRepository<Weapon, Long>{
     Page<Weapon> findAll(Pageable page);
     List<Weapon> findAll();
-    
 }

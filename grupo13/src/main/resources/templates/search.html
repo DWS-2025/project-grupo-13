@@ -1,41 +1,32 @@
-
-    <title>Weapon Search</title>
-</head>
 {{>header}}
-<body>
-    <h3>Search Weapons</h3>
 
-    <form action="/search" method="get">
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name"><br>
+<h3>Search Weapons</h3>
 
-        <label for="description">Description:</label>
-        <input type="text" name="description" id="description"><br>
+<form action="/search" method="get">
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name"><br>
+    <label for="description">Description:</label>
+    <input type="text" name="description" id="description"><br>
+    <label for="strength">Strength:</label>
+    <input type="number" name="strength" id="strength"><br>
+    <label for="price">Price:</label>
+    <input type="number" name="price" id="price"><br>
+    <label for="intimidation">Intimidation:</label>
+    <input type="number" name="intimidation" id="intimidation"><br>
+    <input type="submit" value="Search">
+</form>
 
-        <label for="strength">Strength:</label>
-        <input type="number" name="strength" id="strength"><br>
-
-        <label for="price">Price:</label>
-        <input type="number" name="price" id="price"><br>
-
-        <label for="intimidation">Intimidation:</label>
-        <input type="number" name="intimidation" id="intimidation"><br>
-
-        <button type="submit">Search</button>
-    </form>
-
-    {{#error}}
+{{#error}}
     <p style="color: red">{{.}}</p>
-    {{/error}}
+{{/error}}
 
-    <h3>Weapons</h3>
-    {{#weapons}}
-      <a href="/weapon/{{id}}">{{name}}</a><br>
-    {{/weapons}}
+<h3>Weapons</h3>
+{{#weapons}}
+    <a href="/weapon/{{id}}">{{name}}</a><br>
+{{/weapons}}
 
-    {{^weapons}}
+{{^weapons}}
     <p>No weapons found.</p>
-    {{/weapons}}
-</body>
+{{/weapons}}
+
 {{>footer}}
-</html>

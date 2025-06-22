@@ -27,8 +27,10 @@ public class User {
 
     @OneToOne
     private Character character;
+
     @ManyToMany
     private List<Weapon> inventoryWeapon;
+
     @ManyToMany
     private List<Armor> inventoryArmor;
 
@@ -46,7 +48,6 @@ public class User {
         this.money= 10000;
 	}
 
-    
     //get functions
 
     public String getEncodedPassword() {
@@ -110,8 +111,8 @@ public class User {
     public void setInventoryWeapon(List<Weapon> inventoryWeapon) {
         this.inventoryWeapon = inventoryWeapon;
     }
+    
     public void setInventoryArmor(List<Armor> inventoryArmor) {
         this.inventoryArmor = inventoryArmor;
     }
-
 }

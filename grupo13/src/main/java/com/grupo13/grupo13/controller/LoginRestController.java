@@ -1,6 +1,5 @@
 package com.grupo13.grupo13.controller;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -16,9 +15,7 @@ import com.grupo13.grupo13.security.jwt.LoginRequest;
 import com.grupo13.grupo13.security.jwt.UserLoginService;
 import com.grupo13.grupo13.security.jwt.AuthResponse.Status;
 import com.grupo13.grupo13.service.UserService;
-
 import jakarta.servlet.http.HttpServletResponse;
-
 
 @RestController
 @RequestMapping("/api/auth")
@@ -51,7 +48,6 @@ public class LoginRestController {
 	}
 
 	//register
-
 	@PostMapping("/register")	
 	public ResponseEntity<String> register(@RequestBody Map<String, String> body) {
         String username = body.get("username");
@@ -64,9 +60,5 @@ public class LoginRestController {
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("El usuario ya existe");
         }
-
-
     }
-
-	
 } 

@@ -1,23 +1,23 @@
 {{>header}}
-  {{#logged}}
-  {{#admin}}
-    <form action="/weapon/new" method="post" enctype="multipart/form-data">
-      <p>Name: </p>
-      <input type='text' name='name' class="form-control"/>
-      <p>Intimidation:</p>
-      <input type='text' name='intimidation' class="form-control"/>
-      <p>Strength:</p>
-      <input type='text' name='strength' class="form-control"/>
-      <p>Description:</p>
-      <textarea name='description' rows=5 cols=40 class="form-control"></textarea>
-      <p>Price:</p>
-      <input type='text' name='price' class="form-control"/>
-      <p>Picture file:</p>
-      <input type='file' name='weaponImage' accept=".jpg, .jpeg, .gif" class="form-control" />
-      <input type="hidden" name="_csrf" value="{{token}}"/>
-      <input type='submit' value='Save' />
-    </form>
-  </div>
-  {{/admin}}
-  {{/logged}}
+{{#logged}}
+{{#admin}}
+<form action="/weapon/new" method="post" enctype="multipart/form-data">
+  <p>Name: </p>
+  <input type='text' name='name' class="form-control"/>
+  <p>Intimidation:</p>
+  <input type='text' name='intimidation' class="form-control"/>
+  <p>Strength:</p>
+  <input type='text' name='strength' class="form-control"/>
+  <p>Description:</p>
+  <textarea name='description' rows=5 cols=40 class="form-control"></textarea>
+  <p>Price:</p>
+  <input type='text' name='price' class="form-control"/>
+  <p>Picture file:</p>
+  <input type='file' name='weaponImage' accept=".jpg, .jpeg, .gif" class="form-control" />
+  <input type="hidden" name="_csrf" value="{{token}}"/>
+  <input type='submit' value='Save' />
+</form>
+
+{{/admin}}
+{{/logged}}
 {{>footer}}

@@ -144,5 +144,4 @@ public class Armor{
     public void setImageFile(Blob imageFile) {
         this.imageFile = imageFile;
     }
-
 }

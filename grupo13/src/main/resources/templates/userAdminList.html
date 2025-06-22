@@ -5,13 +5,15 @@
 <h1>USER LIST</h1>
 <div class="card" style="width: 18rem">
     <ul class="list-group list-group-flush" id="user-list">
+
         {{#users}}
         <li class="list-group-item">
             <strong>{{userName}}</strong>
             <form action="/admin/character/{{id}}/view" method="get" style="display:inline; margin-top: 5px;">
                 <input type="hidden" name="_csrf" value="{{token}}">
-                <button type="submit">View character</button>
+                <input type="submit" value="View character">
             </form>
+
             <!-- edit name -->
             <form action="/admin/user/{{id}}/editName" method="post" enctype="multipart/form-data" style="margin-top: 10px;">
                 <input type="text" name="newName" value="{{userName}}" />
@@ -22,16 +24,17 @@
             <!-- delete user  -->
             <form action="/admin/user/{{id}}/delete" method="post" style="display:inline; margin-top: 5px;">
                 <input type="hidden" name="_csrf" value="{{token}}">
-                <button type="submit">Delete user</button>
+                <input type="submit" value="Delete user">
             </form>
 
              <!-- delete user  -->
             <form action="/admin/user/{{id}}/deleteCharacter" method="post" style="display:inline; margin-top: 5px;">
                 <input type="hidden" name="_csrf" value="{{token}}">
-                <button type="submit">Delete character</button>
+                <input type="submit" value="Delete character">
             </form>
         </li>
         {{/users}}
+        
     </ul>
 </div>
 

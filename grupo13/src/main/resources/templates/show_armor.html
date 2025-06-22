@@ -38,16 +38,13 @@
  		</div-->
         
             <a href="#" class="card-link">
-            <form action="/armor/{{id}}/delete" method="post">
-            <input type="hidden" name="id" value="{{id}}">
-			<input type="hidden" name="_csrf" value="{{token}}"/>
-            <input type='submit' value='Delete armor' />
-            </form>
-            <a href="/armor/{{id}}/edit">Edit armor</a>            
+				<form action="/armor/{{id}}/delete" method="post">
+				<input type="hidden" name="id" value="{{id}}">
+				<input type="hidden" name="_csrf" value="{{token}}"/>
+				<input type='submit' value='Delete armor'/>
+				</form>
+				<a href="/armor/{{id}}/edit">Edit armor</a>            
             </a>
-
-       
-        
     </div>
 {{/admin}}
 

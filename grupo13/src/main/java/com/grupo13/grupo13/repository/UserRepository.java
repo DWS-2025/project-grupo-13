@@ -19,7 +19,6 @@ public interface UserRepository extends JpaRepository<User,Long>{
 
     Optional<User> findByUserName(String name);
 
-
     //attributes
    /* private AtomicLong nextId = new AtomicLong(1L);
 	private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();

@@ -1,13 +1,9 @@
 package com.grupo13.grupo13.security.jwt;
-
 import java.util.Date;
-
 import javax.crypto.SecretKey;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtParser;
@@ -37,14 +33,12 @@ public class JwtTokenProvider {
 		if (cookies == null) {
 			throw new IllegalArgumentException("No cookies found in request");
 		}
-
 		for (Cookie cookie : cookies) {
 			if (TokenType.ACCESS.cookieName.equals(cookie.getName())) {
 				String accessToken = cookie.getValue();
 				if (accessToken == null) {
 					throw new IllegalArgumentException("Cookie %s has null value".formatted(TokenType.ACCESS.cookieName));
 				}
-
 				return accessToken;
 			}
 		}

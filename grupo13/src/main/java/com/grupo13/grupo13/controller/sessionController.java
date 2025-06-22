@@ -7,14 +7,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.User;
-import com.grupo13.grupo13.model.Weapon;
-
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
@@ -42,18 +37,16 @@ import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import com.grupo13.grupo13.util.InputSanitizer;
+
 @Controller
 public class sessionController {
 
-       private static final Path BACKUP_FOLDER = 
-        
+    private static final Path BACKUP_FOLDER = 
         Paths.get("").toAbsolutePath()
              .resolve("backups")
              .resolve("characters")
@@ -62,27 +55,28 @@ public class sessionController {
     // attributes
     @Autowired
     private UserService userService;
+
     @Autowired
     private WeaponService weaponService;
+
     @Autowired
     private ArmorService armorService;
+
     @Autowired
     private CharacterService characterService;
+
     @Autowired
     private CharacterMapper characterMapper;
+
     @Autowired
     private UserMapper userMapper;
 
-    
-
     @GetMapping("/character")
     public String index(Model model, HttpSession session) {
-
         List<WeaponBasicDTO> currentInventoryWeapon = userService.currentUserInventoryWeapon();
         List<ArmorBasicDTO> currentInventoryArmor = userService.currentUserInventoryArmor();
         CharacterDTO characterDTO = userService.getCharacter();
-        
-
+    
         // gets the character and its inventory for mustache
         model.addAttribute("character", characterDTO);
         model.addAttribute("currentWeapon", currentInventoryWeapon);
@@ -99,7 +93,6 @@ public class sessionController {
 
     @GetMapping("/user")
     public String user(Model model, HttpServletRequest request) {
-
         UserDTO user = userService.getLoggedUserDTO();
         model.addAttribute("user", user);
         return "profile";
@@ -114,12 +107,10 @@ public class sessionController {
             model.addAttribute("message", "You have 4 457 328 976 628 032 310 960 505 682 458 941 198 711 991 549 516 106 627 559 418 874 736 854 616 990 926 154 563 233 442 050 001 775 332 602 367 762 026 062 514 350 490 020 288 118 293 032 540 896 850 538 206 460 041 208 241 186 662 921 960 227 090 636 748 910 840 240 756 196 348 773 114 755 617 650 747 164 485 025 018 892 794 341 880 385 569 578 419 234 397 708 485 601 847 108 758 503 103 414 694 794 735 059 509 671 326 329 177 465 338 412 391 856 003 420 968 070 605 896 652 214 953 420 282 507 508 205 447 599 347 588 543 298 651 133 082 200 882 973 508 651 096 860 161 307 061 515 481 851 387 590 630 802 753 643 options and still want a longer name?");
             return "sp_errors";
         }
-
         if (characterDesc.length()>255) {
             model.addAttribute("message", "We don't want your life story, be brief.");
             return "sp_errors";
         }
-
         if (nameOfCharacter.isBlank() || characterDesc.isBlank()) {
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
@@ -127,7 +118,6 @@ public class sessionController {
         // creates the character
         InputSanitizer.validateWhitelist(nameOfCharacter);
         characterDesc= InputSanitizer.sanitizeRichText(characterDesc);
-
         if (!InputSanitizer.isImageValid(characterImage)) {
             model.addAttribute("message", "File not allowed or missing: you must upload a jpg file.");
             return "sp_errors";
@@ -165,7 +155,6 @@ public class sessionController {
         model.addAttribute("currentW", currentWeapon);
         model.addAttribute("currentA", currentArmor);
         model.addAttribute("user", userService.getLoggedUserDTO());
-
         return "redirect:/character";
     }
 
@@ -180,46 +169,41 @@ public class sessionController {
         return "listing_weapons";
     }
 
-    
     //used to show the armors on the shop
     @GetMapping("/armorshop")
     public String showArmors(Model model, Pageable pageable) {
         return "listing_armors";
     }
     
-@GetMapping("/search")
-public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) {
-//set 0 as null
-    Integer strength = (probe.strength() != null && probe.strength() != 0) ? probe.strength() : null;
-    Integer price = (probe.price() != null && probe.price() != 0) ? probe.price() : null;
-    Integer intimidation = (probe.intimidation() != null && probe.intimidation() != 0) ? probe.intimidation() : null;
+    @GetMapping("/search")
+    public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) {
+    //set 0 as null
+        Integer strength = (probe.strength() != null && probe.strength() != 0) ? probe.strength() : null;
+        Integer price = (probe.price() != null && probe.price() != 0) ? probe.price() : null;
+        Integer intimidation = (probe.intimidation() != null && probe.intimidation() != 0) ? probe.intimidation() : null;
+        String name = (probe.name() != null && !probe.name().isBlank()) ? probe.name() : null;
+        String description = (probe.description() != null && !probe.description().isBlank()) ? probe.description() : null;
 
-    String name = (probe.name() != null && !probe.name().isBlank()) ? probe.name() : null;
-    String description = (probe.description() != null && !probe.description().isBlank()) ? probe.description() : null;
+        int nonNullFields = 0;
+        if (name != null) nonNullFields++;
+        if (description != null) nonNullFields++;
+        if (strength != null) nonNullFields++;
+        if (price != null) nonNullFields++;
+        if (intimidation != null) nonNullFields++;
 
-    int nonNullFields = 0;
-    if (name != null) nonNullFields++;
-    if (description != null) nonNullFields++;
-    if (strength != null) nonNullFields++;
-    if (price != null) nonNullFields++;
-    if (intimidation != null) nonNullFields++;
-
-   if (nonNullFields >= 2) {
-    model.addAttribute("weapons", weaponService.search(probe));
-} else {
-    model.addAttribute("error", "Search with at least 2 fields");
-    model.addAttribute("weapons", weaponService.findAll());
-}
-
-
-    return "search";
-}
+        if (nonNullFields >= 2) {
+            model.addAttribute("weapons", weaponService.search(probe));
+        } else {
+            model.addAttribute("error", "Search with at least 2 fields");
+            model.addAttribute("weapons", weaponService.findAll());
+        }
+        return "search";
+    }
 
         
     @GetMapping("weaponview/{id}")
     public String showWeapon(Model model, @PathVariable long id){
         WeaponDTO weapon = weaponService.findByIdDTO(id);
-
         if (weapon != null) {
             model.addAttribute("weapon", weapon);
             return "view_weapon";
@@ -280,11 +264,9 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
         CharacterDTO characterDTO = userService.getCharacter();
         Character character = characterMapper.toDomain(characterDTO);
         WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
-
         if (weaponDTO != null) { // if it exists
             characterService.equipWeapon(weaponDTO, characterDTO.id()); // equips it, adding the necessary attributes
             //weaponService.addCharacter(characterDTO, weaponDTO);
-
             return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not equip, doesnt exist");
@@ -297,11 +279,9 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
         CharacterDTO characterDTO= userService.getCharacter();
         Character character = characterMapper.toDomain(characterDTO);
         ArmorDTO armorDTO = armorService.findByIdDTO(id);
-
         if (armorDTO != null) { // if it exists
             characterService.equipArmor(armorDTO, character.getId()); // equips it, adding the necessary attributes
             //armorService.addCharacter(characterDTO, armorDTO);
-
             return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not equip, doesnt exist");
@@ -314,10 +294,8 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
         CharacterDTO characterDTO = userService.getCharacter();
         Character character = characterMapper.toDomain(characterDTO);
         WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
-
         if (weaponDTO != null) {
             characterService.unEquipWeapon(character.getId(), id); // unequips it
-
             return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
@@ -330,10 +308,8 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
         CharacterDTO characterDTO = userService.getCharacter();
         Character character = characterMapper.toDomain(characterDTO);
         ArmorDTO armorDTO = armorService.findByIdDTO(id);
-
         if (armorDTO != null) {
             characterService.unEquipArmor(character.getId(), id); // unequips it
-
             return "redirect:/character";
         } else {
             model.addAttribute("message", "Could not unEquip, doesnt exist");
@@ -347,7 +323,6 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
         Path imagePath = IMP_IMAGES_FOLDER.resolve(imageName);
         Resource image = new UrlResource(imagePath.toUri());
         String contentType;
-
         try { // gets the type of the image
             contentType = Files.probeContentType(imagePath);
             if (contentType == null) {
@@ -394,7 +369,6 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
         CharacterDTO characterDTO = characterService.findByIdDTO(id);
         Character character = characterMapper.toDomain(characterDTO);
-
         if (character != null && character.getImageFile() != null) {
             Blob image = character.getImageFile();
             Resource file = new InputStreamResource(image.getBinaryStream());
@@ -407,9 +381,7 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
 
     @GetMapping("/editUser")
     public String editUser(Model model, HttpSession session) {
-
         model.addAttribute("user", userService.getLoggedUserDTO());
-
         return "edit_user";
     }
 
@@ -456,16 +428,16 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
         }
 	}
     
-   @PostMapping("/deleteCharacter")
-public String deleteCharacter(Model model) {
- long id =userService.getLoggedUserDTO().id();
- UserDTO u = userService.findById(id);
- if(u.character()!=null){
-    userService.deleteCharacter(u);
- }else{
-             model.addAttribute("message", "This user doesn't have a character");
+    @PostMapping("/deleteCharacter")
+    public String deleteCharacter(Model model) {
+        long id =userService.getLoggedUserDTO().id();
+        UserDTO u = userService.findById(id);
+        if(u.character()!=null){
+            userService.deleteCharacter(u);
+        }else{
+            model.addAttribute("message", "This user doesn't have a character");
             return "sp_errors";
-          }
- return "index";
-}
+        }
+        return "index";
+    }
 }

@@ -177,7 +177,4 @@ public class Character {
             return false;
         return true;
     }
-
-    
-
 }

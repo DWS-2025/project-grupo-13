@@ -39,10 +39,8 @@ import java.nio.file.Path;
 public class CharacterService {
 
     private final NoSuchElementExceptionCA noSuchElementExceptionCA;
-
     private final UserService userService;
     private static final Path BACKUP_FOLDER = 
-        
         Paths.get("").toAbsolutePath()
              .resolve("backups")
              .resolve("characters")
@@ -52,18 +50,25 @@ public class CharacterService {
     // attributes
     @Autowired
     private CharacterRepository characterRepository;
+
     @Autowired
     private ArmorRepository armorRepository;
+
     @Autowired
     private WeaponRepository weaponRepository;
+
     @Autowired
     private WeaponService weaponService;
+
     @Autowired
     private ArmorService armorService;
+
     @Autowired
     private CharacterMapper mapper;
+
     @Autowired
     private WeaponMapper weaponMapper;
+
     @Autowired
     private armorMapper armorMapper;
     
@@ -88,7 +93,6 @@ public class CharacterService {
 
     // creates a new character
     public CharacterDTO save(CharacterDTO characterDTO) {
-    
         InputSanitizer.validateWhitelist(characterDTO.name());
         InputSanitizer.sanitizeRichText(characterDTO.description());
         Character character = mapper.toDomain(characterDTO);
@@ -98,17 +102,15 @@ public class CharacterService {
 
     //saves the character's image
     public void save(CharacterDTO characterDTO, MultipartFile imageFile, String imageName) throws IOException {
-       
         Character character = mapper.toDomain(characterDTO);
         if (!imageFile.isEmpty()&& InputSanitizer.isImageValid(imageFile)) {
             character.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
-       
         backupImage(imageFile, imageName);
-        characterRepository.save(character);}
+        characterRepository.save(character);
+    }
     
     public String backupImage(MultipartFile imageFile, String imageName) throws IOException {
-        
         // sanitize name
         String baseName = Paths.get(imageName).getFileName().toString();
         if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")|| !InputSanitizer.isImageValid(imageFile)) {
@@ -123,6 +125,7 @@ public class CharacterService {
                 ext = orig.substring(i); 
             }
         }
+        
         // check if file is using right extension
         String finalName;
         int dot = baseName.lastIndexOf('.');

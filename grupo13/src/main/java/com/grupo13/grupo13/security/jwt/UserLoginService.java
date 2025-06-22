@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.security.jwt;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -11,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -19,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserLoginService {
 
 	private static final Logger log = LoggerFactory.getLogger(UserLoginService.class);
-
 	private final AuthenticationManager authenticationManager;
 	private final UserDetailsService userDetailsService;
 	private final JwtTokenProvider jwtTokenProvider;
@@ -37,7 +34,6 @@ public class UserLoginService {
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		
 		String username = loginRequest.getUsername();
 		UserDetails user = userDetailsService.loadUserByUsername(username);
 
@@ -77,7 +73,6 @@ public class UserLoginService {
 		SecurityContextHolder.clearContext();
 		response.addCookie(removeTokenCookie(TokenType.ACCESS));
 		response.addCookie(removeTokenCookie(TokenType.REFRESH));
-
 		return "logout successfully";
 	}
 

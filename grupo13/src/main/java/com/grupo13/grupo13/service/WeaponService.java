@@ -75,25 +75,23 @@ public class WeaponService {
 }
 
     public void save(Weapon weapon, MultipartFile imageFile) throws IOException{
-if( userService.getLoggedUser().getRoles().contains("ADMIN")){
-      InputSanitizer.validateWhitelist(weapon.getName());
-        InputSanitizer.validateWhitelist(weapon.getDescription());
-        
-        if(!imageFile.isEmpty()){
-            weapon.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+            InputSanitizer.validateWhitelist(weapon.getName());
+            InputSanitizer.validateWhitelist(weapon.getDescription());
+            if(!imageFile.isEmpty()){
+                weapon.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+            }
+            weaponRepository.save(weapon);
         }
-        weaponRepository.save(weapon);
     }
-
-}
 
     public void addCharacter(CharacterDTO characterDTO, WeaponDTO weaponDTO){
-         if (characterDTO.equals(userService.getLoggedUserDTO().character())||userService.getLoggedUser().getRoles().contains("ADMIN")){
-        Weapon weapon = findById(weaponDTO.id());
-        Character character = characterMapper.toDomain(characterDTO); ////////////////////////////////////////////////////
-        weapon.getCharacters().add(character);
-        weaponRepository.save(weapon);
-    }
+        if (characterDTO.equals(userService.getLoggedUserDTO().character())||userService.getLoggedUser().getRoles().contains("ADMIN")){
+            Weapon weapon = findById(weaponDTO.id());
+            Character character = characterMapper.toDomain(characterDTO); ////////////////////////////////////////////////////
+            weapon.getCharacters().add(character);
+            weaponRepository.save(weapon);
+        }
     }
     
 	//returns all weapons in a list
@@ -149,13 +147,13 @@ public List<WeaponBasicDTO> search(WeaponSearchDTO probe) {
 
     Example<Weapon> example = Example.of(weaponExample, matcher);
     return mapper.toBasicDTOs(weaponRepository.findAll(example));
-}
+    }
 
     //deletes a weapon by its id
     public void deleteById(long id){
-         if( userService.getLoggedUser().getRoles().contains("ADMIN")){
-        weaponRepository.deleteById(id);
-    }
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+            weaponRepository.deleteById(id);
+        }
     }
 	
     //updates a weapon when edited
@@ -169,41 +167,37 @@ public List<WeaponBasicDTO> search(WeaponSearchDTO probe) {
         }else{
             throw new NoSuchElementException();
         } */
- if( userService.getLoggedUser().getRoles().contains("ADMIN")){
-        Weapon oldWeapon = findById(oldWeaponid);
-        oldWeapon.setName(updatedWeaponDTO.name());
-        oldWeapon.setDescription(updatedWeaponDTO.description());
-        oldWeapon.setstrength(updatedWeaponDTO.strength());
-        oldWeapon.setPrice(updatedWeaponDTO.price());
-        oldWeapon.setIntimidation(updatedWeaponDTO.intimidation());
-        weaponRepository.save(oldWeapon);
-    }
-
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+            Weapon oldWeapon = findById(oldWeaponid);
+            oldWeapon.setName(updatedWeaponDTO.name());
+            oldWeapon.setDescription(updatedWeaponDTO.description());
+            oldWeapon.setstrength(updatedWeaponDTO.strength());
+            oldWeapon.setPrice(updatedWeaponDTO.price());
+            oldWeapon.setIntimidation(updatedWeaponDTO.intimidation());
+            weaponRepository.save(oldWeapon);
+        }
     }
 
     //deletes a weapon
     public void delete(long id){
         if( userService.getLoggedUser().getRoles().contains("ADMIN")){
-        if(weaponRepository.findById(id).isPresent()){
-            Weapon weapon = weaponRepository.findById(id).get();
-            
-            //deletes from users inventory
-            weapon.getUsers().forEach(user -> user.getInventoryWeapon().remove(weapon));
-
-            for(Character character : weapon.getCharacters()){
-                character.setWeapon(null);
-        		character.setStrength(0);
-        		character.setWeaponEquiped(false);
+            if(weaponRepository.findById(id).isPresent()){
+                Weapon weapon = weaponRepository.findById(id).get();
+                //deletes from users inventory
+                weapon.getUsers().forEach(user -> user.getInventoryWeapon().remove(weapon));
+                for(Character character : weapon.getCharacters()){
+                    character.setWeapon(null);
+                    character.setStrength(0);
+                    character.setWeaponEquiped(false);
+                }
+                weaponRepository.deleteById(id);
             }
-            weaponRepository.deleteById(id);
         }
-    }
     }
     
     //returns the image of the id given
     public Resource getImageFile(long id) throws SQLException  {
         Weapon weapon = weaponRepository.findById(id).orElseThrow();
-
 		if (weapon.getimageFile() != null) {
 			return new InputStreamResource(weapon.getimageFile().getBinaryStream());
 		} else {
@@ -213,18 +207,18 @@ public List<WeaponBasicDTO> search(WeaponSearchDTO probe) {
 
     //change the image of the id given
     public void replaceImage(long id, InputStream inputStream, long size) {
-         if( userService.getLoggedUser().getRoles().contains("ADMIN")){
-		Weapon weapon = weaponRepository.findById(id).orElseThrow();
-		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
-		weaponRepository.save(weapon);
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+            Weapon weapon = weaponRepository.findById(id).orElseThrow();
+            weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
+            weaponRepository.save(weapon);
         }
 	}
 
     public void createWeaponImage(long id, URI location, InputStream inputStream, long size) {
-if( userService.getLoggedUser().getRoles().contains("ADMIN")){
-		Weapon weapon = weaponRepository.findById(id).orElseThrow();
-		weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
-		weaponRepository.save(weapon);
-	}
-}
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+            Weapon weapon = weaponRepository.findById(id).orElseThrow();
+            weapon.setimageFile(BlobProxy.generateProxy(inputStream, size));
+            weaponRepository.save(weapon);
+        }
+    }
 }

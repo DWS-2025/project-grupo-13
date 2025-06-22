@@ -91,7 +91,6 @@ public class grupo13RestController {
 	@GetMapping("/weapon/{id}/image")
 	public ResponseEntity<Object> getWeaponImage(@PathVariable long id) throws SQLException, IOException {
 		Resource weaponImage = weaponService.getImageFile(id);
-
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
@@ -106,7 +105,6 @@ public class grupo13RestController {
 	@GetMapping("/armor/{id}/image")
 	public ResponseEntity<Object> getArmorImage(@PathVariable long id) throws SQLException, IOException {
 		Resource armorImage = armorService.getImageFile(id);
-
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
@@ -249,7 +247,6 @@ public class grupo13RestController {
 	@GetMapping("/character/image")
 	public ResponseEntity<Object> getCharacterImage() throws SQLException, IOException {
 		Resource postImage = characterService.getImageFile(userService.getLoggedUser().getId());
-
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
@@ -384,7 +381,6 @@ public class grupo13RestController {
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
 		}
-
 	}
 
 	@PostMapping("/armor/equipment/{id}")
@@ -406,7 +402,6 @@ public class grupo13RestController {
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
 		}
-
 	}
 
 	//Unequip weapons and armors
@@ -429,7 +424,6 @@ public class grupo13RestController {
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
 		}
-
     }
 
 	@DeleteMapping("/weapon/equipment/{id}")
@@ -468,7 +462,6 @@ public class grupo13RestController {
 		}
 	}
 
-
 	@PutMapping("/editUser")
 	public ResponseEntity<String> updateUser(@RequestBody String userName) throws IOException{
         if(userName.isBlank()){
@@ -482,7 +475,4 @@ public class grupo13RestController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Could not manage, not found");
         }
 	}
-
-
-
 }

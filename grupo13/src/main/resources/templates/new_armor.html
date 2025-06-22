@@ -1,23 +1,24 @@
-  {{>header}}
-  {{#logged}}
-  {{#admin}}
-    <form action="/armor/new" method="post" enctype="multipart/form-data">
-      <p>Name: </p>
-      <input type='text' name='name' class="form-control"/>
-      <p>Style: </p>
-      <input type='text' name='style' class="form-control"/>
-      <p>Defense:</p>
-      <input type='text' name='defense' class="form-control"/>
-      <p>Description:</p>
-      <textarea name='description' rows=5 cols=40 class="form-control"> </textarea>
-      <p>Price:</p>
-      <input type='text' name='price' class="form-control"/>
-      <p>Image file:</p>
-      <input type='file' name='armorImage' accept=".jpg, .jpeg, .gif" class="form-control" />
-      <input type="hidden" name="_csrf" value="{{token}}"/>
-      <input type='submit' value='Save' />
-    </form>
-  </div>
-  {{/admin}}
-  {{/logged}}
+{{>header}}
+{{#logged}}
+{{#admin}}
+  
+<form action="/armor/new" method="post" enctype="multipart/form-data">
+  <p>Name: </p>
+  <input type='text' name='name' class="form-control"/>
+  <p>Style: </p>
+  <input type='text' name='style' class="form-control"/>
+  <p>Defense:</p>
+  <input type='text' name='defense' class="form-control"/>
+  <p>Description:</p>
+  <textarea name='description' rows=5 cols=40 class="form-control"> </textarea>
+  <p>Price:</p>
+  <input type='text' name='price' class="form-control"/>
+  <p>Image file:</p>
+  <input type='file' name='armorImage' accept=".jpg, .jpeg, .gif" class="form-control" />
+  <input type="hidden" name="_csrf" value="{{token}}"/>
+  <input type='submit' value='Save' />
+</form>
+
+{{/admin}}
+{{/logged}}
 {{>footer}}

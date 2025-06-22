@@ -1,16 +1,12 @@
 package com.grupo13.grupo13.controller;
-
 import java.security.Principal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.grupo13.grupo13.service.UserService;
-
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
@@ -22,7 +18,6 @@ public class LoginWebController {
 	@GetMapping("/login")
 	public String login(HttpServletRequest request) {
 		Principal principal = request.getUserPrincipal();
-
         if (principal != null) {
 			return "redirect:/";
 		}
@@ -48,10 +43,6 @@ public class LoginWebController {
 			model.addAttribute("message", "Name already exists");
             return "sp_errors";
 		}
-		
 	}
-
-
-
 }
 
