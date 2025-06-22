@@ -102,7 +102,7 @@ public class SampleData {
                 weaponRepository.save(weapon8);
 
                 //w9.png
-                Weapon weapon9 = new Weapon("Torch", "Mostly a tool for illumination. It can be used in desperate combat situations, though it’s far from ideal. The flame offers minor burns to enemies, but its best used to light paths, burn obstacles, or drive away creatures sensitive to light and fire.", 
+                Weapon weapon9 = new Weapon("Torch", "Mostly a tool for illumination. It can be used in desperate combat situations, though it is far from ideal. The flame offers minor burns to enemies, but its best used to light paths, burn obstacles, or drive away creatures sensitive to light and fire.", 
                 1, 10, 10);
                 weapon9.setimageFile(localImageToBlob("images/imp_imgs/w9.png"));
                 weaponRepository.save(weapon9);
@@ -120,7 +120,7 @@ public class SampleData {
                 weaponRepository.save(weapon11);
 
                 //w12.png
-                Weapon weapon12 = new Weapon("Magic Staff", "Crafted from enchanted wood. Topped with a glowing orb. This staff channels arcane power. While it lacks the destructive force of advanced staves, it’s a reliable conduit for elemental spells and magical bursts. Perfect for apprentice wizards.", 
+                Weapon weapon12 = new Weapon("Magic Staff", "Crafted from enchanted wood. Topped with a glowing orb. This staff channels arcane power. While it lacks the destructive force of advanced staves, it is a reliable conduit for elemental spells and magical bursts. Perfect for apprentice wizards.", 
                 81, 12, 6);
                 weapon12.setimageFile(localImageToBlob("images/imp_imgs/w12.png"));
                 weaponRepository.save(weapon12);
@@ -132,7 +132,7 @@ public class SampleData {
                 weaponRepository.save(weapon13);
 
                 //w14.png
-                Weapon weapon14 = new Weapon("Shark Sword", "This bizarre weapon resembles a shark mid-lunge, with jagged teeth forming its serrated blade. Said to be crafted by sea cultists, it’s feared both for its savage design and eerie aura. Its unique shape can tear through flesh, armor, and confidence alike.", 
+                Weapon weapon14 = new Weapon("Shark Sword", "This bizarre weapon resembles a shark mid-lunge, with jagged teeth forming its serrated blade. Said to be crafted by sea cultists, it s feared both for its savage design and eerie aura. Its unique shape can tear through flesh, armor, and confidence alike.", 
                 10, 3401, 802);
                 weapon14.setimageFile(localImageToBlob("images/imp_imgs/w14.png"));
                 weaponRepository.save(weapon14);
@@ -204,7 +204,7 @@ public class SampleData {
                 weaponRepository.save(weapon25);
 
                 //w26.png
-                Weapon weapon26 = new Weapon("Chicken Sword", "An utterly bizarre weapon that fuses poultry with combat. It’s not sharp, swift, or smart—but it is unforgettable. Causes mild bruises, loud clucking, and occasional existential crises in enemies. A true farmyard fiasco in blade form.",
+                Weapon weapon26 = new Weapon("Chicken Sword", "An utterly bizarre weapon that fuses poultry with combat. It is not sharp, swift, or smart—but it is unforgettable. Causes mild bruises, loud clucking, and occasional existential crises in enemies. A true farmyard fiasco in blade form.",
                 2010, 70, 2);
                 weapon26.setimageFile(localImageToBlob("images/imp_imgs/w26.png"));
                 weaponRepository.save(weapon26);
@@ -234,7 +234,7 @@ public class SampleData {
                 armorRepository.save(armor);
 
                 //a2.png
-                Armor armor2 = new Armor("Iron Plate", "Forged from heavy iron, this armor provides excellent protection against physical damage. Though slightly restrictive, it’s a favorite among seasoned warriors. Durable, reliable, and built for direct combat in harsh conditions.", 
+                Armor armor2 = new Armor("Iron Plate", "Forged from heavy iron, this armor provides excellent protection against physical damage. Though slightly restrictive, it is a favorite among seasoned warriors. Durable, reliable, and built for direct combat in harsh conditions.", 
                 10, 65, 50);
                 armor2.setImageFile(localImageToBlob("images/imp_imgs/a2.png"));
                 armorRepository.save(armor2);
@@ -246,19 +246,19 @@ public class SampleData {
                 armorRepository.save(armor3);
 
                 //a4.png
-                Armor armor4 = new Armor("Chainmail Armor", "Made of thousands of interlocking metal rings, this armor balances protection and flexibility. Perfect for fighters who face both melee and ranged threats. It’s tough, reliable, and ideal for prolonged use in harsh conditions.", 
+                Armor armor4 = new Armor("Chainmail Armor", "Made of thousands of interlocking metal rings, this armor balances protection and flexibility. Perfect for fighters who face both melee and ranged threats. It is tough, reliable, and ideal for prolonged use in harsh conditions.", 
                 41, 541, 123);
                 armor4.setImageFile(localImageToBlob("images/imp_imgs/a4.png"));
                 armorRepository.save(armor4);
 
                 //a5.png
-                Armor armor5 = new Armor("Hide Armor", "Stitched from thick, tanned animal hides, this armor provides excellent defense for its weight. Great for rangers, hunters, or wilderness survival. Though not flashy, it’s durable and tough, standing up to nature’s challenges.", 
+                Armor armor5 = new Armor("Hide Armor", "Stitched from thick, tanned animal hides, this armor provides excellent defense for its weight. Great for rangers, hunters, or wilderness survival. Though not flashy, it is durable and tough, standing up to nature s challenges.", 
                 1025, 165, 0);
                 armor5.setImageFile(localImageToBlob("images/imp_imgs/a5.png"));
                 armorRepository.save(armor5);
 
                 //a6.png
-                Armor armor6 = new Armor("Leaf Mail", "Woven from magically treated leaves, this armor is shockingly strong and stylish. Preferred by druids or forest guardians, it offers high defense while staying light and flexible. Nature’s answer to metal and leather protection.", 
+                Armor armor6 = new Armor("Leaf Mail", "Woven from magically treated leaves, this armor is shockingly strong and stylish. Preferred by druids or forest guardians, it offers high defense while staying light and flexible. Nature s answer to metal and leather protection.", 
                 1047, 2340, 170);
                 armor6.setImageFile(localImageToBlob("images/imp_imgs/a6.png"));
                 armorRepository.save(armor6);
@@ -276,7 +276,7 @@ public class SampleData {
                 armorRepository.save(armor8);
 
                 //a9.png
-                Armor armor9 = new Armor("Plastic Armor", "This poorly made armor is fashioned from cheap plastic, offering almost no defense. It’s lightweight and flexible, but practically useless in a real fight. More of a novelty or disguise piece than any serious protective gear.", 
+                Armor armor9 = new Armor("Plastic Armor", "This poorly made armor is fashioned from cheap plastic, offering almost no defense. It is lightweight and flexible, but practically useless in a real fight. More of a novelty or disguise piece than any serious protective gear.", 
                 1, 1, 1);
                 armor9.setImageFile(localImageToBlob("images/imp_imgs/a9.png"));
                 armorRepository.save(armor9);
@@ -312,7 +312,7 @@ public class SampleData {
                 armorRepository.save(armor14);
 
                 //a15.png
-                Armor armor15 = new Armor("Stegosaurus Armor", "Crafted to mimic the ancient stegosaurus, this armor offers robust defense with its rugged plates. Spiked backplates echo the dinosaur’s form, providing added defense and a primal connection to the past.", 
+                Armor armor15 = new Armor("Stegosaurus Armor", "Crafted to mimic the ancient stegosaurus, this armor offers robust defense with its rugged plates. Spiked backplates echo the dinosaur s form, providing added defense and a primal connection to the past.", 
                 2547, 5854, 7);
                 armor15.setImageFile(localImageToBlob("images/imp_imgs/a15.png"));
                 armorRepository.save(armor15);
@@ -336,7 +336,7 @@ public class SampleData {
                 armorRepository.save(armor18);
 
                 //a19.png
-                Armor armor19 = new Armor("Painter’s Smock", "A garment worn by artists to protect their clothing during painting. Sturdy and well-worn, it is heavily spotted with vibrant paint splatters that tell stories of countless creations. Every stain hides a unique story.", 
+                Armor armor19 = new Armor("Painter s Smock", "A garment worn by artists to protect their clothing during painting. Sturdy and well-worn, it is heavily spotted with vibrant paint splatters that tell stories of countless creations. Every stain hides a unique story.", 
                 1, 954, 385);
                 armor19.setImageFile(localImageToBlob("images/imp_imgs/a19.png"));
                 armorRepository.save(armor19);
