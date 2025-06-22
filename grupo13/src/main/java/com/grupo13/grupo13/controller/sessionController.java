@@ -25,9 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Weapon;
-import com.grupo13.grupo13.repository.WeaponRepository;
+
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
@@ -41,6 +42,8 @@ import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,8 +72,8 @@ public class sessionController {
     private CharacterMapper characterMapper;
     @Autowired
     private UserMapper userMapper;
-    @Autowired
-    private WeaponRepository weaponRepository;
+
+    
 
     @GetMapping("/character")
     public String index(Model model, HttpSession session) {
@@ -201,31 +204,13 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
     if (price != null) nonNullFields++;
     if (intimidation != null) nonNullFields++;
 
-    if (nonNullFields >= 2) {
-        Weapon weaponExample = new Weapon();
-        weaponExample.setName(name);
-        weaponExample.setDescription(description);
-        
-        if (strength != null) weaponExample.setstrength(strength);
-        if (price != null) weaponExample.setPrice(price);
-        if (intimidation != null) weaponExample.setIntimidation(intimidation);
-// creating a list with ignored parameters
-        List<String> ignoredPaths = new ArrayList<>(List.of("id", "imageName", "imageFile", "characters", "users"));
-        if (strength == null || strength == 0) ignoredPaths.add("strength");
-        if (price == null || price == 0) ignoredPaths.add("price");
-        if (intimidation == null || intimidation == 0) ignoredPaths.add("intimidation");
-        ExampleMatcher matcher = ExampleMatcher.matchingAll()
-            .withIgnoreNullValues()
-            .withIgnorePaths(ignoredPaths.toArray(new String[0]))            
-            .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-            .withMatcher("description", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+   if (nonNullFields >= 2) {
+    model.addAttribute("weapons", weaponService.search(probe));
+} else {
+    model.addAttribute("error", "Search with at least 2 fields");
+    model.addAttribute("weapons", weaponService.findAll());
+}
 
-        Example<Weapon> example = Example.of(weaponExample, matcher);
-        model.addAttribute("weapons", weaponRepository.findAll(example));
-    } else {
-        model.addAttribute("error", "Search with at least 2 fields");
-        model.addAttribute("weapons", weaponRepository.findAll());
-    }
 
     return "search";
 }
@@ -447,15 +432,15 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
 
     @PostMapping("/deleteUser")
 	public String deleteUser(Model model) throws IOException{
-       User u= userService.getLoggedUser();
-       userService.deleteUser(u.getId());
+       UserDTO u= userService.getLoggedUserDTO();
+       userService.deleteUser(u.id());
        return "/logout";
 	}
     
 	@GetMapping("/userImage")
 	public ResponseEntity<Object> downloadUserImage() throws MalformedURLException {
-        Character c = userService.getLoggedUser().getCharacter();
-        String imageName = c.getImageName();        
+        CharacterBasicDTO c = userService.getLoggedUserDTO().character();
+        String imageName = c.imageName();        
 		return characterService.returnImage(imageName);
 	}
 
@@ -470,5 +455,17 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
             return "redirect:/character";
         }
 	}
-
+    
+   @PostMapping("/deleteCharacter")
+public String deleteCharacter(Model model) {
+ long id =userService.getLoggedUserDTO().id();
+ UserDTO u = userService.findById(id);
+ if(u.character()!=null){
+    userService.deleteCharacter(u);
+ }else{
+             model.addAttribute("message", "This user doesn't have a character");
+            return "sp_errors";
+          }
+ return "index";
+}
 }

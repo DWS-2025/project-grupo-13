@@ -31,6 +31,9 @@ import org.springframework.security.core.Authentication;
 public class UserService {
 
     //attributes
+    @Lazy
+    @Autowired
+    private CharacterService characterService;
     @Autowired
     private UserRepository userRepository;
     @Lazy
@@ -60,6 +63,10 @@ public class UserService {
     public UserDTO getUser(String name) {
 		return mapper.toDTO(userRepository.findByUserName(name).orElseThrow());
 	}
+
+    public void saveUser (User user){
+        userRepository.save(user);
+    }
 
 	public User getLoggedUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -139,6 +146,32 @@ public class UserService {
         return armorMapper.toBasicDTOs(user.getInventoryArmor());
     }
 
+
+    //return inventory by user ID
+      public List<WeaponBasicDTO> UserInventoryWeaponById(long id) {
+        if( getLoggedUser().getRoles().contains("ADMIN")){
+        User user = userRepository.findById(id).get();
+        return weaponMapper.toBasicDTOs(user.getInventoryWeapon());
+    
+    
+    }else{
+      throw new IllegalAccessError("Only an admin can access to other's inventory");
+
+    }
+    }
+
+    public List<ArmorBasicDTO> UserInventoryArmorById(long id) {
+        if( getLoggedUser().getRoles().contains("ADMIN")){
+        User user = userRepository.findById(id).get();
+        return armorMapper.toBasicDTOs(user.getInventoryArmor());
+    
+    
+    }else{
+      throw new IllegalAccessError("Only an admin can access to other's inventory");
+
+    }
+    }
+
     //put a equipment in the inventory of an scpecific user
     public void saveWeapon(long id) {
         
@@ -180,6 +213,31 @@ public class UserService {
     public CharacterDTO getCharacter() {
         return characterMapper.toDTO(getLoggedUser().getCharacter());
     }
+      //returns character by id
+    public CharacterDTO getCharacterById(long id) {
+         if( getLoggedUser().getRoles().contains("ADMIN")){
+     return characterMapper.toDTO(userRepository.findById(id).get().getCharacter());
+
+         }else{
+      throw new IllegalAccessError("Only an admin can access to other's character");
+    }
+    }
+//delete character
+
+public void deleteCharacter(UserDTO userDTO){
+    if(getLoggedUserDTO().equals(userDTO)){
+User user = userRepository.findById(userDTO.id()).get();
+ Character character = user.getCharacter();
+ if(character!=null){ 
+           long charId = character.getId();
+        user.setCharacter(null);
+        saveUser(user); 
+	    characterService.deleteById(charId);
+          }
+        
+        }
+
+}
 
     //returns if the user has a specific weapon or armor
     public boolean hasWeapon(WeaponBasicDTO weapon){ 

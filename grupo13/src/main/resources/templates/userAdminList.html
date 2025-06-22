@@ -8,7 +8,10 @@
         {{#users}}
         <li class="list-group-item">
             <strong>{{userName}}</strong>
-
+            <form action="/admin/character/{{id}}/view" method="get" style="display:inline; margin-top: 5px;">
+                <input type="hidden" name="_csrf" value="{{token}}">
+                <button type="submit">View character</button>
+            </form>
             <!-- edit name -->
             <form action="/admin/user/{{id}}/editName" method="post" enctype="multipart/form-data" style="margin-top: 10px;">
                 <input type="text" name="newName" value="{{userName}}" />
@@ -20,6 +23,12 @@
             <form action="/admin/user/{{id}}/delete" method="post" style="display:inline; margin-top: 5px;">
                 <input type="hidden" name="_csrf" value="{{token}}">
                 <button type="submit">Delete user</button>
+            </form>
+
+             <!-- delete user  -->
+            <form action="/admin/user/{{id}}/deleteCharacter" method="post" style="display:inline; margin-top: 5px;">
+                <input type="hidden" name="_csrf" value="{{token}}">
+                <button type="submit">Delete character</button>
             </form>
         </li>
         {{/users}}

@@ -276,11 +276,11 @@ public class CharacterService {
     }
 */
     public void deleteById(long id) {
-        if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==id){
+        
         characterRepository.deleteById(id);
     
     }
-    }
+    
 
     //returns the image from the id it gets
     public Resource getImageFile(long id) throws SQLException  {
@@ -320,7 +320,7 @@ public class CharacterService {
 	}
 
     public void editCharacterName(String name){
-InputSanitizer.validateWhitelist(name);
+    InputSanitizer.validateWhitelist(name);
         if(userService.getCharacter() == null){
             throw new IllegalStateException("El usuario aún no tiene un personaje creado.");
         }else{
