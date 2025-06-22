@@ -2,6 +2,7 @@ package com.grupo13.grupo13.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,8 +31,12 @@ import org.springframework.security.core.Authentication;
 public class UserService {
 
     //attributes
+    @Lazy
+    @Autowired
+    private CharacterService characterService;
     @Autowired
     private UserRepository userRepository;
+    @Lazy
     @Autowired
     private WeaponService weaponService;
     @Autowired
@@ -46,15 +51,22 @@ public class UserService {
     private CharacterMapper characterMapper;
     @Autowired
 	private PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private UserMapper userMapper;
     // returns a specific user by its id
     public UserDTO findById(long id) {
         return mapper.toDTO(userRepository.findById(id).get());
     }
 
+
+
     public UserDTO getUser(String name) {
 		return mapper.toDTO(userRepository.findByUserName(name).orElseThrow());
 	}
+
+    public void saveUser (User user){
+        userRepository.save(user);
+    }
 
 	public User getLoggedUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -92,7 +104,7 @@ public class UserService {
 
     public void save(UserDTO userDTO) {
         User user = getLoggedUser();
-
+        InputSanitizer.validateWhitelist(user.getUserName());
         userRepository.save(user);
     }
 
@@ -134,8 +146,35 @@ public class UserService {
         return armorMapper.toBasicDTOs(user.getInventoryArmor());
     }
 
+
+    //return inventory by user ID
+      public List<WeaponBasicDTO> UserInventoryWeaponById(long id) {
+        if( getLoggedUser().getRoles().contains("ADMIN")){
+        User user = userRepository.findById(id).get();
+        return weaponMapper.toBasicDTOs(user.getInventoryWeapon());
+    
+    
+    }else{
+      throw new IllegalAccessError("Only an admin can access to other's inventory");
+
+    }
+    }
+
+    public List<ArmorBasicDTO> UserInventoryArmorById(long id) {
+        if( getLoggedUser().getRoles().contains("ADMIN")){
+        User user = userRepository.findById(id).get();
+        return armorMapper.toBasicDTOs(user.getInventoryArmor());
+    
+    
+    }else{
+      throw new IllegalAccessError("Only an admin can access to other's inventory");
+
+    }
+    }
+
     //put a equipment in the inventory of an scpecific user
     public void saveWeapon(long id) {
+        
         User user = getLoggedUser();
 
         if (!hasWeapon(id)) {
@@ -162,7 +201,8 @@ public class UserService {
     //set a character to the current user
     public void saveCharacter(CharacterDTO characterDTO) {
         Character character = characterMapper.toDomain(characterDTO);
-
+        InputSanitizer.sanitizeRichText(character.getDescription());
+        InputSanitizer.sanitizeRichText(character.getName());
         User user = getLoggedUser();
 
         user.setCharacter(character);
@@ -173,6 +213,31 @@ public class UserService {
     public CharacterDTO getCharacter() {
         return characterMapper.toDTO(getLoggedUser().getCharacter());
     }
+      //returns character by id
+    public CharacterDTO getCharacterById(long id) {
+         if( getLoggedUser().getRoles().contains("ADMIN")){
+     return characterMapper.toDTO(userRepository.findById(id).get().getCharacter());
+
+         }else{
+      throw new IllegalAccessError("Only an admin can access to other's character");
+    }
+    }
+//delete character
+
+public void deleteCharacter(UserDTO userDTO){
+    if(getLoggedUserDTO().equals(userDTO)){
+User user = userRepository.findById(userDTO.id()).get();
+ Character character = user.getCharacter();
+ if(character!=null){ 
+           long charId = character.getId();
+        user.setCharacter(null);
+        saveUser(user); 
+	    characterService.deleteById(charId);
+          }
+        
+        }
+
+}
 
     //returns if the user has a specific weapon or armor
     public boolean hasWeapon(WeaponBasicDTO weapon){ 
@@ -201,23 +266,32 @@ public class UserService {
 
     //updates an user's name when edited
     public void updateName(UserDTO updatedUserDTO, String userName){
+        if(!userExists(userName)){
+            if(updatedUserDTO.equals(getLoggedUserDTO())||getLoggedUser().getRoles().contains("ADMIN")){
         InputSanitizer.validateWhitelist(userName);
-        User updatedUser = getLoggedUser();
+       User updatedUser=  userRepository.findById(updatedUserDTO.id()).get();
+    
         updatedUser.setUserName(userName);;
 
-        userRepository.save(updatedUser);
+        userRepository.save(updatedUser);}
+    }
     }
 
     public void deleteUser(long id) {
+        if( getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId().equals(id)){
+
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
         } else {
             throw new NoSuchElementException("User doesn't exist " + id);
         }
     }
+    }
     
     //creates user
     public void createUser(String user, String pass){
+        InputSanitizer.validateWhitelist(user);
+        InputSanitizer.validateWhitelist(pass);
         userRepository.save(new User(user, passwordEncoder.encode(pass), "USER"));
     }
     

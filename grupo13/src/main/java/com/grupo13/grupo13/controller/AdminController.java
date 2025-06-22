@@ -1,7 +1,10 @@
 package com.grupo13.grupo13.controller;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,17 +12,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.DTOs.UserBasicDTO;
+import com.grupo13.grupo13.DTOs.UserDTO;
+import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.mapper.CharacterMapper;
+import com.grupo13.grupo13.mapper.UserMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.service.ArmorService;
+import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
 import com.grupo13.grupo13.util.InputSanitizer;
+import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.User;
 
 @Controller
 public class AdminController {
@@ -35,6 +48,12 @@ public class AdminController {
     private armorMapper armorMapper;
     @Autowired
     private WeaponMapper weaponMapper;
+    @Autowired
+    private CharacterService characterService;
+    @Autowired
+    private UserMapper userMapper;
+    
+    
 
     //private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/imp_imgs");
       
@@ -99,8 +118,8 @@ public class AdminController {
             return "sp_errors";            
         }
 
-        name = InputSanitizer.whitelistSanitize(name);
-        description = InputSanitizer.whitelistSanitize(description);
+        InputSanitizer.validateWhitelist(name);
+        InputSanitizer.validateWhitelist(description);
         
         Weapon weapon = new Weapon(name, description, intimidation, strength, price);
         WeaponDTO weaponDTO = weaponMapper.toDTO(weapon);
@@ -134,9 +153,8 @@ public class AdminController {
             model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
             return "sp_errors";            
         }
-
-        name = InputSanitizer.whitelistSanitize(name);
-        description = InputSanitizer.whitelistSanitize(description);
+        InputSanitizer.validateWhitelist(name);
+        InputSanitizer.validateWhitelist(description);
         
         Armor armor = new Armor(name, description, style, defense, price);
         ArmorDTO armorDTO = armorMapper.toDTO(armor);
@@ -217,8 +235,13 @@ public class AdminController {
             return "sp_errors";            
         }
 
-        updatedWeapon.setName(InputSanitizer.whitelistSanitize(updatedWeapon.getName()));
-        updatedWeapon.setDescription(InputSanitizer.whitelistSanitize(updatedWeapon.getDescription()));
+        if(updatedWeapon.getstrength()>2147483647 || updatedWeapon.getPrice()>2147483647 || updatedWeapon.getIntimidation()>2147483647 || updatedWeapon.getstrength()<0 || updatedWeapon.getIntimidation()<0 || updatedWeapon.getPrice()<0){
+            model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
+            return "sp_errors";            
+        }
+
+        InputSanitizer.validateWhitelist(updatedWeapon.getName());
+        InputSanitizer.validateWhitelist(updatedWeapon.getDescription());
 
         WeaponDTO editedWeapon = weaponService.findByIdDTO(id);
         if(editedWeapon != null || !InputSanitizer.isImageValid(weaponImage) ){
@@ -259,8 +282,9 @@ public class AdminController {
             return "sp_errors";            
         }
 
-        updatedArmor.setName(InputSanitizer.whitelistSanitize(updatedArmor.getName()));
-        updatedArmor.setDescription(InputSanitizer.whitelistSanitize(updatedArmor.getDescription()));
+        InputSanitizer.validateWhitelist(updatedArmor.getName());
+        InputSanitizer.validateWhitelist(updatedArmor.getDescription());
+
         ArmorDTO editedArmor = armorService.findByIdDTO(id);
         if(editedArmor != null || !InputSanitizer.isImageValid(armorImage)){
             armorService.update(id, updatedArmorDTO);
@@ -285,15 +309,132 @@ public class AdminController {
         model.addAttribute("users", users);
         return "userAdminList";
     }
+
+    
+     @GetMapping("/admin/character/{id}/view")
+	    public String viewCharacter(Model model, @PathVariable long id) throws IOException{
+        
+ if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
+        List<WeaponBasicDTO> currentInventoryWeapon = userService.UserInventoryWeaponById(id);
+        List<ArmorBasicDTO> currentInventoryArmor = userService.UserInventoryArmorById(id);
+        CharacterDTO characterDTO = userService.getCharacterById(id);
+        
+
+        // gets the character and its inventory for mustache
+        model.addAttribute("character", characterDTO);
+        model.addAttribute("currentWeapon", currentInventoryWeapon);
+        model.addAttribute("currentArmor", currentInventoryArmor);
+   
+        // checks if the user has "logged", in the first fase is creating the character
+        if (characterDTO == null) {
+            model.addAttribute("message", "This user doesn't have a character");
+            return "sp_errors";
+        } else {
+            return "admin_character_view";
+        }
+    }else{
+        return "/logout";
+     }
+	}
     
     @PostMapping("/admin/user/{id}/delete")
 	public String deleteUser(Model model, @PathVariable long id) throws IOException{
-        if(userService.getLoggedUserDTO().id() != id){
+    if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
+            if(userService.getLoggedUserDTO().id() != id){
             userService.deleteUser(id);
             return "deleted_user";
         }else{
             userService.deleteUser(id);
             return "/logout";
         }
-	}
+     }else{
+        return "/logout";
+     }
+    }
+
+     @PostMapping("/admin/user/{id}/deleteCharacter")
+	public String deleteCharacter(Model model, @PathVariable long id) throws IOException, NotFoundException{
+         if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
+           UserDTO u = userService.findById(id);
+           if(u.character()!=null){
+           userService.deleteCharacter(u);
+          }else{
+             model.addAttribute("message", "This user doesn't have a character");
+            return "sp_errors";
+          }
+            return "redirect:/userList";
+               }else{
+                 return "/logout";
+    }  
 }
+    
+
+        @PostMapping("/admin/user/{id}/editName")
+	    public String editUser(Model model, @PathVariable long id, @RequestParam String newName) throws IOException{
+        if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
+        if(userService.getLoggedUserDTO().id() != id){
+            userService.updateName(userService.findById(id), newName);
+           return "redirect:/userList";
+
+        }else{
+            userService.updateName(userService.findById(id), newName);
+            return "/logout";
+        }
+	}else{
+        return "/logout";
+	}
+
+    }
+
+    @GetMapping("/userImageAdmin/{id}")
+	public ResponseEntity<Object> downloadUserImage(@PathVariable long id) throws MalformedURLException {
+          if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
+        CharacterDTO c = userService.getCharacterById(id);
+        String imageName = c.imageName();     
+		return characterService.returnImage(imageName);
+	}else{ throw new IllegalAccessError("Only an admin can acess this feature");}
+
+}
+
+//POR IMPLEMENTAR
+
+/*@PostMapping("/unEquipWeaponAdmin/")
+    public String unEquipWeapon(@RequestParam long id, Model model, @PathVariable long idUser) {
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+        CharacterDTO characterDTO = userService.getCharacterById(idUser);
+        Character character = characterMapper.toDomain(characterDTO);
+        WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
+
+        if (weaponDTO != null) {
+            characterService.unEquipWeapon(character.getId(), id); // unequips it
+
+            return "redirect:/character";
+        } else {
+            model.addAttribute("message", "Could not unEquip, doesnt exist");
+            return "sp_errors";}
+        }else{
+             throw new IllegalAccessError("Only an admin can acess this feature");
+        }
+
+
+}
+
+    @PostMapping("/unEquipArmorAdmin")
+    public String unEquipArmor(@RequestParam long id, Model model, @PathVariable long idUser) {
+        CharacterDTO characterDTO = userService.getCharacter();
+        Character character = characterMapper.toDomain(characterDTO);
+        ArmorDTO armorDTO = armorService.findByIdDTO(id);
+
+        if (armorDTO != null) {
+            characterService.unEquipArmor(character.getId(), id); // unequips it
+
+            return "redirect:/character";
+        } else {
+            model.addAttribute("message", "Could not unEquip, doesnt exist");
+            return "sp_errors";
+        }
+    }
+*/
+
+    }
+

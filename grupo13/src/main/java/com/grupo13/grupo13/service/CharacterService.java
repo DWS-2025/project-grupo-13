@@ -22,6 +22,7 @@ import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.NoSuchElementExceptionCA;
 import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
@@ -36,6 +37,8 @@ import java.nio.file.Path;
 
 @Service
 public class CharacterService {
+
+    private final NoSuchElementExceptionCA noSuchElementExceptionCA;
 
     private final UserService userService;
     private static final Path BACKUP_FOLDER = 
@@ -63,9 +66,10 @@ public class CharacterService {
     private WeaponMapper weaponMapper;
     @Autowired
     private armorMapper armorMapper;
-
-    CharacterService(UserService userService) {
+    
+    CharacterService(UserService userService, NoSuchElementExceptionCA noSuchElementExceptionCA) {
         this.userService = userService;
+        this.noSuchElementExceptionCA = noSuchElementExceptionCA;
     }
 
     // returns all characters in a list
@@ -84,6 +88,7 @@ public class CharacterService {
 
     // creates a new character
     public CharacterDTO save(CharacterDTO characterDTO) {
+    
         InputSanitizer.validateWhitelist(characterDTO.name());
         InputSanitizer.sanitizeRichText(characterDTO.description());
         Character character = mapper.toDomain(characterDTO);
@@ -93,18 +98,20 @@ public class CharacterService {
 
     //saves the character's image
     public void save(CharacterDTO characterDTO, MultipartFile imageFile, String imageName) throws IOException {
+       
         Character character = mapper.toDomain(characterDTO);
-        if (!imageFile.isEmpty()) {
+        if (!imageFile.isEmpty()&& InputSanitizer.isImageValid(imageFile)) {
             character.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
        
         backupImage(imageFile, imageName);
-        characterRepository.save(character);
-    }
+        characterRepository.save(character);}
+    
     public String backupImage(MultipartFile imageFile, String imageName) throws IOException {
+        
         // sanitize name
         String baseName = Paths.get(imageName).getFileName().toString();
-        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
+        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")|| !InputSanitizer.isImageValid(imageFile)) {
             throw new SecurityException("Invalid file name: " + imageName);
         }
 
@@ -137,6 +144,7 @@ public class CharacterService {
         imageFile.transferTo(target.toFile());
 
         return finalName;
+       
     }
 
     //show image 
@@ -157,6 +165,7 @@ public class CharacterService {
 	}
 
     public void saveUser(CharacterDTO characterDTO) {
+       
         Character character = mapper.toDomain(characterDTO);
         character.setUser(userService.getLoggedUser());
         characterRepository.save(character);
@@ -165,6 +174,8 @@ public class CharacterService {
     // for equipping armor or weapon, sets the necessary values from the equipment
     // and adds the character to the equipment
     public void equipWeapon(WeaponDTO weaponDTO, long charId) {
+        
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.hasWeapon(weaponDTO.id())){
         Character character = characterRepository.findById(charId).get();
         Weapon weapon = weaponService.findById(weaponDTO.id());
         character.setWeaponEquiped(true);
@@ -174,9 +185,11 @@ public class CharacterService {
         weaponService.save(weapon);
         characterRepository.save(character);
     }
+    }
 
     // equips an armor to the character that recives
     public void equipArmor(ArmorDTO armorDTO, long charId) {
+         if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.hasArmor(armorDTO.id())){
         Character character = characterRepository.findById(charId).get();
         Armor armor = armorService.findById(armorDTO.id());
         character.setArmorEquiped(true);
@@ -185,7 +198,7 @@ public class CharacterService {
         armor.getCharacters().add(character);
         armorService.save(armor);
         characterRepository.save(character);
-    }
+    }}
 
     // gets the weapon equipped
     public Weapon getEquipedWeapon(CharacterDTO characterDTO) {
@@ -203,6 +216,7 @@ public class CharacterService {
 
     // unequips the weapon in use
     public void unEquipWeapon(long charId, long id) {
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==charId){
         Character character = findById(charId);
         character.setWeapon(null);
         character.setStrength(0);
@@ -219,9 +233,11 @@ public class CharacterService {
         characterRepository.save(character);
         characterRepository.save(character);
     }
+    }
 
     // unequips the armor in use
     public void unEquipArmor(long charId, long id) {
+         if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==charId){
         Character character = findById(charId);
         character.setArmor(null);
         character.setDefense(0);
@@ -236,7 +252,7 @@ public class CharacterService {
         armor.getCharacters().remove(character);
         armorService.save(armor);
         characterRepository.save(character);
-
+         }
 
     }
 
@@ -260,8 +276,11 @@ public class CharacterService {
     }
 */
     public void deleteById(long id) {
+        
         characterRepository.deleteById(id);
+    
     }
+    
 
     //returns the image from the id it gets
     public Resource getImageFile(long id) throws SQLException  {
@@ -276,6 +295,7 @@ public class CharacterService {
 
     //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==id){
 
 		Character character = characterRepository.findById(id).orElseThrow();
 
@@ -285,19 +305,22 @@ public class CharacterService {
 
 		character.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		characterRepository.save(character);
+    }
 	}
 
     public void createCharacterImage(long id, URI location, InputStream inputStream, long size) {
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==id){
 
 		Character character = characterRepository.findById(id).orElseThrow();
 
 		character.setImageName(location.toString());
 		character.setImageFile(BlobProxy.generateProxy(inputStream, size));
 		characterRepository.save(character);
+    }
 	}
 
     public void editCharacterName(String name){
-
+    InputSanitizer.validateWhitelist(name);
         if(userService.getCharacter() == null){
             throw new IllegalStateException("El usuario aún no tiene un personaje creado.");
         }else{

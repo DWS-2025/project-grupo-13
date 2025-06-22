@@ -3,7 +3,7 @@
 <div class="d-flex vh-100 p-4">
    <div class="d-flex col-5">
       <div class="card w-100 border-dark" style="background-color:  rgb(249, 196, 164);">
-         <img src="/userImage"></img>
+         <img src="/userImageAdmin/{{character.id}}"></img>
          <form action="/editCharacter" method="POST">
             <h5 class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.name}}</h5>
             <input type="hidden" name="_csrf" value="{{token}}" />
@@ -14,16 +14,13 @@
             <button type="submit" class="btn btn-primary">Change Name</button>
          </li>
          </form>
-         <form action="/deleteCharacter" method="POST">
-         <input type="hidden" name="_csrf" value="{{token}}" />
-         <button type="submit" class="btn btn-primary">Delete character</button>
-         </form>
+
          <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
             <p class="card-text">{{{character.description}}}</p>
          </li> <!--Shows rich text -->
 
          <ul class="list-group list-group-flush">
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">MONEY - {{user.money}}</li>
+
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Strength - {{character.strength}}
             </li>
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Defense - {{character.defense}}
@@ -69,7 +66,7 @@
                   style="background-color:  rgb(255, 179, 132);" ; aria-expanded="true" aria-controls="collapseCardW">
                   Equipped weapon </button>
                <div class="collapse" id="collapseCardW">
-                  <form action="/unEquipWeapon" method="post" enctype="multipart/form-data">
+                  <form action="/unEquipWeaponAdmin" method="post" enctype="multipart/form-data">
                      <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
                         <div class="row g-0">
                            <div class="col-md-4">
@@ -81,6 +78,7 @@
                                  <p class="card-text"> {{description}} </p>
                                  <input type='submit' value='Unequip'>
                                  <!-- Hidden inputs-->
+                                 <input type="hidden" name="id" value="{{id}}">
                                  <input type="hidden" name="id" value="{{id}}">
                                  <input type="hidden" name="_csrf" value="{{token}}" />
                                  <!--end of hidden inputs-->
