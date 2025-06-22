@@ -319,16 +319,18 @@ public class CharacterService {
     }
 	}
 
-    public void editCharacterName(String name) {
-        InputSanitizer.validateWhitelist(name);
-        if (userService.getCharacter() == null) {
-            throw new IllegalStateException("El usuario aún no tiene un personaje creado.");
-        } else {
-            Character newCharacter = characterRepository.findById(userService.getCharacter().id()).get();
+    public void editCharacterName(String name, long id){
+        if(userService.getLoggedUser().getRoles().contains("ADMIN")||userService.getCharacter().id()==id){
+            InputSanitizer.validateWhitelist(name);
+        if(findById(id) == null){
+            throw new IllegalStateException("No character created");
+        }else{
+            Character newCharacter = characterRepository.findById(id).get();
             newCharacter.setName(name);
             characterRepository.save(newCharacter);
         }
 
     }
 	
+}
 }

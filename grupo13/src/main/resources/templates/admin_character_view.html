@@ -4,10 +4,10 @@
    <div class="d-flex col-5">
       <div class="card w-100 border-dark" style="background-color:  rgb(249, 196, 164);">
          <img src="/userImageAdmin/{{character.id}}"></img>
-         <form action="/editCharacter" method="POST">
+         <form action="/admin/user/{{id}}/editCharacterName" method="POST">
             <h5 class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.name}}</h5>
             <input type="hidden" name="_csrf" value="{{token}}" />
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> <input type="text" name="name"
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> <input type="text" name="newName"
                   value="{{character.name}}" class="form-control" style="width: 100%;" /></li>
 
          <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">

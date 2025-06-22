@@ -368,6 +368,21 @@ public class AdminController {
     }  
 }
     
+@PostMapping("/admin/user/{id}/editCharacterName")
+	    public String editCharacter(Model model, @PathVariable long id, @RequestParam String newName) throws IOException{
+        if(userService.getLoggedUserDTO().roles().contains("ADMIN")){
+           long charId = userService.findById(id).character().id(); 
+            characterService.editCharacterName(newName, charId);
+   
+           return "redirect:/userList";
+
+        }
+	else{
+        return "/logout";
+	}
+
+    }
+
 
         @PostMapping("/admin/user/{id}/editName")
 	    public String editUser(Model model, @PathVariable long id, @RequestParam String newName) throws IOException{

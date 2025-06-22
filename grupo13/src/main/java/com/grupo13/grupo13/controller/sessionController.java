@@ -451,7 +451,7 @@ public String searchWeapons(Model model, @ModelAttribute WeaponSearchDTO probe) 
             model.addAttribute("message", "Some or all parameters were left blank");
             return "sp_errors";
         } else {
-            characterService.editCharacterName(name);
+            characterService.editCharacterName(name, characterDTO.id());
             return "redirect:/character";
         }
 	}
