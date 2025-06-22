@@ -115,6 +115,9 @@ public class SecurityConfig {
 						.requestMatchers("/css/**").permitAll()
 						.requestMatchers("/armorshop/**").permitAll()
 						.requestMatchers("/weaponshop/**").permitAll()
+						.requestMatchers("/weapon/**").permitAll()
+						.requestMatchers("/armor/**").permitAll()
+						.requestMatchers("/register/**").permitAll()
 						.requestMatchers("/error").permitAll()
 						.requestMatchers("/image/**").permitAll()
 						/////// PRIVATE PAGES
@@ -131,9 +134,6 @@ public class SecurityConfig {
 						.requestMatchers("/unEquipArmor/**").hasAnyRole("USER")
 						.requestMatchers("/character/**").hasAnyRole("USER")
 						.requestMatchers("editUser").hasAnyRole("USER")
-						
-						.requestMatchers("/weapon/**").permitAll()
-						.requestMatchers("/armor/**").permitAll()
 
 						//ADMIN PAGES
 						.requestMatchers("/equipment_manager/**").hasAnyRole("ADMIN")

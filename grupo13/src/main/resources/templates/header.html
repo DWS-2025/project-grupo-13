@@ -86,9 +86,14 @@
     <a class="element-header" href="/character">Character</a>
     <a class="element-header" href="/user">Profile</a>
     <a class="element-header" href="/search">Search</a>
+    
     {{^logged}}
     <a class="element-header" href="/register">Register</a>
     {{/logged}}
+
+    {{#admin}}
+    <a class="element-header" href="/register">Register</a>
+    {{/admin}}
 
 
     {{#admin}}
