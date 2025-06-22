@@ -72,12 +72,16 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.GET, "/api/armors/search").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/weapons").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/armors").permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
 
                     // PRIVATE ENDPOINTS
 					.requestMatchers(HttpMethod.GET, "/api/**").hasRole("USER")
                     .requestMatchers(HttpMethod.POST,"/api/**").hasRole("USER")
                     .requestMatchers(HttpMethod.PUT,"/api/**").hasRole("USER")
                     .requestMatchers(HttpMethod.DELETE,"/api/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.PUT, "/api/editCharacter").hasRole("USER")
+					.requestMatchers(HttpMethod.PUT, "/api/editUser").hasRole("USER")
+
 					// PUBLIC ENDPOINTS
 					.anyRequest().permitAll()
 			);
@@ -115,8 +119,6 @@ public class SecurityConfig {
 						.requestMatchers("/weaponshop/**").permitAll()
 						.requestMatchers("/error").permitAll()
 						.requestMatchers("/image/**").permitAll()
-						.requestMatchers("/register").permitAll()
-
 						/////// PRIVATE PAGES
 						//USER PAGES
 						.requestMatchers("/user").hasAnyRole("USER")

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,7 @@ import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
@@ -284,7 +286,19 @@ public class grupo13RestController {
 		return ResponseEntity.created(location).build();
 	}
 
-	// YOU CANNOT UPDATE CHARACTERS
+	// Update character
+
+	@PutMapping("/editCharacter")
+	public ResponseEntity<String> editCharacter(@RequestBody String name){       
+        CharacterDTO characterDTO = userService.getCharacter(); //gets the character from the user
+        if (characterDTO == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("There is no character");
+        } else {
+            characterService.editCharacterName(name);
+			return ResponseEntity.status(HttpStatus.CREATED).body("Character updated succesfully");
+        }
+	}
+
 	// -------------------------------------------------
 
 	// DELETE -------------------------------------------------
@@ -438,6 +452,7 @@ public class grupo13RestController {
 		}
     }
 
+	// replace user
 	@PutMapping("/user/")
 	public ResponseEntity<?> replaceUser(@RequestParam String userName) {
 		try {
@@ -452,5 +467,22 @@ public class grupo13RestController {
 			return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
 		}
 	}
+
+
+	@PutMapping("/editUser")
+	public ResponseEntity<String> updateUser(@RequestBody String userName) throws IOException{
+        if(userName.isBlank()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("The name cannot be left blank");
+        }
+        UserDTO oldUserDTO = userService.getLoggedUserDTO();
+        if(oldUserDTO != null){
+            userService.updateName(oldUserDTO, userName);
+			return ResponseEntity.status(HttpStatus.CREATED).body("User updated succesfully");
+        }else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Could not manage, not found");
+        }
+	}
+
+
 
 }
