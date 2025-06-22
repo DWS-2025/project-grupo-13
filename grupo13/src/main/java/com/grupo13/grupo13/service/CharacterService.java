@@ -319,16 +319,15 @@ public class CharacterService {
     }
 	}
 
-    public void editCharacterName(String name){
-    InputSanitizer.validateWhitelist(name);
-        if(userService.getCharacter() == null){
+    public void editCharacterName(String name) {
+        InputSanitizer.validateWhitelist(name);
+        if (userService.getCharacter() == null) {
             throw new IllegalStateException("El usuario aún no tiene un personaje creado.");
-        }else{
+        } else {
             Character newCharacter = characterRepository.findById(userService.getCharacter().id()).get();
             newCharacter.setName(name);
             characterRepository.save(newCharacter);
         }
-
 
     }
 	

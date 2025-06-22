@@ -224,18 +224,18 @@ public class UserService {
     }
 //delete character
 
-public void deleteCharacter(UserDTO userDTO){
-    if(getLoggedUserDTO().equals(userDTO)){
-User user = userRepository.findById(userDTO.id()).get();
- Character character = user.getCharacter();
- if(character!=null){ 
-           long charId = character.getId();
-        user.setCharacter(null);
-        saveUser(user); 
-	    characterService.deleteById(charId);
-          }
-        
+public void deleteCharacter(UserDTO userDTO) {
+    if (getLoggedUserDTO().equals(userDTO)) {
+        User user = userRepository.findById(userDTO.id()).get();
+        Character character = user.getCharacter();
+        if (character != null) {
+            long charId = character.getId();
+            user.setCharacter(null);
+            saveUser(user);
+            characterService.deleteById(charId);
         }
+
+    }
 
 }
 
@@ -264,17 +264,19 @@ User user = userRepository.findById(userDTO.id()).get();
         userRepository.findById(id).get().setMoney(ammount);
     }
 
-    //updates an user's name when edited
-    public void updateName(UserDTO updatedUserDTO, String userName){
-        if(!userExists(userName)){
-            if(updatedUserDTO.equals(getLoggedUserDTO())||getLoggedUser().getRoles().contains("ADMIN")){
-        InputSanitizer.validateWhitelist(userName);
-       User updatedUser=  userRepository.findById(updatedUserDTO.id()).get();
-    
-        updatedUser.setUserName(userName);;
+    // updates an user's name when edited
+    public void updateName(UserDTO updatedUserDTO, String userName) {
+        if (!userExists(userName)) {
+            if (updatedUserDTO.equals(getLoggedUserDTO()) || getLoggedUser().getRoles().contains("ADMIN")) {
+                InputSanitizer.validateWhitelist(userName);
+                User updatedUser = userRepository.findById(updatedUserDTO.id()).get();
 
-        userRepository.save(updatedUser);}
-    }
+                updatedUser.setUserName(userName);
+                ;
+
+                userRepository.save(updatedUser);
+            }
+        }
     }
 
     public void deleteUser(long id) {
