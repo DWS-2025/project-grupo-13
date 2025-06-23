@@ -49,16 +49,22 @@ public class grupo13RestController {
 
 	@Autowired
 	private CharacterService characterService;
+
 	@Autowired
 	private WeaponService weaponService;
+
 	@Autowired
 	private ArmorService armorService;
+
 	@Autowired
 	private WeaponMapper weaponMapper;
+
 	@Autowired
 	private armorMapper armorMapper;
+
 	@Autowired
 	private CharacterMapper characterMapper;
+
 	@Autowired
 	private UserService userService;
 
@@ -118,13 +124,10 @@ public class grupo13RestController {
     	try {
         	InputSanitizer.validateWhitelist(weaponDTO.name());
         	InputSanitizer.validateWhitelist(weaponDTO.description());
-
         	weaponService.saveDTO(weaponDTO);
         	Weapon weapon = weaponMapper.toDomain(weaponDTO);
         	URI location = fromCurrentRequest().path("/{id}").buildAndExpand(weapon.getId()).toUri();
-
         	return ResponseEntity.created(location).body(weaponDTO);
-
     	}catch (IllegalArgumentException ex) {
         	return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
     	}
@@ -135,13 +138,10 @@ public class grupo13RestController {
 		try {
         	InputSanitizer.validateWhitelist(armorDTO.name());
         	InputSanitizer.validateWhitelist(armorDTO.description());
-
         	armorService.saveDTO(armorDTO);
        		Armor armor = armorMapper.toDomain(armorDTO);
         	URI location = fromCurrentRequest().path("/{id}").buildAndExpand(armor.getId()).toUri();
-
         	return ResponseEntity.created(location).body(armorDTO);
-
     	}catch (IllegalArgumentException ex) {
         	return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
     	}
@@ -188,7 +188,6 @@ public class grupo13RestController {
 		try {
 			InputSanitizer.validateWhitelist(updatedArmorDTO.name());
 			InputSanitizer.validateWhitelist(updatedArmorDTO.description());
-
 			armorService.update(id, updatedArmorDTO);
 			return ResponseEntity.ok(updatedArmorDTO);
 		}catch (IllegalArgumentException ex) {
@@ -262,7 +261,6 @@ public class grupo13RestController {
 			InputSanitizer.validateWhitelist(characterDTO.description());
 			InputSanitizer.validateWhitelist(characterDTO.imageName());
 			characterService.save(characterDTO);
-
 			Character character = characterMapper.toDomain(characterDTO);
 			URI location = fromCurrentRequest().path("/{id}").buildAndExpand(character.getId()).toUri();
 			return ResponseEntity.created(location).body(characterDTO);
@@ -277,7 +275,6 @@ public class grupo13RestController {
 		if (!InputSanitizer.isImageValid(imageFile)) {
 			return ResponseEntity.badRequest().body("Error: Invalid image file.");
 		}
-
 		URI location = fromCurrentRequest().build().toUri();
 		characterService.createCharacterImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.created(location).build();
@@ -321,9 +318,6 @@ public class grupo13RestController {
 			return ResponseEntity.status(HttpStatus.CREATED).body("User deleted succesfully");
         }
 	}
-
-
-
 
 	// IMAGES ------------------------------------------------------
 
@@ -389,7 +383,6 @@ public class grupo13RestController {
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		WeaponDTO equipment = weaponService.findByIdDTO(id);
-
 		if (equipment != null) { // if it exists
 			if (userService.hasWeapon(id)) {
 				characterService.equipWeapon(equipment, charId); // equips it, adding the necessary attributes
@@ -410,7 +403,6 @@ public class grupo13RestController {
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		ArmorDTO equipment = armorService.findByIdDTO(id);
-
 		if (equipment != null) { // if it exists
 			if (userService.hasArmor(id)) {
 				characterService.equipArmor(equipment, charId); // equips it, adding the necessary attributes
@@ -433,7 +425,6 @@ public class grupo13RestController {
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		ArmorDTO equipment = armorService.findByIdDTO(id);
-
 		if (equipment != null) { // if it exists
 			if (userService.hasArmor(id)) {
 				characterService.unEquipArmor(id, charId); // equips it, adding the necessary attributes
@@ -453,7 +444,6 @@ public class grupo13RestController {
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		WeaponDTO equipment = weaponService.findByIdDTO(id);
-
 		if (equipment != null) { // if it exists
 			if (userService.hasWeapon(id)) {
 				characterService.unEquipWeapon(id, charId); // equips it, adding the necessary attributes

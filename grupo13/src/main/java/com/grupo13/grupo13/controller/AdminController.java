@@ -36,19 +36,24 @@ public class AdminController {
     //attributes
     @Autowired
     private WeaponService weaponService;
+
     @Autowired
     private ArmorService armorService;
+
     @Autowired
-    private UserService userService;   
+    private UserService userService;
+
     @Autowired
     private armorMapper armorMapper;
+
     @Autowired
     private WeaponMapper weaponMapper;
+
     @Autowired
     private CharacterService characterService;
 
     //private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/imp_imgs");
-      
+
     @GetMapping("weapon/{id}")
     public String showWeapon(Model model, @PathVariable long id){
         WeaponDTO weapon = weaponService.findByIdDTO(id);
@@ -104,7 +109,6 @@ public class AdminController {
             model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
             return "sp_errors";            
         }
-
         InputSanitizer.validateWhitelist(name);
         InputSanitizer.validateWhitelist(description);        
         Weapon weapon = new Weapon(name, description, intimidation, strength, price);
@@ -208,7 +212,6 @@ public class AdminController {
             model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
             return "sp_errors";            
         }
-
         InputSanitizer.validateWhitelist(updatedWeapon.getName());
         InputSanitizer.validateWhitelist(updatedWeapon.getDescription());
         WeaponDTO editedWeapon = weaponService.findByIdDTO(id);
@@ -243,7 +246,6 @@ public class AdminController {
             model.addAttribute("message", "We are trying to make a balanced game, change the stats.");
             return "sp_errors";            
         }
-
         InputSanitizer.validateWhitelist(updatedArmor.getName());
         InputSanitizer.validateWhitelist(updatedArmor.getDescription());
         ArmorDTO editedArmor = armorService.findByIdDTO(id);

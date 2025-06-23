@@ -6,7 +6,8 @@ public record CharacterBasicDTO(
         String description,
         int strength,
         int defense,
-        int healthPoints,
+        int intimidation,
+        int style,
         boolean weaponEquiped,
         boolean armorEquiped,
         String imageName

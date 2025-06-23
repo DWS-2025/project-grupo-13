@@ -46,7 +46,6 @@ public class CharacterService {
              .resolve("characters")
              .normalize();
 
-
     // attributes
     @Autowired
     private CharacterRepository characterRepository;
@@ -129,11 +128,9 @@ public class CharacterService {
         // check if file is using right extension
         String finalName;
         int dot = baseName.lastIndexOf('.');
-        if (dot >= 0) {
-            
+        if (dot >= 0) {           
             finalName = baseName;
         } else {
-            
             finalName = baseName + ext;
         }
         
@@ -145,9 +142,7 @@ public class CharacterService {
         // save file
         Files.createDirectories(target.getParent());
         imageFile.transferTo(target.toFile());
-
-        return finalName;
-       
+        return finalName;     
     }
 
     //show image 
@@ -159,7 +154,6 @@ public class CharacterService {
             throw new SecurityException("Invalid file name: " + imageName);
         }
         Path normalized = BACKUP_FOLDER.resolve(imageName).normalize();
-
         if (!normalized.startsWith(BACKUP_FOLDER)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid image path.");
         }
@@ -168,7 +162,6 @@ public class CharacterService {
 	}
 
     public void saveUser(CharacterDTO characterDTO) {
-       
         Character character = mapper.toDomain(characterDTO);
         character.setUser(userService.getLoggedUser());
         characterRepository.save(character);
@@ -177,86 +170,86 @@ public class CharacterService {
     // for equipping armor or weapon, sets the necessary values from the equipment
     // and adds the character to the equipment
     public void equipWeapon(WeaponDTO weaponDTO, long charId) {
-        
         if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.hasWeapon(weaponDTO.id())){
-        Character character = characterRepository.findById(charId).get();
-        Weapon weapon = weaponService.findById(weaponDTO.id());
-        character.setWeaponEquiped(true);
-        character.setStrength(weaponDTO.strength());
-        character.setWeapon(weapon);
-        weapon.getCharacters().add(character);
-        weaponService.save(weapon);
-        characterRepository.save(character);
-    }
+            Character character = characterRepository.findById(charId).get();
+            Weapon weapon = weaponService.findById(weaponDTO.id());
+            character.setWeaponEquiped(true);
+            character.setStrength(weaponDTO.strength());
+            character.setIntimidation(weaponDTO.intimidation());
+            character.setWeapon(weapon);
+            weapon.getCharacters().add(character);
+            weaponService.save(weapon);
+            characterRepository.save(character);
+        }
     }
 
     // equips an armor to the character that recives
     public void equipArmor(ArmorDTO armorDTO, long charId) {
-         if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.hasArmor(armorDTO.id())){
-        Character character = characterRepository.findById(charId).get();
-        Armor armor = armorService.findById(armorDTO.id());
-        character.setArmorEquiped(true);
-        character.setDefense(armorDTO.defense());
-        character.setArmor(armor);
-        armor.getCharacters().add(character);
-        armorService.save(armor);
-        characterRepository.save(character);
-    }}
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.hasArmor(armorDTO.id())){
+            Character character = characterRepository.findById(charId).get();
+            Armor armor = armorService.findById(armorDTO.id());
+            character.setArmorEquiped(true);
+            character.setDefense(armorDTO.defense());
+            character.setStyle(armorDTO.style());
+            character.setArmor(armor);
+            armor.getCharacters().add(character);
+            armorService.save(armor);
+            characterRepository.save(character);
+        }
+    }
 
     // gets the weapon equipped
     public Weapon getEquipedWeapon(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);
-
         return character.getWeapon();
     }
 
     // gets the armor in use    
     public Armor getEquipedArmor(CharacterDTO characterDTO) {
         Character character = mapper.toDomain(characterDTO);
-
         return character.getArmor();
     }
 
     // unequips the weapon in use
     public void unEquipWeapon(long charId, long id) {
         if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==charId){
-        Character character = findById(charId);
-        character.setWeapon(null);
-        character.setStrength(0);
-        character.setWeaponEquiped(false);
-        // removes the character from the list
-        /*if (weaponRepository.findById(id).isPresent()) {
-            weaponRepository.findById(id).get().getCharacters().remove(character);
+            Character character = findById(charId);
+            character.setWeapon(null);
+            character.setStrength(0);
+            character.setIntimidation(0);
+            character.setWeaponEquiped(false);
+            // removes the character from the list
+            /*if (weaponRepository.findById(id).isPresent()) {
+                weaponRepository.findById(id).get().getCharacters().remove(character);
 
-            weaponService.saveDTO(weaponMapper.toDTO(weaponRepository.findById(id).get()));
-        }*/
-        Weapon weapon = weaponService.findById(id);
-        weapon.getCharacters().remove(character);
-        weaponService.save(weapon);
-        characterRepository.save(character);
-        characterRepository.save(character);
-    }
+                weaponService.saveDTO(weaponMapper.toDTO(weaponRepository.findById(id).get()));
+            }*/
+            Weapon weapon = weaponService.findById(id);
+            weapon.getCharacters().remove(character);
+            weaponService.save(weapon);
+            characterRepository.save(character);
+            characterRepository.save(character);
+        }
     }
 
     // unequips the armor in use
     public void unEquipArmor(long charId, long id) {
-         if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==charId){
-        Character character = findById(charId);
-        character.setArmor(null);
-        character.setDefense(0);
-        character.setArmorEquiped(false);
-        // removes the character from the list
-        /*if (armorRepository.findById(id).isPresent()) {
-            armorRepository.findById(id).get().getCharacters().remove(character);
-            armorService.saveDTO(armorMapper.toDTO(armorRepository.findById(id).get()));
-        } */
-
-        Armor armor = armorService.findById(id);
-        armor.getCharacters().remove(character);
-        armorService.save(armor);
-        characterRepository.save(character);
-         }
-
+        if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==charId){
+            Character character = findById(charId);
+            character.setArmor(null);
+            character.setDefense(0);
+            character.setStyle(0);
+            character.setArmorEquiped(false);
+            // removes the character from the list
+            /*if (armorRepository.findById(id).isPresent()) {
+                armorRepository.findById(id).get().getCharacters().remove(character);
+                armorService.saveDTO(armorMapper.toDTO(armorRepository.findById(id).get()));
+            } */
+            Armor armor = armorService.findById(id);
+            armor.getCharacters().remove(character);
+            armorService.save(armor);
+            characterRepository.save(character);
+        }
     }
 
     /*// deletes the given character
@@ -279,16 +272,12 @@ public class CharacterService {
     }
 */
     public void deleteById(long id) {
-        
-        characterRepository.deleteById(id);
-    
+        characterRepository.deleteById(id);  
     }
-    
 
     //returns the image from the id it gets
     public Resource getImageFile(long id) throws SQLException  {
         Character character = characterRepository.findById(id).orElseThrow();
-
 		if (character.getImageFile() != null) {
 			return new InputStreamResource(character.getImageFile().getBinaryStream());
 		} else {
@@ -299,27 +288,22 @@ public class CharacterService {
     //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {
         if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==id){
-
-		Character character = characterRepository.findById(id).orElseThrow();
-
-		if(character.getImageName() == null){
-			throw new NoSuchElementException();
-		}
-
-		character.setImageFile(BlobProxy.generateProxy(inputStream, size));
-		characterRepository.save(character);
-    }
+            Character character = characterRepository.findById(id).orElseThrow();
+            if(character.getImageName() == null){
+                throw new NoSuchElementException();
+            }
+            character.setImageFile(BlobProxy.generateProxy(inputStream, size));
+            characterRepository.save(character);
+        }
 	}
 
     public void createCharacterImage(long id, URI location, InputStream inputStream, long size) {
         if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==id){
-
-		Character character = characterRepository.findById(id).orElseThrow();
-
-		character.setImageName(location.toString());
-		character.setImageFile(BlobProxy.generateProxy(inputStream, size));
-		characterRepository.save(character);
-    }
+            Character character = characterRepository.findById(id).orElseThrow();
+            character.setImageName(location.toString());
+            character.setImageFile(BlobProxy.generateProxy(inputStream, size));
+            characterRepository.save(character);
+        }
 	}
 
     public void editCharacterName(String name, long id) {
@@ -332,10 +316,8 @@ public class CharacterService {
                 newCharacter.setName(name);
                 characterRepository.save(newCharacter);
             }
-
         }else{
             throw new IllegalStateException("Not your character");
         }
-	
-}
+    }
 }

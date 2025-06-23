@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
@@ -37,23 +36,32 @@ public class UserService {
     @Lazy
     @Autowired
     private CharacterService characterService;
+
     @Autowired
     private UserRepository userRepository;
+
     @Lazy
     @Autowired
     private WeaponService weaponService;
+
     @Autowired
     private ArmorService armorService;
+
     @Autowired
     private UserMapper mapper;
+
     @Autowired
     private WeaponMapper weaponMapper;
+
     @Autowired
     private armorMapper armorMapper;
+
     @Autowired
     private CharacterMapper characterMapper;
+
     @Autowired
 	private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserMapper userMapper;
 
@@ -93,11 +101,9 @@ public class UserService {
     }
     
     public UserDTO getLoggedUserDTOOrNull() {
-        
         User user = getLoggedUserOrNull();
         return (user != null) ? mapper.toDTO(getLoggedUserOrNull()) : null;
-        }
-
+    }
 
     //returns all users in a list
     public List<UserBasicDTO> findAll() {
@@ -114,7 +120,6 @@ public class UserService {
     public boolean hasWeapon(long id) {
         User user = getLoggedUser();
         WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
-
         if (weaponDTO != null) {
             return user.getInventoryWeapon().contains(weaponMapper.toDomain(weaponDTO));
         }
@@ -125,7 +130,6 @@ public class UserService {
     public boolean hasArmor(long id) {
         User user = getLoggedUser();
         ArmorDTO armorDTO = armorService.findByIdDTO(id);
-
         if (armorDTO != null) {
             return user.getInventoryArmor().contains(armorMapper.toDomain(armorDTO));
         }
@@ -197,7 +201,6 @@ public class UserService {
         InputSanitizer.sanitizeRichText(character.getDescription());
         InputSanitizer.sanitizeRichText(character.getName());
         User user = getLoggedUser();
-
         user.setCharacter(character);
         userRepository.save(user);
     }
@@ -230,7 +233,6 @@ public class UserService {
         } else{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Id");
         }
-
     }
 
     //returns if the user has a specific weapon or armor

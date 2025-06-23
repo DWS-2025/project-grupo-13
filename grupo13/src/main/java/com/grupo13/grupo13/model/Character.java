@@ -22,7 +22,8 @@ public class Character {
     private String description;
     private int strength;
     private int defense;
-    private int healthPoints;
+    private int style;
+    private int intimidation;
     private boolean weaponEquiped;
     private boolean armorEquiped;
     private String imageName;
@@ -71,8 +72,12 @@ public class Character {
         return defense;
     }
 
-    public int getHealthPoints() {
-        return healthPoints;
+    public int getStyle() {
+        return style;
+    }
+
+    public int getIntimidation() {
+        return intimidation;
     }
 
     public boolean isWeaponEquiped() {
@@ -116,8 +121,12 @@ public class Character {
         this.defense = defense;
     }
 
-    public void setHealthPoints(int healthPoints) {
-        this.healthPoints = healthPoints;
+    public void setIntimidation(int intimidation) {
+        this.intimidation = intimidation;
+    }
+
+    public void setStyle(int style) {
+        this.style = style;
     }
 
     public void setWeaponEquiped(boolean weaponEquiped) {

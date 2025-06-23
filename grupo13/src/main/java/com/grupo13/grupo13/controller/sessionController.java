@@ -132,7 +132,6 @@ public class sessionController {
             model.addAttribute("message", "Make sure the image has a valid name.");
             return "sp_errors";
         }
-
         Character character = new Character(characterDesc, nameOfCharacter,imageName);
         CharacterDTO characterDTO = characterMapper.toDTO(character);
         CharacterDTO savedCharacterDTO = characterService.save(characterDTO);
