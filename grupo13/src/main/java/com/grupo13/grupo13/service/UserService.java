@@ -3,11 +3,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
@@ -224,17 +227,18 @@ public class UserService {
     }
 //delete character
 
-public void deleteCharacter(UserDTO userDTO) {
-    if (getLoggedUserDTO().equals(userDTO)) {
-        User user = userRepository.findById(userDTO.id()).get();
-        Character character = user.getCharacter();
+public void deleteCharacter(long id) {
+    if (getLoggedUserDTO().id() == id || getLoggedUser().getRoles().contains("ADMIN")) {
+        Character character = characterService.findById(id);
+        User user = character.getUser();
         if (character != null) {
             long charId = character.getId();
             user.setCharacter(null);
             saveUser(user);
             characterService.deleteById(charId);
         }
-
+    } else{
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Id");
     }
 
 }
@@ -270,17 +274,16 @@ public void deleteCharacter(UserDTO userDTO) {
             if (updatedUserDTO.equals(getLoggedUserDTO()) || getLoggedUser().getRoles().contains("ADMIN")) {
                 InputSanitizer.validateWhitelist(userName);
                 User updatedUser = userRepository.findById(updatedUserDTO.id()).get();
-
                 updatedUser.setUserName(userName);
-                ;
-
                 userRepository.save(updatedUser);
+            } else{
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong id");
             }
         }
     }
 
     public void deleteUser(long id) {
-        if( getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId().equals(id)){
+        if( getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId() == id){
 
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);

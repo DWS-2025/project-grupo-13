@@ -308,7 +308,7 @@ public class AdminController {
         if(userService.getLoggedUserDTO().roles().contains("ADMIN")){
             UserDTO u = userService.findById(id);
             if(u.character()!=null){
-                userService.deleteCharacter(u);
+                userService.deleteCharacter(u.character().id());
             }else{
                 model.addAttribute("message", "This user doesn't have a character");
                 return "sp_errors";

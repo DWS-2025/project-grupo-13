@@ -433,7 +433,7 @@ public class sessionController {
         long id =userService.getLoggedUserDTO().id();
         UserDTO u = userService.findById(id);
         if(u.character()!=null){
-            userService.deleteCharacter(u);
+            userService.deleteCharacter(u.character().id());
         }else{
             model.addAttribute("message", "This user doesn't have a character");
             return "sp_errors";

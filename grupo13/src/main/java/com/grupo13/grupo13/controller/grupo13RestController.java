@@ -285,13 +285,13 @@ public class grupo13RestController {
 
 	// Update character
 
-	@PutMapping("/editCharacter")
-	public ResponseEntity<String> editCharacter(@RequestBody String name){       
-        CharacterDTO characterDTO = userService.getCharacter(); //gets the character from the user
+	@PutMapping("/character/{id}")
+	public ResponseEntity<String> editCharacter(@RequestBody String name, @PathVariable long id){       
+        CharacterDTO characterDTO = characterService.findByIdDTO(id); //gets the character from the user
         if (characterDTO == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("There is no character");
         } else {
-            characterService.editCharacterName(name);
+            characterService.editCharacterName(name, id);
 			return ResponseEntity.status(HttpStatus.CREATED).body("Character updated succesfully");
         }
 	}
@@ -301,9 +301,29 @@ public class grupo13RestController {
 	// DELETE -------------------------------------------------
 
 	@DeleteMapping("/character/{id}")
-	public void deleteCharacter(@PathVariable long id) {
-		characterService.deleteById(id);
+	public ResponseEntity<String> deleteCharacter(@PathVariable long id) {
+		CharacterDTO characterDTO = characterService.findByIdDTO(id); //gets the character from the user
+        if (characterDTO == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("There is no character");
+        } else {
+            userService.deleteCharacter(id);
+			return ResponseEntity.status(HttpStatus.CREATED).body("Character deleted succesfully");
+        }
 	}
+
+	@DeleteMapping("/user/{id}")
+	public ResponseEntity<String> deleteUser (@PathVariable long id) {
+		UserDTO userDTO = userService.findById(id); //gets the user
+        if (userDTO == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("There is no user");
+        } else {
+            userService.deleteUser(id);
+			return ResponseEntity.status(HttpStatus.CREATED).body("User deleted succesfully");
+        }
+	}
+
+
+
 
 	// IMAGES ------------------------------------------------------
 
@@ -462,17 +482,17 @@ public class grupo13RestController {
 		}
 	}
 
-	@PutMapping("/editUser")
-	public ResponseEntity<String> updateUser(@RequestBody String userName) throws IOException{
+	@PutMapping("/user/{id}")
+	public ResponseEntity<String> updateUser(@RequestBody String userName, @PathVariable long id) throws IOException{
         if(userName.isBlank()){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("The name cannot be left blank");
         }
-        UserDTO oldUserDTO = userService.getLoggedUserDTO();
+        UserDTO oldUserDTO = userService.findById(id);
         if(oldUserDTO != null){
             userService.updateName(oldUserDTO, userName);
 			return ResponseEntity.status(HttpStatus.CREATED).body("User updated succesfully");
         }else{
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Could not manage, not found");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Could not manage");
         }
 	}
 }

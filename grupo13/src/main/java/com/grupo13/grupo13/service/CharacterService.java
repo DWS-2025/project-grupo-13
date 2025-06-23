@@ -322,18 +322,20 @@ public class CharacterService {
     }
 	}
 
-    public void editCharacterName(String name, long id){
-        if(userService.getLoggedUser().getRoles().contains("ADMIN")||userService.getCharacter().id()==id){
+    public void editCharacterName(String name, long id) {
+        if (userService.getLoggedUser().getRoles().contains("ADMIN") || userService.getCharacter().id() == id) {
             InputSanitizer.validateWhitelist(name);
-        if(findById(id) == null){
-            throw new IllegalStateException("No character created");
-        }else{
-            Character newCharacter = characterRepository.findById(id).get();
-            newCharacter.setName(name);
-            characterRepository.save(newCharacter);
-        }
+            if (findById(id) == null) {
+                throw new IllegalStateException("No character created");
+            } else {
+                Character newCharacter = characterRepository.findById(id).get();
+                newCharacter.setName(name);
+                characterRepository.save(newCharacter);
+            }
 
-    }
+        }else{
+            throw new IllegalStateException("Not your character");
+        }
 	
 }
 }
