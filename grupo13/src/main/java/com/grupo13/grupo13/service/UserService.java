@@ -56,12 +56,11 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
     @Autowired
     private UserMapper userMapper;
+
     // returns a specific user by its id
     public UserDTO findById(long id) {
         return mapper.toDTO(userRepository.findById(id).get());
     }
-
-
 
     public UserDTO getUser(String name) {
 		return mapper.toDTO(userRepository.findByUserName(name).orElseThrow());
@@ -149,37 +148,28 @@ public class UserService {
         return armorMapper.toBasicDTOs(user.getInventoryArmor());
     }
 
-
     //return inventory by user ID
-      public List<WeaponBasicDTO> UserInventoryWeaponById(long id) {
+    public List<WeaponBasicDTO> UserInventoryWeaponById(long id) {
         if( getLoggedUser().getRoles().contains("ADMIN")){
-        User user = userRepository.findById(id).get();
-        return weaponMapper.toBasicDTOs(user.getInventoryWeapon());
-    
-    
-    }else{
-      throw new IllegalAccessError("Only an admin can access to other's inventory");
-
-    }
+            User user = userRepository.findById(id).get();
+            return weaponMapper.toBasicDTOs(user.getInventoryWeapon());
+        }else{
+            throw new IllegalAccessError("Only an admin can access to other's inventory");
+        }
     }
 
     public List<ArmorBasicDTO> UserInventoryArmorById(long id) {
         if( getLoggedUser().getRoles().contains("ADMIN")){
-        User user = userRepository.findById(id).get();
-        return armorMapper.toBasicDTOs(user.getInventoryArmor());
-    
-    
-    }else{
-      throw new IllegalAccessError("Only an admin can access to other's inventory");
-
-    }
+            User user = userRepository.findById(id).get();
+            return armorMapper.toBasicDTOs(user.getInventoryArmor());    
+        }else{
+            throw new IllegalAccessError("Only an admin can access to other's inventory");
+        }
     }
 
     //put a equipment in the inventory of an scpecific user
-    public void saveWeapon(long id) {
-        
+    public void saveWeapon(long id) {       
         User user = getLoggedUser();
-
         if (!hasWeapon(id)) {
             Weapon weapon = weaponService.findById(id);
             user.getInventoryWeapon().add(weapon);
@@ -216,32 +206,32 @@ public class UserService {
     public CharacterDTO getCharacter() {
         return characterMapper.toDTO(getLoggedUser().getCharacter());
     }
-      //returns character by id
+
+    //returns character by id
     public CharacterDTO getCharacterById(long id) {
-         if( getLoggedUser().getRoles().contains("ADMIN")){
-     return characterMapper.toDTO(userRepository.findById(id).get().getCharacter());
-
-         }else{
-      throw new IllegalAccessError("Only an admin can access to other's character");
-    }
-    }
-//delete character
-
-public void deleteCharacter(long id) {
-    if (getLoggedUserDTO().id() == id || getLoggedUser().getRoles().contains("ADMIN")) {
-        Character character = characterService.findById(id);
-        User user = character.getUser();
-        if (character != null) {
-            long charId = character.getId();
-            user.setCharacter(null);
-            saveUser(user);
-            characterService.deleteById(charId);
+        if( getLoggedUser().getRoles().contains("ADMIN")){
+            return characterMapper.toDTO(userRepository.findById(id).get().getCharacter());
+        }else{
+            throw new IllegalAccessError("Only an admin can access to other's character");
         }
-    } else{
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Id");
     }
 
-}
+    //delete character
+    public void deleteCharacter(long id) {
+        if (getLoggedUserDTO().id() == id || getLoggedUser().getRoles().contains("ADMIN")) {
+            Character character = characterService.findById(id);
+            User user = character.getUser();
+            if (character != null) {
+                long charId = character.getId();
+                user.setCharacter(null);
+                saveUser(user);
+                characterService.deleteById(charId);
+            }
+        } else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Id");
+        }
+
+    }
 
     //returns if the user has a specific weapon or armor
     public boolean hasWeapon(WeaponBasicDTO weapon){ 
@@ -284,13 +274,12 @@ public void deleteCharacter(long id) {
 
     public void deleteUser(long id) {
         if( getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId() == id){
-
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-        } else {
-            throw new NoSuchElementException("User doesn't exist " + id);
+            if (userRepository.existsById(id)) {
+                userRepository.deleteById(id);
+            } else {
+                throw new NoSuchElementException("User doesn't exist " + id);
+            }
         }
-    }
     }
     
     //creates user
