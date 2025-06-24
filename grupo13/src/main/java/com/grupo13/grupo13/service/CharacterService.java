@@ -1,7 +1,10 @@
 package com.grupo13.grupo13.service;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -17,6 +20,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
@@ -286,7 +291,9 @@ public class CharacterService {
     
 
     //returns the image from the id it gets
-    public Resource getImageFile(long id) throws SQLException  {
+    public Resource getImageFile(long id) throws SQLException, IllegalAccessException  {
+      if( userService.getLoggedUser().getRoles().contains("ADMIN")|| userService.getCharacter().id()==id){
+
         Character character = characterRepository.findById(id).orElseThrow();
 
 		if (character.getImageFile() != null) {
@@ -294,7 +301,58 @@ public class CharacterService {
 		} else {
 			throw new NoSuchElementException();
 		}
+    } else{
+        throw new IllegalAccessException();
     }
+    
+    }
+
+    public Resource downloadImage(long id) throws IOException, IllegalAccessException {
+    if (userService.getLoggedUser().getRoles().contains("ADMIN") 
+        || userService.getCharacter().id() == id) {
+
+        Character character = characterRepository.findById(id).orElseThrow();
+
+        String imageName = character.getImageName();
+        if (imageName == null) {
+            throw new NoSuchElementException("Character has no image");
+        }
+
+        if (!imageName.contains(".")) {
+            imageName = imageName + ".jpg";
+        }
+
+        if (imageName.contains("..") 
+            || imageName.contains("/") 
+            || imageName.contains("\\") 
+            || imageName.startsWith(".")) {
+            throw new SecurityException("Invalid file name: " + imageName);
+        }
+
+        Path imagePath = BACKUP_FOLDER.resolve(imageName).normalize();
+
+        if (!imagePath.startsWith(BACKUP_FOLDER)) {
+            throw new SecurityException("Invalid image path: " + imagePath);
+        }
+
+        if (!Files.exists(imagePath)) {
+            throw new FileNotFoundException("Image not found on disk: " + imagePath);
+        }
+
+        Resource resource = new UrlResource(imagePath.toUri());
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new IOException("Image cannot be read: " + imagePath);
+        }
+
+        return resource;
+
+    } else {
+        throw new IllegalAccessException("Not allowed to access this image");
+    }
+}
+
+
+
 
     //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {

@@ -2,12 +2,16 @@ package com.grupo13.grupo13.controller;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Pattern;
+
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -124,6 +128,7 @@ public class sessionController {
         }
         
         String originalFilename = characterImage.getOriginalFilename();
+        InputSanitizer.validateWhitelist(originalFilename);
         int dotIndex = originalFilename.lastIndexOf('.');
         String baseName = (dotIndex == -1) ? originalFilename : originalFilename.substring(0, dotIndex);
         String extension = (dotIndex == -1) ? "" : originalFilename.substring(dotIndex);
@@ -440,4 +445,36 @@ public class sessionController {
         }
         return "index";
     }
+
+  
+    @GetMapping("/download")
+    public ResponseEntity<Resource> downloadImage() throws IOException, IllegalAccessException {
+    Long id = userService.getCharacter().id();
+    Resource image = characterService.downloadImage(id);
+
+    String cleanFileName = image.getFilename();
+    String username = userService.getLoggedUserDTO().userName();
+
+    if (cleanFileName != null && username != null) {
+    cleanFileName = cleanFileName.replaceFirst("-" + Pattern.quote(username) + "(?=\\.[^.]+$)", "");
+    }
+
+    String contentType = "application/octet-stream";
+    try {
+        Path path = Paths.get(image.getURI());
+        String detectedType = Files.probeContentType(path);
+        if (detectedType != null) {
+            contentType = detectedType;
+        }
+    } catch (Exception e) {
+       
+    }
+
+    return ResponseEntity.ok()
+        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cleanFileName + "\"")
+        .contentType(MediaType.parseMediaType(contentType))
+        .body(image);
+}
+
+
 }

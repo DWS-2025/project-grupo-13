@@ -15,7 +15,10 @@
                <input type="submit" class="btn btn-primary" value="Change Name">
             </li>
          </form>
-
+         <form action="/downloadAdmin/{{character.id}}" method="GET">
+            <input type="hidden" name="_csrf" value="{{token}}"/>
+            <input type='submit' class="btn btn-primary" value='Download image'/>
+         </form>
          <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
             <p class="card-text">{{{character.description}}}</p>
          </li> <!--Shows rich text -->
