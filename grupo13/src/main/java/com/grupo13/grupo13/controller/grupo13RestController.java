@@ -244,7 +244,7 @@ public class grupo13RestController {
 	}
 
 	@GetMapping("/character/image")
-	public ResponseEntity<Object> getCharacterImage() throws SQLException, IOException {
+	public ResponseEntity<Object> getCharacterImage() throws SQLException, IOException, IllegalAccessException {
 		Resource postImage = characterService.getImageFile(userService.getLoggedUser().getId());
 		return ResponseEntity
 				.ok()
