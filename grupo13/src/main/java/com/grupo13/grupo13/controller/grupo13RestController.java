@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
+import com.grupo13.grupo13.DTOs.WeaponSearchDTO;
 import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
@@ -352,6 +354,44 @@ public class grupo13RestController {
 	}
 
 	// GENERAL / FUNCTIONALITY
+
+   //SEARCH WEAPONS
+
+  @GetMapping("/search")
+public List<WeaponBasicDTO> searchWeapons(
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String description,
+        @RequestParam(required = false) Integer strength,
+        @RequestParam(required = false) Integer price,
+        @RequestParam(required = false) Integer intimidation
+) {
+    
+    String n = (name != null && !name.isBlank()) ? name : null;
+    String d = (description != null && !description.isBlank()) ? description : null;
+    Integer s = (strength != null && strength > 0) ? strength : null;
+    Integer p = (price != null && price > 0) ? price : null;
+    Integer i = (intimidation != null && intimidation > 0) ? intimidation : null;
+
+    int nonNull = 0;
+    if (n != null) nonNull++;
+    if (d != null) nonNull++;
+    if (s != null) nonNull++;
+    if (p != null) nonNull++;
+    if (i != null) nonNull++;
+
+    if (nonNull < 2) {
+        throw new ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Search with at least 2 fields"
+        );
+    }
+
+   
+    WeaponSearchDTO probe = new WeaponSearchDTO(n, d, s, p, i);
+    return weaponService.search(probe); 
+}
+
+
 
 	@PostMapping("/armor/purchase/{id}")
 	public ArmorDTO purchaseArmor(@PathVariable long id) {
