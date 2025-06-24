@@ -49,16 +49,22 @@ public class grupo13RestController {
 
 	@Autowired
 	private CharacterService characterService;
+
 	@Autowired
 	private WeaponService weaponService;
+
 	@Autowired
 	private ArmorService armorService;
+
 	@Autowired
 	private WeaponMapper weaponMapper;
+
 	@Autowired
 	private armorMapper armorMapper;
+
 	@Autowired
 	private CharacterMapper characterMapper;
+
 	@Autowired
 	private UserService userService;
 
@@ -118,13 +124,10 @@ public class grupo13RestController {
     	try {
         	InputSanitizer.validateWhitelist(weaponDTO.name());
         	InputSanitizer.validateWhitelist(weaponDTO.description());
-
         	weaponService.saveDTO(weaponDTO);
         	Weapon weapon = weaponMapper.toDomain(weaponDTO);
         	URI location = fromCurrentRequest().path("/{id}").buildAndExpand(weapon.getId()).toUri();
-
         	return ResponseEntity.created(location).body(weaponDTO);
-
     	}catch (IllegalArgumentException ex) {
         	return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
     	}
@@ -135,13 +138,10 @@ public class grupo13RestController {
 		try {
         	InputSanitizer.validateWhitelist(armorDTO.name());
         	InputSanitizer.validateWhitelist(armorDTO.description());
-
         	armorService.saveDTO(armorDTO);
        		Armor armor = armorMapper.toDomain(armorDTO);
         	URI location = fromCurrentRequest().path("/{id}").buildAndExpand(armor.getId()).toUri();
-
         	return ResponseEntity.created(location).body(armorDTO);
-
     	}catch (IllegalArgumentException ex) {
         	return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
     	}
@@ -188,7 +188,6 @@ public class grupo13RestController {
 		try {
 			InputSanitizer.validateWhitelist(updatedArmorDTO.name());
 			InputSanitizer.validateWhitelist(updatedArmorDTO.description());
-
 			armorService.update(id, updatedArmorDTO);
 			return ResponseEntity.ok(updatedArmorDTO);
 		}catch (IllegalArgumentException ex) {
@@ -262,7 +261,6 @@ public class grupo13RestController {
 			InputSanitizer.validateWhitelist(characterDTO.description());
 			InputSanitizer.validateWhitelist(characterDTO.imageName());
 			characterService.save(characterDTO);
-
 			Character character = characterMapper.toDomain(characterDTO);
 			URI location = fromCurrentRequest().path("/{id}").buildAndExpand(character.getId()).toUri();
 			return ResponseEntity.created(location).body(characterDTO);
@@ -277,7 +275,6 @@ public class grupo13RestController {
 		if (!InputSanitizer.isImageValid(imageFile)) {
 			return ResponseEntity.badRequest().body("Error: Invalid image file.");
 		}
-
 		URI location = fromCurrentRequest().build().toUri();
 		characterService.createCharacterImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.created(location).build();
@@ -285,13 +282,13 @@ public class grupo13RestController {
 
 	// Update character
 
-	@PutMapping("/editCharacter")
-	public ResponseEntity<String> editCharacter(@RequestBody String name){       
-        CharacterDTO characterDTO = userService.getCharacter(); //gets the character from the user
+	@PutMapping("/character/{id}")
+	public ResponseEntity<String> editCharacter(@RequestBody String name, @PathVariable long id){       
+        CharacterDTO characterDTO = characterService.findByIdDTO(id); //gets the character from the user
         if (characterDTO == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("There is no character");
         } else {
-            characterService.editCharacterName(name);
+            characterService.editCharacterName(name, id);
 			return ResponseEntity.status(HttpStatus.CREATED).body("Character updated succesfully");
         }
 	}
@@ -301,8 +298,25 @@ public class grupo13RestController {
 	// DELETE -------------------------------------------------
 
 	@DeleteMapping("/character/{id}")
-	public void deleteCharacter(@PathVariable long id) {
-		characterService.deleteById(id);
+	public ResponseEntity<String> deleteCharacter(@PathVariable long id) {
+		CharacterDTO characterDTO = characterService.findByIdDTO(id); //gets the character from the user
+        if (characterDTO == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("There is no character");
+        } else {
+            userService.deleteCharacter(id);
+			return ResponseEntity.status(HttpStatus.CREATED).body("Character deleted succesfully");
+        }
+	}
+
+	@DeleteMapping("/user/{id}")
+	public ResponseEntity<String> deleteUser (@PathVariable long id) {
+		UserDTO userDTO = userService.findById(id); //gets the user
+        if (userDTO == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("There is no user");
+        } else {
+            userService.deleteUser(id);
+			return ResponseEntity.status(HttpStatus.CREATED).body("User deleted succesfully");
+        }
 	}
 
 	// IMAGES ------------------------------------------------------
@@ -369,7 +383,6 @@ public class grupo13RestController {
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		WeaponDTO equipment = weaponService.findByIdDTO(id);
-
 		if (equipment != null) { // if it exists
 			if (userService.hasWeapon(id)) {
 				characterService.equipWeapon(equipment, charId); // equips it, adding the necessary attributes
@@ -390,7 +403,6 @@ public class grupo13RestController {
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		ArmorDTO equipment = armorService.findByIdDTO(id);
-
 		if (equipment != null) { // if it exists
 			if (userService.hasArmor(id)) {
 				characterService.equipArmor(equipment, charId); // equips it, adding the necessary attributes
@@ -413,7 +425,6 @@ public class grupo13RestController {
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		ArmorDTO equipment = armorService.findByIdDTO(id);
-
 		if (equipment != null) { // if it exists
 			if (userService.hasArmor(id)) {
 				characterService.unEquipArmor(id, charId); // equips it, adding the necessary attributes
@@ -433,7 +444,6 @@ public class grupo13RestController {
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
 		WeaponDTO equipment = weaponService.findByIdDTO(id);
-
 		if (equipment != null) { // if it exists
 			if (userService.hasWeapon(id)) {
 				characterService.unEquipWeapon(id, charId); // equips it, adding the necessary attributes
@@ -462,17 +472,17 @@ public class grupo13RestController {
 		}
 	}
 
-	@PutMapping("/editUser")
-	public ResponseEntity<String> updateUser(@RequestBody String userName) throws IOException{
+	@PutMapping("/user/{id}")
+	public ResponseEntity<String> updateUser(@RequestBody String userName, @PathVariable long id) throws IOException{
         if(userName.isBlank()){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("The name cannot be left blank");
         }
-        UserDTO oldUserDTO = userService.getLoggedUserDTO();
+        UserDTO oldUserDTO = userService.findById(id);
         if(oldUserDTO != null){
             userService.updateName(oldUserDTO, userName);
 			return ResponseEntity.status(HttpStatus.CREATED).body("User updated succesfully");
         }else{
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Could not manage, not found");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Could not manage");
         }
 	}
 }

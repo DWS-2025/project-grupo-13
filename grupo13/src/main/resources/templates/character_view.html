@@ -7,17 +7,19 @@
          <img src="/userImage"></img>
          <form action="/editCharacter" method="POST">
             <h5 class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.name}}</h5>
-            <input type="hidden" name="_csrf" value="{{token}}" />
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> 
                <input type="text" name="name" value="{{character.name}}" class="form-control" style="width: 100%;" />
             </li>
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+               <input type="hidden" name="_csrf" value="{{token}}" />
                <input type='submit' class="btn btn-primary" value='Change name'/>
             </li>
          </form>
          <form action="/deleteCharacter" method="POST">
-            <input type="hidden" name="_csrf" value="{{token}}"/>
-            <input type='submit' class="btn btn-primary" value='Delete character'/>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+               <input type="hidden" name="_csrf" value="{{token}}"/>
+               <input type='submit' class="btn btn-primary" value='Delete character'/>
+            </li>
          </form>
            </form>
          <form action="/download" method="GET">
@@ -31,34 +33,39 @@
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">MONEY - {{user.money}}</li>
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Strength - {{character.strength}}</li>
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Defense - {{character.defense}}</li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Intimidation - {{character.intimidation}}</li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Style - {{character.style}}</li>
             
             {{#character.armor}}
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
             <button class="btn w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCardA" style="background-color:  rgb(255, 179, 132);" ; aria-expanded="true" aria-controls="collapseCardA">
                Equipped armor
             </button>
-               <div class="collapse" id="collapseCardA">
-                  <form action="/unEquipArmor" method="post" enctype="multipart/form-data">
-                     <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
-                         <div class="row g-0">
-                           <div class="col-md-4">
-                              <img src="api/armor/{{id}}/image" class="img-fluid rounded-start" alt="...">
-                           </div>
-                           <div class="col-md-8">
-                              <div class="card-body">
-                                 <h5 class="card-title">{{name}}</h5>
-                                 <p class="card-text"> {{description}} </p>
-                                 <input type='submit' value='Unequip'>
-                                 <!-- Hidden inputs-->
-                                 <input type="hidden" name="id" value="{{id}}">
-                                 <input type="hidden" name="_csrf" value="{{token}}" />
-                                 <!--end of hidden inputs-->
-                              </div>
+            </li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"></li>
+            <div class="collapse" id="collapseCardA">
+               <form action="/unEquipArmor" method="post" enctype="multipart/form-data">
+                  <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
+                     <div class="row g-0">
+                        <div class="col-md-4">
+                           <img src="api/armor/{{id}}/image" class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                           <div class="card-body">
+                              <h5 class="card-title">{{name}}</h5>
+                              <p class="card-text">Defense: {{defense}}</p>
+                              <p class="card-text">Style: {{style}}</p>
+                              <input type='submit' value='Unequip'>
+                              <!-- Hidden inputs-->
+                              <input type="hidden" name="id" value="{{id}}">
+                              <input type="hidden" name="_csrf" value="{{token}}" />
+                              <!--end of hidden inputs-->
                            </div>
                         </div>
                      </div>
-                  </form>
-               </div>
+                  </div>
+               </form>
+            </div>
             </li>
             {{/character.armor}}
 
@@ -81,7 +88,8 @@
                            <div class="col-md-8">
                               <div class="card-body">
                                  <h5 class="card-title">{{name}}</h5>
-                                 <p class="card-text"> {{description}} </p>
+                                 <p class="card-text">Strength: {{strength}}</p>
+                                 <p class="card-text">Intimidation: {{intimidation}}</p>
                                  <input type='submit' value='Unequip'>
                                  <!-- Hidden inputs-->
                                  <input type="hidden" name="id" value="{{id}}">

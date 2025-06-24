@@ -7,11 +7,11 @@
          <img src="/userImageAdmin/{{character.id}}"></img>
          <form action="/admin/user/{{id}}/editCharacterName" method="POST">
             <h5 class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.name}}</h5>
-            <input type="hidden" name="_csrf" value="{{token}}" />
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> 
                <input type="text" name="newName" value="{{character.name}}" class="form-control" style="width: 100%;" />
             </li>
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+               <input type="hidden" name="_csrf" value="{{token}}" />
                <input type="submit" class="btn btn-primary" value="Change Name">
             </li>
          </form>

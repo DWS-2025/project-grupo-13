@@ -137,7 +137,6 @@ public class sessionController {
             model.addAttribute("message", "Make sure the image has a valid name.");
             return "sp_errors";
         }
-
         Character character = new Character(characterDesc, nameOfCharacter,imageName);
         CharacterDTO characterDTO = characterMapper.toDTO(character);
         CharacterDTO savedCharacterDTO = characterService.save(characterDTO);
@@ -438,7 +437,7 @@ public class sessionController {
         long id =userService.getLoggedUserDTO().id();
         UserDTO u = userService.findById(id);
         if(u.character()!=null){
-            userService.deleteCharacter(u);
+            userService.deleteCharacter(u.character().id());
         }else{
             model.addAttribute("message", "This user doesn't have a character");
             return "sp_errors";
