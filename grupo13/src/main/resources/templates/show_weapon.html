@@ -22,29 +22,14 @@
 
 {{#admin}}
     <div class="col">
-        <!--div>
-            <a href="#" class="card-link">
-            <form action="/weapon/{{id}}/delete" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="id" value="{{id}}">
+        <a href="#" class="card-link">
+			<form action="/weapon/{{id}}/delete" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="id" value="{{id}}">
 			<input type="hidden" name="_csrf" value="{{token}}"/>
-		    <input type='submit' value='Delete weapon'>
-            </form>
-            <form action="/weapon/{{id}}/edit" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="id" value="{{id}}">
-			<input type="hidden" name="_csrf" value="{{token}}"/>
-		    <input type='submit' value='Edit weapon'>
-            </form>
-            </a>
-        </div-->
-
-            <a href="#" class="card-link">
-				<form action="/weapon/{{id}}/delete" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="id" value="{{id}}">
-				<input type="hidden" name="_csrf" value="{{token}}"/>
-				<input type='submit' value='Delete weapon' />
-				</form>
-				<a href="/weapon/{{id}}/edit">Edit weapon</a>            
-            </a>
+			<input type='submit' value='Delete weapon' />
+			</form>
+			<a href="/weapon/{{id}}/edit">Edit weapon</a>            
+        </a>
     </div>
 {{/admin}}
 
