@@ -1,16 +1,22 @@
 {{>header}}
 
-    <h1 style="color:rgb(0, 0, 0); text-align: center; font-weight: bold; font-family: Arial, sans-serif;">Weapons Store</h1>       
-        <div id="weapon-list" class="row row-cols-auto g-4 justify-content-center" ></div>        
-            <!-- The weapons are loaded here with AJAX -->      
-        </div>   
+    <h1 style="color: rgb(52, 206, 0); text-align: center; font-weight: bold; font-family: Arial, sans-serif;">Weapon Store</h1>
+    
+    {{#user}}
+    <h3 style="color:rgb(138, 206, 0); text-align: center; font-weight: bold; font-family: Arial, sans-serif;">Money: {{user.money}}</h3>
+    {{/user}}
+
+
+    <div id="weapon-list" class="row row-cols-auto g-4 justify-content-center" ></div>        
+        <!-- The weapons are loaded here with AJAX -->      
+    </div>   
         
-        <nav aria-label="Page navigation">
-            <div id="pagination" class="pagination">
-                <button class="btn-next-prev" id="prevPage">Prev</button>
-                <button class="btn-next-prev" id="nextPage">Next</button>
-            </div>
-        </nav>
+    <nav aria-label="Page navigation">
+        <div id="pagination" class="pagination">
+            <button class="btn-next-prev" id="prevPage">Prev</button>
+            <button class="btn-next-prev" id="nextPage">Next</button>
+        </div>
+    </nav>
     
     <!--script src="../../resources/static\js/WeaponShop.js"-->
     <script>

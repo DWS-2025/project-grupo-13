@@ -21,10 +21,12 @@
                <input type='submit' class="btn btn-primary" value='Delete character'/>
             </li>
          </form>
-           </form>
+         
          <form action="/download" method="GET">
-            <input type="hidden" name="_csrf" value="{{token}}"/>
-            <input type='submit' class="btn btn-primary" value='Download image'/>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+               <input type="hidden" name="_csrf" value="{{token}}"/>
+               <input type='submit' class="btn btn-primary" value='Download image'/>
+            </li>
          </form>
          <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
             <p class="card-text">{{{character.description}}}</p>

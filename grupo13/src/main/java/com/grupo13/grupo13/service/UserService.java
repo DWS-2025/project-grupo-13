@@ -199,7 +199,7 @@ public class UserService {
     public void saveCharacter(CharacterDTO characterDTO) {
         Character character = characterMapper.toDomain(characterDTO);
         InputSanitizer.sanitizeRichText(character.getDescription());
-        InputSanitizer.sanitizeRichText(character.getName());
+        InputSanitizer.validateWhitelist(character.getName());
         User user = getLoggedUser();
         user.setCharacter(character);
         userRepository.save(user);
@@ -288,7 +288,7 @@ public class UserService {
     public void createUser(String user, String pass){
         InputSanitizer.validateWhitelist(user);
         InputSanitizer.validateWhitelist(pass);
-        userRepository.save(new User(user, passwordEncoder.encode(pass), "USER"));
+        userRepository.save(new User(user, passwordEncoder.encode(pass),10000, "USER"));
     }
     
     //checks if username is already in use

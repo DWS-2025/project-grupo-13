@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.security.jwt;
-
 import java.time.Duration;
 
 public enum TokenType {

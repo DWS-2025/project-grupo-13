@@ -47,9 +47,9 @@ public class SampleData {
         // loads the default items
         @PostConstruct
         public void init() {
-                userRepository.save(new User("user", passwordEncoder.encode("pass"), "USER"));
-                userRepository.save(new User("Lotti", passwordEncoder.encode("lottipico"), "USER"));
-		userRepository.save(new User("admin", passwordEncoder.encode("adminpass"), "USER", "ADMIN"));
+                userRepository.save(new User("user", passwordEncoder.encode("pass"),10000, "USER"));
+                userRepository.save(new User("Lotti", passwordEncoder.encode("lottipico"),10000, "USER"));
+		userRepository.save(new User("admin", passwordEncoder.encode("adminpass"),2147483647, "USER", "ADMIN"));
 
                 //faltan las imagenes
 
@@ -126,13 +126,13 @@ public class SampleData {
                 weaponRepository.save(weapon12);
 
                 //w13.png
-                Weapon weapon13 = new Weapon("War Hammer", "Forged with a squared iron head, this hammer is designed to smash through enemy lines and fortifications. While not as elegant as a sword or axe, its devastating blows make it a favorite in brute-force warfare. Effective, but requires stamina.", 
+                Weapon weapon13 = new Weapon("War Hammer", "Forged with a squared iron head, this hammer is designed to smash through enemy lines and fortifications. While not as elegant as a sword or axe, its devastating blows make it a favorite in brute force warfare. Effective, but requires stamina.", 
                 20, 6, 5);
                 weapon13.setimageFile(localImageToBlob("images/imp_imgs/w13.png"));
                 weaponRepository.save(weapon13);
 
                 //w14.png
-                Weapon weapon14 = new Weapon("Shark Sword", "This bizarre weapon resembles a shark mid-lunge, with jagged teeth forming its serrated blade. Said to be crafted by sea cultists, it s feared both for its savage design and eerie aura. Its unique shape can tear through flesh, armor, and confidence alike.", 
+                Weapon weapon14 = new Weapon("Shark Sword", "This bizarre weapon resembles a shark mid lunge, with jagged teeth forming its serrated blade. Said to be crafted by sea cultists, it s feared both for its savage design and eerie aura. Its unique shape can tear through flesh, armor, and confidence alike.", 
                 10, 3401, 802);
                 weapon14.setimageFile(localImageToBlob("images/imp_imgs/w14.png"));
                 weaponRepository.save(weapon14);
@@ -144,7 +144,7 @@ public class SampleData {
                 weaponRepository.save(weapon15);
 
                 //w16.png
-                Weapon weapon16 = new Weapon("Winged Piglet", "Is it a hammer or an adorable little pig? Its both! This unusual (and very cute) hammer is infused with celestial magic, allowing it to deal heavy blows to enemies and occasionally knock them far away.",
+                Weapon weapon16 = new Weapon("Winged Piglet", "Is it a hammer or an adorable little pig. Its both. This unusual,and very cute, hammer is infused with celestial magic, allowing it to deal heavy blows to enemies and occasionally knock them far away.",
                 2010, 9170, 20);
                 weapon16.setimageFile(localImageToBlob("images/imp_imgs/w16.png"));
                 weaponRepository.save(weapon16);
@@ -175,36 +175,36 @@ public class SampleData {
 
                 //w21.png
                 Weapon weapon21 = new Weapon("Saturns Antlers", "A whimsical staff crowned with a cow head, orbiting rings, and a golden bell. Infused with stardust and pastoral magic, it channels celestial energy with every swing, bringing both charm and cosmic might to its wielder.", 
-                100314, 142, 274414);
+                2147483647, 142, 274414);
                 weapon21.setimageFile(localImageToBlob("images/imp_imgs/w21.png"));
                 weaponRepository.save(weapon21);
 
                 //w22.png
-                Weapon weapon22 = new Weapon("Dark Saturns Antlers", "A mystical staff born from the depths of the cosmos, featuring a star-speckled purple cow head and golden rings. Its eerie bell tolls with dark energy, summoning the silent power of the night sky and forgotten constellations.", 
+                Weapon weapon22 = new Weapon("Dark Saturns Antlers", "A mystical staff born from the depths of the cosmos, featuring a star speckled purple cow head and golden rings. Its eerie bell tolls with dark energy, summoning the silent power of the night sky and forgotten constellations.", 
                 980314, 1401, 614454);
                 weapon22.setimageFile(localImageToBlob("images/imp_imgs/w22.png"));
                 weaponRepository.save(weapon22);
 
                 //w23.png
-                Weapon weapon23 = new Weapon("Gum Rapier", "A sword crafted entirely from enchanted bubblegump. Its sticky surface traps enemies, while its chewy core allows for lightning-fast strikes. The perfect weapon for warriors who prefer style and surprise in battle. Deadly, delicious, and unpredictable.", 
+                Weapon weapon23 = new Weapon("Gum Rapier", "A sword crafted entirely from enchanted bubblegump. Its sticky surface traps enemies, while its chewy core allows for lightning fast strikes. The perfect weapon for warriors who prefer style and surprise in battle. Deadly, delicious, and unpredictable.", 
                 2041, 476, 5);
                 weapon23.setimageFile(localImageToBlob("images/imp_imgs/w23.png"));
                 weaponRepository.save(weapon23);
 
                 //w24.png
-                Weapon weapon24 = new Weapon("Rubber Ducky Stick", "A hilariously absurd weapon: a plain stick topped with a cheerful rubber duck. It wont deal much damage, but its perfect for confusing foes or unsettling those with duck-related fears. Victory through psychological quackery!", 
+                Weapon weapon24 = new Weapon("Rubber Ducky Stick", "A hilariously absurd weapon. A plain stick topped with a cheerful rubber duck. It wont deal much damage, but its perfect for confusing foes or unsettling those with duck related fears. Victory through psychological quackery", 
                 11, 7054, 8012);
                 weapon24.setimageFile(localImageToBlob("images/imp_imgs/w24.png"));
                 weaponRepository.save(weapon24);
 
                 //w25.png
-                Weapon weapon25 = new Weapon("Fish Flail", "An unconventional weapon crafted from a slippery fish chained to a wooden handle. It swings wildly and unpredictably, making it hard to master—but devastatingly effective. Smells awful, but leaves a lasting impression on enemies.", 
+                Weapon weapon25 = new Weapon("Fish Flail", "An unconventional weapon crafted from a slippery fish chained to a wooden handle. It swings wildly and unpredictably, making it hard to master but devastatingly effective. Smells awful, but leaves a lasting impression on enemies.", 
                 14, 21, 2);
                 weapon25.setimageFile(localImageToBlob("images/imp_imgs/w25.png"));
                 weaponRepository.save(weapon25);
 
                 //w26.png
-                Weapon weapon26 = new Weapon("Chicken Sword", "An utterly bizarre weapon that fuses poultry with combat. It is not sharp, swift, or smart—but it is unforgettable. Causes mild bruises, loud clucking, and occasional existential crises in enemies. A true farmyard fiasco in blade form.",
+                Weapon weapon26 = new Weapon("Chicken Sword", "An utterly bizarre weapon that fuses poultry with combat. It is not sharp, swift, or smart but it is unforgettable. Causes mild bruises, loud clucking, and occasional existential crises in enemies. A true farmyard fiasco in blade form.",
                 2010, 70, 2);
                 weapon26.setimageFile(localImageToBlob("images/imp_imgs/w26.png"));
                 weaponRepository.save(weapon26);
@@ -226,6 +226,18 @@ public class SampleData {
                 4144, 1144, 89);
                 weapon29.setimageFile(localImageToBlob("images/imp_imgs/w29.png"));
                 weaponRepository.save(weapon29);
+
+                //w30.png
+                Weapon weapon30 = new Weapon("Fiesta Knife", "This legendary folding knife appears every year during the local festivals of Mostoles. While not the sharpest blade in town, it carries the weight of a thousand stories told at 3 a.m. under the glow of cheap beer.", 
+                2147483647, 45, 2147483647);
+                weapon30.setimageFile(localImageToBlob("images/imp_imgs/w30.png"));
+                weaponRepository.save(weapon30);
+
+                //w31.png
+                Weapon weapon31 = new Weapon("Paper Plane", "A delicate weapon shaped like a paper airplane. While it may appear flimsy, it can surprise foes with swift, precise attacks when thrown by an expert hand. Its lightness makes it nearly silent in flight, ideal for stealthy strikes from afar.",                                         
+                2977, 1, 1);
+                weapon31.setimageFile(localImageToBlob("images/imp_imgs/w31.png"));
+                weaponRepository.save(weapon31);
                 
                 //a1.png
                 Armor armor = new Armor("Wood Armor", "Crafted from sturdy oak wood, this lightweight armor offers modest protection and great mobility. Ideal for novice adventurers or scouts who need speed over strength. Fragile against strong attacks but easy to replace and affordable.", 
@@ -306,7 +318,7 @@ public class SampleData {
                 armorRepository.save(armor13);
 
                 //a14.png
-                Armor armor14 = new Armor("Chips Bag", "An odd armor fashioned from a large potato chips bag. Though lacking in actual protection, it is lightweight and attention-grabbing. Ideal for casual wear or pranks, but very impractical for serious combat encounters.", 
+                Armor armor14 = new Armor("Chips Bag", "An odd armor fashioned from a large potato chips bag. Though lacking in actual protection, it is lightweight and attention grabbing. Ideal for casual wear or pranks, but very impractical for serious combat encounters.", 
                 2, 5,0 );
                 armor14.setImageFile(localImageToBlob("images/imp_imgs/a14.png"));
                 armorRepository.save(armor14);
@@ -318,7 +330,7 @@ public class SampleData {
                 armorRepository.save(armor15);
 
                 //a16.png
-                Armor armor16 = new Armor("DVD Armor", "This glimmering armor is entirely crafted from upcycled DVDs, forming a lightweight yet sturdy defense that refracts rainbow light with every move. Its disco-ball effect dazzles opponents while offering surprising protection.", 
+                Armor armor16 = new Armor("DVD Armor", "This glimmering armor is entirely crafted from upcycled DVDs, forming a lightweight yet sturdy defense that refracts rainbow light with every move. Its disco ball effect dazzles opponents while offering surprising protection.", 
                 548, 541, 54);
                 armor16.setImageFile(localImageToBlob("images/imp_imgs/a16.png"));
                 armorRepository.save(armor16);
@@ -336,11 +348,69 @@ public class SampleData {
                 armorRepository.save(armor18);
 
                 //a19.png
-                Armor armor19 = new Armor("Painter s Smock", "A garment worn by artists to protect their clothing during painting. Sturdy and well-worn, it is heavily spotted with vibrant paint splatters that tell stories of countless creations. Every stain hides a unique story.", 
+                Armor armor19 = new Armor("Painter s Smock", "A garment worn by artists to protect their clothing during painting. Sturdy and well worn, it is heavily spotted with vibrant paint splatters that tell stories of countless creations. Every stain hides a unique story.", 
                 1, 954, 385);
                 armor19.setImageFile(localImageToBlob("images/imp_imgs/a19.png"));
                 armorRepository.save(armor19);
 
-        }
+                //a20.png
+                Armor armor20 = new Armor("Lava Armor", "Forged in volcanic chambers, this molten armor pulses with glowing magma veins. Provides intense heat resistance and slight fire damage to attackers. Not recommended in wooden buildings.", 
+                37, 1275, 312);
+                armor20.setImageFile(localImageToBlob("images/imp_imgs/a20.png"));
+                armorRepository.save(armor20);
 
+                //a21.png
+                Armor armor21 = new Armor("Jellyfish Armor", "Made from translucent, gelatinous material, this armor glows softly in the dark and pulses like a living creature. Grants slight electric shock to melee attackers and underwater breathing to the wearer.", 
+                2147483647, 69, 83647);
+                armor21.setImageFile(localImageToBlob("images/imp_imgs/a21.png"));
+                armorRepository.save(armor21);
+
+                //a22.png
+                Armor armor22 = new Armor("Sunflower Suit", "This vibrant armor is stitched from magical sunflower petals and stems. Absorbs sunlight to slowly regenerate health during the day and boosts morale in allies with its cheerful appearance.", 
+                2, 7404, 7510);
+                armor22.setImageFile(localImageToBlob("images/imp_imgs/a22.png"));
+                armorRepository.save(armor22);
+
+                //a23.png
+                Armor armor23 = new Armor("Tea Kettle Mail", "A whimsical suit forged from enchanted teapots and kettle parts. Steam puffs out harmlessly from the spout pauldrons. Grants fire resistance and occasionally brews morale boosting tea mid battle.",
+                2145512, 4145, 10);
+                armor23.setImageFile(localImageToBlob("images/imp_imgs/a23.png"));
+                armorRepository.save(armor23);
+
+                //a24.png
+                Armor armor24 = new Armor("Plague Doctor Vestments", "This eerie armor is modeled after historical plague doctor garb. Imbued with antiseptic magic and dark alchemy, it grants poison resistance and a minor aura of dread to nearby foes.",
+                2147545, 5112,2 );
+                armor24.setImageFile(localImageToBlob("images/imp_imgs/a24.png"));
+                armorRepository.save(armor24);
+
+                //a25.png
+                Armor armor25 = new Armor("Armadillo Suit", "Crafted to mimic the hardy shell of an armadillo, this armor rolls with the hits, literally. Highly durable and flexible, it provides solid defense while enabling evasive maneuvers. Perfect for unconventional warriors.", 
+                458, 54, 17);
+                armor25.setImageFile(localImageToBlob("images/imp_imgs/a25.png"));
+                armorRepository.save(armor25);
+
+                //a26.png
+                Armor armor26 = new Armor("Banana Suit", "A ridiculous full body costume shaped like a peeled banana. While it offers zero real defense, it boosts morale and distracts enemies with sheer absurdity. Worn only by the bravest fools and most committed jesters of battle.", 
+                5, 1, 4);
+                armor26.setImageFile(localImageToBlob("images/imp_imgs/a26.png"));
+                armorRepository.save(armor26);
+ 
+                //a27.png
+                Armor armor27 = new Armor("Pizza Sweater", "Warm, greasy, and delicious looking, this pullover resembles a pepperoni pizza slice. It won t stop a sword, but it may stop hunger. Popular among eccentric adventurers who care more about vibes than victory.", 
+                27, 17, 4);
+                armor27.setImageFile(localImageToBlob("images/imp_imgs/a27.png"));
+                armorRepository.save(armor27);
+
+                //a28.png
+                Armor armor28 = new Armor("Barrel Armor", "Composed of an aged wooden cask, this makeshift armor offers basic protection in an absurdly comical form. Despite modest defensive capabilities, it stands out for its quirky look and the improvised, almost laughable nature of its design.", 
+                47, 41, 38);
+                armor28.setImageFile(localImageToBlob("images/imp_imgs/a28.png"));
+                armorRepository.save(armor28);
+
+                //a29.png
+                Armor armor29 = new Armor("Lattice Plate", "This intricate armor is crafted from interlocking latticework metal, combining structural elegance with moderate protection. Its airy design allows surprising flexibility, while the open mesh gleams under light, favored by elite ceremonial guards.", 
+                11, 94, 85);
+                armor29.setImageFile(localImageToBlob("images/imp_imgs/a29.png"));
+                armorRepository.save(armor29);
+        }
 }

@@ -137,14 +137,15 @@ public class sessionController {
             model.addAttribute("message", "Make sure the image has a valid name.");
             return "sp_errors";
         }
+        characterService.backupImage(characterImage, imageName);
         Character character = new Character(characterDesc, nameOfCharacter,imageName);
         CharacterDTO characterDTO = characterMapper.toDTO(character);
         CharacterDTO savedCharacterDTO = characterService.save(characterDTO);
         
         // saves the character in the repository
-        userService.saveCharacter(savedCharacterDTO);
-        characterService.saveUser(savedCharacterDTO);    
+        userService.saveCharacter(savedCharacterDTO);   
         characterService.save(savedCharacterDTO, characterImage, imageName);
+        characterService.saveUser(savedCharacterDTO); 
         userService.save(userService.getLoggedUserDTO());
 
         /* // saves image in the correspondent folder
@@ -169,13 +170,15 @@ public class sessionController {
    
     //used to show the weapons on the shop
     @GetMapping("/weaponshop")
-    public String showWeapons(Model model, @PageableDefault(size = 9) Pageable pageable) {
+    public String showWeapons(Model model, Pageable pageable) {
+        model.addAttribute("user", userService.getLoggedUserDTOOrNull());
         return "listing_weapons";
     }
 
     //used to show the armors on the shop
     @GetMapping("/armorshop")
     public String showArmors(Model model, Pageable pageable) {
+        model.addAttribute("user", userService.getLoggedUserDTOOrNull());
         return "listing_armors";
     }
     
@@ -408,7 +411,7 @@ public class sessionController {
 
     @PostMapping("/deleteUser")
 	public String deleteUser(Model model) throws IOException{
-       UserDTO u= userService.getLoggedUserDTO();
+       UserDTO u = userService.getLoggedUserDTO();
        userService.deleteUser(u.id());
        return "/logout";
 	}

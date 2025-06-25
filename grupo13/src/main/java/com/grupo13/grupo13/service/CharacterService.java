@@ -118,7 +118,7 @@ public class CharacterService {
         // sanitize name
         String baseName = Paths.get(imageName).getFileName().toString();
         if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")|| !InputSanitizer.isImageValid(imageFile)) {
-            throw new SecurityException("Invalid file name: " + imageName);
+            throw new SecurityException("Invalid file name");
         }
 
         String orig = imageFile.getOriginalFilename();

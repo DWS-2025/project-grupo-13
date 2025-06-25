@@ -41,11 +41,11 @@ public class User {
     protected User(){}
 
     //constructor
-    public User(String name, String encodedPassword, String... roles) {
+    public User(String name, String encodedPassword, int money, String... roles) {
 		this.userName = name;
 		this.encodedPassword = encodedPassword;
 		this.roles = List.of(roles);
-        this.money= 10000;
+        this.money = money;
 	}
 
     //get functions

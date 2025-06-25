@@ -357,39 +357,35 @@ public class grupo13RestController {
 
    //SEARCH WEAPONS
 
-  @GetMapping("/search")
-public List<WeaponBasicDTO> searchWeapons(
-        @RequestParam(required = false) String name,
-        @RequestParam(required = false) String description,
-        @RequestParam(required = false) Integer strength,
-        @RequestParam(required = false) Integer price,
-        @RequestParam(required = false) Integer intimidation
-) {
+  	@GetMapping("/search")
+	public List<WeaponBasicDTO> searchWeapons(
+			@RequestParam(required = false) String name,
+			@RequestParam(required = false) String description,
+			@RequestParam(required = false) Integer strength,
+			@RequestParam(required = false) Integer price,
+			@RequestParam(required = false) Integer intimidation) {
     
-    String n = (name != null && !name.isBlank()) ? name : null;
-    String d = (description != null && !description.isBlank()) ? description : null;
-    Integer s = (strength != null && strength > 0) ? strength : null;
-    Integer p = (price != null && price > 0) ? price : null;
-    Integer i = (intimidation != null && intimidation > 0) ? intimidation : null;
+		String n = (name != null && !name.isBlank()) ? name : null;
+		String d = (description != null && !description.isBlank()) ? description : null;
+		Integer s = (strength != null && strength > 0) ? strength : null;
+		Integer p = (price != null && price > 0) ? price : null;
+		Integer i = (intimidation != null && intimidation > 0) ? intimidation : null;
 
-    int nonNull = 0;
-    if (n != null) nonNull++;
-    if (d != null) nonNull++;
-    if (s != null) nonNull++;
-    if (p != null) nonNull++;
-    if (i != null) nonNull++;
-
-    if (nonNull < 2) {
-        throw new ResponseStatusException(
-            HttpStatus.BAD_REQUEST,
-            "Search with at least 2 fields"
-        );
-    }
-
-   
-    WeaponSearchDTO probe = new WeaponSearchDTO(n, d, s, p, i);
-    return weaponService.search(probe); 
-}
+		int nonNull = 0;
+		if (n != null) nonNull++;
+		if (d != null) nonNull++;
+		if (s != null) nonNull++;
+		if (p != null) nonNull++;
+		if (i != null) nonNull++;
+		if (nonNull < 2) {
+			throw new ResponseStatusException(
+				HttpStatus.BAD_REQUEST,
+				"Search with at least 2 fields"
+			);
+		}
+		WeaponSearchDTO probe = new WeaponSearchDTO(n, d, s, p, i);
+		return weaponService.search(probe); 
+	}
 
 
 
