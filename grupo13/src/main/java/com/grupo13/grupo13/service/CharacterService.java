@@ -113,13 +113,23 @@ public class CharacterService {
         backupImage(imageFile, imageName);
         characterRepository.save(character);
     }
+
+    public void checkImage(MultipartFile imageFile, String imageName){
+        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")|| !InputSanitizer.isImageValid(imageFile)) {
+            throw new SecurityException("Invalid file name");
+        }
+    }
+
+    public void checkImageName(String imageName){
+        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")) {
+            throw new SecurityException("Invalid file name");
+        }
+    }
     
     public String backupImage(MultipartFile imageFile, String imageName) throws IOException {
         // sanitize name
         String baseName = Paths.get(imageName).getFileName().toString();
-        if (imageName.contains("..") || imageName.contains("/") || imageName.contains("\\") || imageName.startsWith(".")|| !InputSanitizer.isImageValid(imageFile)) {
-            throw new SecurityException("Invalid file name");
-        }
+        checkImage(imageFile, imageName);
 
         String orig = imageFile.getOriginalFilename();
         String ext = "";
