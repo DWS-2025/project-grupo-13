@@ -281,7 +281,9 @@ public class AdminController {
             List<WeaponBasicDTO> currentInventoryWeapon = userService.UserInventoryWeaponById(id);
             List<ArmorBasicDTO> currentInventoryArmor = userService.UserInventoryArmorById(id);
             CharacterDTO characterDTO = userService.getCharacterById(id);
+            UserDTO userDTO = userService.findById(id);
             // gets the character and its inventory for mustache
+            model.addAttribute("viewUser", userDTO);
             model.addAttribute("character", characterDTO);
             model.addAttribute("currentWeapon", currentInventoryWeapon);
             model.addAttribute("currentArmor", currentInventoryArmor);
@@ -368,7 +370,8 @@ public class AdminController {
     @GetMapping("/downloadAdmin/{id}")
     public ResponseEntity<Resource> downloadImageAdmin(@PathVariable long id) throws IOException, IllegalAccessException {
     if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
-    Resource image = characterService.downloadImage(id);
+    long idchar = userService.findById(id).character().id();
+    Resource image = characterService.downloadImage(idchar);
 
     String cleanFileName = image.getFilename();
     String username = userService.findById(id).userName();
