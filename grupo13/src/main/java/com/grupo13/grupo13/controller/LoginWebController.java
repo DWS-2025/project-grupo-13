@@ -6,14 +6,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.grupo13.grupo13.security.jwt.UserLoginService;
 import com.grupo13.grupo13.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class LoginWebController {
+
+    private final UserLoginService userLoginService;
 	
 	@Autowired
 	UserService userService;
+
+    LoginWebController(UserLoginService userLoginService) {
+        this.userLoginService = userLoginService;
+    }
 
 	@GetMapping("/login")
 	public String login(HttpServletRequest request) {
@@ -31,7 +38,11 @@ public class LoginWebController {
 
 	@GetMapping("/register")
 	public String showRegster() {
-		return "register";
+		if((userService.getLoggedUserOrNull()) == null || userService.getLoggedUserDTOOrNull().roles().contains("ADMIN")){
+			return "register";
+		}else{
+			return "redirect:/character";
+		}
 	}
 
 	@PostMapping("/register")
