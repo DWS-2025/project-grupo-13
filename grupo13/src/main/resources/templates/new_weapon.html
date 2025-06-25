@@ -1,22 +1,28 @@
 {{>header}}
 {{#logged}}
 {{#admin}}
+
+<h1 style="color:rgb(233, 132, 8);">New weapon</h1>
 <form action="/weapon/new" method="post" enctype="multipart/form-data">
-  <p>Name: </p>
+  <p style="color:rgb(235, 152, 50);">Name: </p>
   <input type='text' name='name' class="form-control"/>
-  <p>Intimidation:</p>
+  <p style="color:rgb(235, 152, 50);">Intimidation:</p>
   <input type='text' name='intimidation' class="form-control"/>
-  <p>Strength:</p>
+  <p style="color:rgb(235, 152, 50);">Strength:</p>
   <input type='text' name='strength' class="form-control"/>
-  <p>Description:</p>
+  <p style="color:rgb(235, 152, 50);">Description:</p>
   <textarea name='description' rows=5 cols=40 class="form-control"></textarea>
-  <p>Price:</p>
+  <p style="color:rgb(235, 152, 50);">Price:</p>
   <input type='text' name='price' class="form-control"/>
-  <p>Picture file:</p>
+  <p style="color:rgb(235, 152, 50);">Picture file:</p>
   <input type='file' name='weaponImage' accept=".jpg, .jpeg, .gif" class="form-control" />
   <input type="hidden" name="_csrf" value="{{token}}"/>
   <input type='submit' value='Save' />
 </form>
+
+<body class="bg-dark"
+   style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/image/admin4.jpg') no-repeat center center / cover;">
+</body>
 
 {{/admin}}
 {{/logged}}

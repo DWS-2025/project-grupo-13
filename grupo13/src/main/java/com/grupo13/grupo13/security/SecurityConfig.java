@@ -115,8 +115,8 @@ public class SecurityConfig {
 						.requestMatchers("/css/**").permitAll()
 						.requestMatchers("/armorshop/**").permitAll()
 						.requestMatchers("/weaponshop/**").permitAll()
-						.requestMatchers("/weapon/**").permitAll()
-						.requestMatchers("/armor/**").permitAll()
+						.requestMatchers("/weapon/*").permitAll()
+						.requestMatchers("/armor/*").permitAll()
 						.requestMatchers("/register/**").permitAll()
 						.requestMatchers("/error").permitAll()
 						.requestMatchers("/image/**").permitAll()
@@ -138,8 +138,11 @@ public class SecurityConfig {
 						//ADMIN PAGES
 						.requestMatchers("/equipment_manager/**").hasAnyRole("ADMIN")
 						.requestMatchers("/userList").hasAnyRole("ADMIN")
-						//.requestMatchers("/armor/*/edit").hasAnyRole("ADMIN")
-						//.requestMatchers("/weapon/*/edit").hasAnyRole("ADMIN")
+						.requestMatchers("/armor/*/edit").hasAnyRole("ADMIN")
+						.requestMatchers("/weapon/*/edit").hasAnyRole("ADMIN")
+						.requestMatchers("/new_armor/**").hasAnyRole("ADMIN")
+						.requestMatchers("/new_weapon/**").hasAnyRole("ADMIN")
+						.requestMatchers("/admin/**").hasAnyRole("ADMIN")
 
 						//with all this should cover all adminController and etc, but keep checking, regular tests
 						.anyRequest().authenticated()
