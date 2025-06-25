@@ -411,9 +411,9 @@ public class sessionController {
 
     @PostMapping("/deleteUser")
 	public String deleteUser(Model model) throws IOException{
-       UserDTO u = userService.getLoggedUserDTO();
-       userService.deleteUser(u.id());
-       return "/logout";
+        UserDTO u = userService.getLoggedUserDTO();
+        userService.deleteUser(u.id());
+        return "/logout";
 	}
     
 	@GetMapping("/userImage")

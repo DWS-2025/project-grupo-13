@@ -277,6 +277,10 @@ public class UserService {
     public void deleteUser(long id) {
         if( getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId() == id){
             if (userRepository.existsById(id)) {
+                boolean hasChar = characterID(id)==0?false:true;
+                if(hasChar){
+                    deleteCharacter(characterID(id));
+                }
                 userRepository.deleteById(id);
             } else {
                 throw new NoSuchElementException("User doesn't exist " + id);
@@ -303,5 +307,15 @@ public class UserService {
 			}
         }
 		return result;
+    }
+
+    //returns 0 if the user has no character
+    public long characterID(long userid){
+        for(User u : userRepository.findAll()){
+            if(u.getId()==userid){
+                return u.getCharacter().getId();
+            }
+        }
+        return 0;
     }
 }
