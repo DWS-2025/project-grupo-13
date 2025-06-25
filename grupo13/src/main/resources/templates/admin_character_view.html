@@ -24,11 +24,11 @@
          <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
             <p class="card-text">{{{character.description}}}</p>
          </li> <!--Shows rich text -->
-
          <ul class="list-group list-group-flush">
-
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Strength - {{character.strength}}</li>
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Defense - {{character.defense}}</li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Intimidation - {{character.intimidation}}</li>
+            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">Style - {{character.style}}</li>
             
             {{#character.armor}}
             <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
@@ -36,26 +36,20 @@
                Equipped armor
             </button>
             <div class="collapse" id="collapseCardA">
-               <form action="/unEquipArmor" method="post" enctype="multipart/form-data">
-                  <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
-                     <div class="row g-0">
-                        <div class="col-md-4">
-                           <img src="/api/armor/{{id}}/image" class="img-fluid rounded-start" alt="...">
-                        </div>
-                           <div class="col-md-8">
-                              <div class="card-body">
-                                 <h5 class="card-title">{{name}}</h5>
-                                 <p class="card-text"> {{description}} </p>
-                                 <input type='submit' value='Unequip'>
-                                 <!-- Hidden inputs-->
-                                 <input type="hidden" name="id" value="{{id}}">
-                                 <input type="hidden" name="_csrf" value="{{token}}" />
-                                 <!--end of hidden inputs-->
-                              </div>
+               <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
+                  <div class="row g-0">
+                     <div class="col-md-4">
+                        <img src="/api/armor/{{id}}/image" class="img-fluid rounded-start" alt="...">
+                     </div>
+                        <div class="col-md-8">
+                           <div class="card-body">
+                           <h5 class="card-title">{{name}}</h5>
+                           <p class="card-text">Defense: {{defense}}</p>
+                           <p class="card-text">Style: {{style}}</p>
                            </div>
                         </div>
                      </div>
-                  </form>
+                  </div>
                </div>
             </li>
             {{/character.armor}}
@@ -70,26 +64,20 @@
                Equipped weapon 
             </button>
             <div class="collapse" id="collapseCardW">
-               <form action="/unEquipWeaponAdmin" method="post" enctype="multipart/form-data">
-                   <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
-                     <div class="row g-0">
-                        <div class="col-md-4">
-                           <img src="/api/weapon/{{id}}/image" class="img-fluid rounded-start" alt="...">
-                        </div>
-                           <div class="col-md-8">
-                              <div class="card-body">
-                                 <h5 class="card-title">{{name}}</h5>
-                                 <p class="card-text"> {{description}} </p>
-                                 <input type='submit' value='Unequip'>
-                                 <!-- Hidden inputs-->
-                                 <input type="hidden" name="id" value="{{id}}">
-                                 <input type="hidden" name="_csrf" value="{{token}}" />
-                                 <!--end of hidden inputs-->
-                              </div>
+               <div class="card mb-3 border-0" style="background-color:  rgb(255, 179, 132);">
+                  <div class="row g-0">
+                     <div class="col-md-4">
+                        <img src="/api/weapon/{{id}}/image" class="img-fluid rounded-start" alt="...">
+                     </div>
+                        <div class="col-md-8">
+                           <div class="card-body">
+                              <h5 class="card-title">{{name}}</h5>
+                              <p class="card-text">Strength: {{strength}}</p>
+                              <p class="card-text">Intimidation: {{intimidation}}</p>
                            </div>
                         </div>
                      </div>
-                  </form>
+                  </div>
                </div>
             </li>
             {{/character.weapon}}
@@ -105,43 +93,29 @@
 
       {{#currentWeapon}}
       <div class="col">
-         <form action="/equipWeapon" method="post" enctype="multipart/form-data">
-            <div class="card" style="width:17rem;">
-               <img src="/api/weapon/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
-               <div class="card-body">
-                  <h5 class="card-title">{{name}}</h5>
-                  <p class="card-text">{{description}}</p>
-                  <h6 class="card-style">Attack: {{strength}}</h6>
-                  <h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
-                  <!-- Hidden inputs to avoid sending the data of every object-->
-                  <input type="hidden" name="id" value="{{id}}">
-                  <input type="hidden" name="_csrf" value="{{token}}" />
-                  <!--end of hidden inputs-->
-                  <input type='submit' value='Equip'>
-               </div>
+         <div class="card" style="width:17rem;">
+            <img src="/api/weapon/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+            <div class="card-body">
+               <h5 class="card-title">{{name}}</h5>
+               <p class="card-title">{{description}}</p>
+               <h6 class="card-style">Strength: {{strength}}</h6>
+               <h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
             </div>
-         </form>
+         </div>
       </div>
       {{/currentWeapon}}
 
       {{#currentArmor}}
       <div class="col">
-         <form action="/equipArmor" method="post" enctype="multipart/form-data">
-            <div class="card" style="width:17rem;">
-               <img src="/api/armor/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
-               <div class="card-body">
-                  <h5 class="card-title">{{name}}</h5>
-                  <p class="card-text">{{description}}</p>
-                  <h6 class="card-style">Defense: {{defense}}</h6>
-                  <h6 class="card-style">Style: {{style}}</h6>
-                  <!-- Hidden inputs to avoid sending the data of every object-->
-                  <input type="hidden" name="id" value="{{id}}">
-                  <input type="hidden" name="_csrf" value="{{token}}" />
-                  <!--end of hidden inputs-->
-                  <input type='submit' value='Equip'>
-               </div>
+         <div class="card" style="width:17rem;">
+            <img src="/api/armor/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+            <div class="card-body">
+               <h5 class="card-title">{{name}}</h5>
+               <p class="card-text">{{description}}</p>
+               <h6 class="card-style">Defense: {{defense}}</h6>
+               <h6 class="card-style">Style: {{style}}</h6>
             </div>
-         </form>
+         </div>
       </div>
       {{/currentArmor}}
 
@@ -149,7 +123,7 @@
 </div>
 
 <body class="bg-dark"
-   style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/image/admin1.jpg') no-repeat center center / cover;">
+   style="background: url('/image/admin1.jpg') no-repeat center center fixed; background-size: cover; margin: 0;  padding: 0; min-height: 100vh;">
 </body>
 
 {{/logged}}
