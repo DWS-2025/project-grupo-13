@@ -2,14 +2,21 @@
 {{#logged}}
 
 <h1>Edit Username</h1>
-<form action="/editUser" method="post" enctype="multipart/form-data">
-    <p>Name: </p>
-    <input type='text' name='userName' value="{{user.userName}}"/>
-    <br><br>
-    <p style="color: #FF0000">You will be logged out. You will need to log in again with your new name.</p>  
-    <input type="hidden" name="_csrf" value="{{token}}"/>
-    <input type='submit' value='Save' />
-</form>
+<div class="d-flex">
+    <div style="width: 50%; height: 50%;">
+        <form action="/editUser" method="post" enctype="multipart/form-data" onsubmit="return confirm('Remember to log-in again with your new name.');">
+            <p>Name: </p>
+            <input type='text' name='userName' value="{{user.userName}}"/>
+            <br><br>
+            <p style="color: #FF0000">You will be logged out. You will need to log in again with your new name.</p>  
+            <input type="hidden" name="_csrf" value="{{token}}"/>
+            <input type='submit' value='Save' />
+        </form>
+    </div>
+    <div style="width: 50%; height: 50%;">
+        <img src="/image/cat-punch.jpg" style="width: 75%; height: 75%; padding-left: 20px; padding-bottom: 15px;">
+    </div>
+</div>
 
 {{/logged}}
 {{>footer}}

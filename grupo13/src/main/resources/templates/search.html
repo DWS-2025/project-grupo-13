@@ -1,32 +1,39 @@
 {{>header}}
 
 <h3>Search Weapons</h3>
+<div class="d-flex">
+    <div style="width: 50%;">
+        <form action="/search" method="get">
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name"><br>
+            <label for="description">Description:</label>
+            <input type="text" name="description" id="description"><br>
+            <label for="strength">Strength:</label>
+            <input type="number" name="strength" id="strength"><br>
+            <label for="price">Price:</label>
+            <input type="number" name="price" id="price"><br>
+            <label for="intimidation">Intimidation:</label>
+            <input type="number" name="intimidation" id="intimidation"><br>
+            <input type="submit" value="Search">
+        </form>
 
-<form action="/search" method="get">
-    <label for="name">Name:</label>
-    <input type="text" name="name" id="name"><br>
-    <label for="description">Description:</label>
-    <input type="text" name="description" id="description"><br>
-    <label for="strength">Strength:</label>
-    <input type="number" name="strength" id="strength"><br>
-    <label for="price">Price:</label>
-    <input type="number" name="price" id="price"><br>
-    <label for="intimidation">Intimidation:</label>
-    <input type="number" name="intimidation" id="intimidation"><br>
-    <input type="submit" value="Search">
-</form>
+        {{#error}}
+            <p style="color: red">{{.}}</p>
+        {{/error}}
 
-{{#error}}
-    <p style="color: red">{{.}}</p>
-{{/error}}
+        <h3>Weapons</h3>
+        {{#weapons}}
+            <a href="/weapon/{{id}}">{{name}}</a><br>
+        {{/weapons}}
 
-<h3>Weapons</h3>
-{{#weapons}}
-    <a href="/weapon/{{id}}">{{name}}</a><br>
-{{/weapons}}
-
-{{^weapons}}
-    <p>No weapons found.</p>
-{{/weapons}}
+        {{^weapons}}
+            <p>No weapons found.</p>
+        {{/weapons}}
+        
+    </div>
+    <div style="width: 50%; height: 50%;">
+        <img src="/image/cat-sus.jpg" style="width: 75%; height: 75%;">
+    </div>
+</div>
 
 {{>footer}}

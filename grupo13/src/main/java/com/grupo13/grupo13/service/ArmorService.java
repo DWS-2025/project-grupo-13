@@ -18,6 +18,7 @@ import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.util.InputSanitizer;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
+import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
 import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
@@ -27,7 +28,7 @@ import com.grupo13.grupo13.model.Character;
 @Service
 public class ArmorService {
 
-	//attributes
+    //attributes
 	@Autowired
 	private ArmorRepository armorRepository;
 
@@ -40,6 +41,10 @@ public class ArmorService {
     @Lazy
     @Autowired
     private UserService userService;
+
+    @Lazy
+    @Autowired
+    private CharacterService characterService;
 
 	//saves in repository
     public void saveDTO(ArmorDTO armorDTO){
@@ -84,7 +89,7 @@ public class ArmorService {
     }
 
     public void addCharacter(CharacterDTO characterDTO, ArmorDTO armorDTO){
-        if (characterDTO.equals(userService.getLoggedUserDTO().character())||userService.getLoggedUser().getRoles().contains("ADMIN")){
+       if ((characterDTO.equals(userService.getLoggedUserDTO().character())&&userService.hasArmor(armorDTO.id()))||userService.getLoggedUser().getRoles().contains("ADMIN")){
             Armor armor = findById(armorDTO.id());
             Character character = characterMapper.toDomain(characterDTO); ////////////////////////////////////////////////////
             armor.getCharacters().add(character);
@@ -134,7 +139,9 @@ public class ArmorService {
         }else{
             throw new NoSuchElementException();
         }*/
-        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+        if(userService.getLoggedUser().getRoles().contains("ADMIN")){
+            InputSanitizer.validateWhitelist(updatedArmorDTO.name());
+            InputSanitizer.validateWhitelist(updatedArmorDTO.description());
             Armor oldArmor = findById(oldArmorId);
             oldArmor.setName(updatedArmorDTO.name());
             oldArmor.setDescription(updatedArmorDTO.description());
@@ -142,12 +149,16 @@ public class ArmorService {
             oldArmor.setPrice(updatedArmorDTO.price());
             oldArmor.setStyle(updatedArmorDTO.style());
             armorRepository.save(oldArmor);
+            //everyone who has the armor needs to get his stats updated
+            for(CharacterBasicDTO c : characterMapper.toBasicDTOs(oldArmor.getCharacters())){
+                characterService.equipArmor(updatedArmorDTO, c.id());
+            }
         }
     }
 
     //deletes an armor
     public void delete(long id){
-        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+        if(userService.getLoggedUser().getRoles().contains("ADMIN")){
             if(armorRepository.findById(id).isPresent()){
                 Armor armor = armorRepository.findById(id).get();
                 //deletes from users inventory

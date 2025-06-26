@@ -36,6 +36,8 @@ import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
+
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -123,7 +125,7 @@ public class sessionController {
             model.addAttribute("message", "File not allowed or missing: you must upload a jpg file.");
             return "sp_errors";
         }
-        
+        InputSanitizer.checkIfNameEmpty(characterImage);
         String originalFilename = characterImage.getOriginalFilename();
         InputSanitizer.validateWhitelist(originalFilename);
         int dotIndex = originalFilename.lastIndexOf('.');
@@ -266,7 +268,6 @@ public class sessionController {
     @PostMapping("/equipWeapon")
     public String equipWeapon(@RequestParam long id, Model model) {
         CharacterDTO characterDTO = userService.getCharacter();
-        Character character = characterMapper.toDomain(characterDTO);
         WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
         if (weaponDTO != null) { // if it exists
             characterService.equipWeapon(weaponDTO, characterDTO.id()); // equips it, adding the necessary attributes
@@ -281,10 +282,9 @@ public class sessionController {
     @PostMapping("/equipArmor")
     public String equipArmor(@RequestParam long id, Model model) {
         CharacterDTO characterDTO= userService.getCharacter();
-        Character character = characterMapper.toDomain(characterDTO);
         ArmorDTO armorDTO = armorService.findByIdDTO(id);
         if (armorDTO != null) { // if it exists
-            characterService.equipArmor(armorDTO, character.getId()); // equips it, adding the necessary attributes
+            characterService.equipArmor(armorDTO, characterDTO.id()); // equips it, adding the necessary attributes
             //armorService.addCharacter(characterDTO, armorDTO);
             return "redirect:/character";
         } else {
