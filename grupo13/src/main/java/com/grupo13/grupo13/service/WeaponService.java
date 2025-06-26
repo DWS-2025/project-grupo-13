@@ -92,7 +92,7 @@ public class WeaponService {
     }
 
     public void addCharacter(CharacterDTO characterDTO, WeaponDTO weaponDTO){
-        if (characterDTO.equals(userService.getLoggedUserDTO().character())||userService.getLoggedUser().getRoles().contains("ADMIN")){
+        if ((characterDTO.equals(userService.getLoggedUserDTO().character())&&userService.hasWeapon(weaponDTO.id()))||userService.getLoggedUser().getRoles().contains("ADMIN")){
             Weapon weapon = findById(weaponDTO.id());
             Character character = characterMapper.toDomain(characterDTO); ////////////////////////////////////////////////////
             weapon.getCharacters().add(character);
@@ -174,6 +174,8 @@ public class WeaponService {
             throw new NoSuchElementException();
         } */
         if( userService.getLoggedUser().getRoles().contains("ADMIN")){
+            InputSanitizer.validateWhitelist(updatedWeaponDTO.name());
+            InputSanitizer.validateWhitelist(updatedWeaponDTO.description());
             Weapon oldWeapon = findById(oldWeaponid);
             oldWeapon.setName(updatedWeaponDTO.name());
             oldWeapon.setDescription(updatedWeaponDTO.description());

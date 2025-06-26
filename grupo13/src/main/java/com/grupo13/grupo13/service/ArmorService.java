@@ -89,7 +89,7 @@ public class ArmorService {
     }
 
     public void addCharacter(CharacterDTO characterDTO, ArmorDTO armorDTO){
-        if (characterDTO.equals(userService.getLoggedUserDTO().character())||userService.getLoggedUser().getRoles().contains("ADMIN")){
+       if ((characterDTO.equals(userService.getLoggedUserDTO().character())&&userService.hasArmor(armorDTO.id()))||userService.getLoggedUser().getRoles().contains("ADMIN")){
             Armor armor = findById(armorDTO.id());
             Character character = characterMapper.toDomain(characterDTO); ////////////////////////////////////////////////////
             armor.getCharacters().add(character);
@@ -140,6 +140,8 @@ public class ArmorService {
             throw new NoSuchElementException();
         }*/
         if(userService.getLoggedUser().getRoles().contains("ADMIN")){
+            InputSanitizer.validateWhitelist(updatedArmorDTO.name());
+            InputSanitizer.validateWhitelist(updatedArmorDTO.description());
             Armor oldArmor = findById(oldArmorId);
             oldArmor.setName(updatedArmorDTO.name());
             oldArmor.setDescription(updatedArmorDTO.description());
