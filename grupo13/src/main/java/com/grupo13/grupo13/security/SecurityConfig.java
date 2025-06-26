@@ -72,6 +72,9 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
 
                     // PRIVATE ENDPOINTS
+					.requestMatchers(HttpMethod.GET, "/api/user/**").hasRole("USER")
+					.requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMIN")
+
 					.requestMatchers(HttpMethod.GET, "/api/characters").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.POST, "/api/weapons").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.POST, "/api/armors").hasRole("ADMIN")
@@ -82,6 +85,9 @@ public class SecurityConfig {
 
 					.requestMatchers(HttpMethod.DELETE, "/api/character/**").hasRole("USER")
 					.requestMatchers(HttpMethod.DELETE, "/api/user/**").hasRole("USER")
+					.requestMatchers(HttpMethod.DELETE, "/api/armor/equipment/**").hasRole("USER")
+					.requestMatchers(HttpMethod.DELETE, "/api/weapon/equipment/**").hasRole("USER")
+
 
 					.requestMatchers(HttpMethod.GET, "/api/**").hasRole("USER")
                     .requestMatchers(HttpMethod.POST,"/api/**").hasRole("USER")
@@ -89,6 +95,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT, "/api/editCharacter").hasRole("USER")
 					.requestMatchers(HttpMethod.PUT, "/api/editUser").hasRole("USER")
 					.requestMatchers(HttpMethod.DELETE,"/api/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.GET,"/api/characters").hasRole("ADMIN")
 					
 
 					// PUBLIC ENDPOINTS

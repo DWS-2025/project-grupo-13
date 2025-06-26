@@ -175,7 +175,7 @@ public class grupo13RestController {
 			InputSanitizer.validateWhitelist(updatedWeaponDTO.description());
 
 			weaponService.update(id, updatedWeaponDTO);
-			return ResponseEntity.ok(updatedWeaponDTO);
+			return ResponseEntity.ok(weaponService.findByIdDTO(id));
 		}catch (IllegalArgumentException ex) {
 			return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
 		}
@@ -188,7 +188,7 @@ public class grupo13RestController {
 			InputSanitizer.validateWhitelist(updatedArmorDTO.name());
 			InputSanitizer.validateWhitelist(updatedArmorDTO.description());
 			armorService.update(id, updatedArmorDTO);
-			return ResponseEntity.ok(updatedArmorDTO);
+			return ResponseEntity.ok(armorService.findByIdDTO(id));
 		}catch (IllegalArgumentException ex) {
 			return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
 		}
@@ -217,12 +217,12 @@ public class grupo13RestController {
 
 	@DeleteMapping("/armor/{id}")
 	public void deleteArmor(@PathVariable long id) {
-		armorService.deleteById(id);
+		armorService.delete(id);
 	}
 
 	@DeleteMapping("/weapon/{id}")
 	public void deleteWeapon(@PathVariable long id) {
-		weaponService.deleteById(id);
+		weaponService.delete(id);
 	}
 
 	// CHARACTERS
@@ -239,10 +239,14 @@ public class grupo13RestController {
 
 	@GetMapping("/character/{id}")
 	public CharacterDTO getCharacter(@PathVariable long id) {
-		if(id == userService.getLoggedUserDTO().id() || userService.getLoggedUserDTO().roles().contains("ADMIN")){
-			return characterService.findByIdDTO(userService.getLoggedUser().getId());
-		}
-		else {
+		if (characterService.findByIdDTO(id) != null) {
+			if (id == userService.getLoggedUserDTO().character().id()
+					|| userService.getLoggedUserDTO().roles().contains("ADMIN")) {
+				return characterService.findByIdDTO(userService.getLoggedUser().getCharacter().getId());
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not reach");
+			}
+		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not reach");
 		}
 	}
@@ -270,10 +274,16 @@ public class grupo13RestController {
 				InputSanitizer.validateWhitelist(characterDTO.name());
 				InputSanitizer.validateWhitelist(characterDTO.description());
 				InputSanitizer.validateWhitelist(characterDTO.imageName());
-				characterService.save(characterDTO);
+        CharacterDTO savedCharacterDTO = characterService.save(characterDTO);
+        
+        // saves the character in the repository
+        userService.saveCharacter(savedCharacterDTO);   
+        characterService.saveUser(savedCharacterDTO); 
+        userService.save(userService.getLoggedUserDTO());
+
 				Character character = characterMapper.toDomain(characterDTO);
 				URI location = fromCurrentRequest().path("/{id}").buildAndExpand(character.getId()).toUri();
-				return ResponseEntity.created(location).body(characterDTO);
+				return ResponseEntity.created(location).body(savedCharacterDTO);
 			} catch (IllegalArgumentException ex) {
 				return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
 			}
@@ -287,7 +297,7 @@ public class grupo13RestController {
 	public ResponseEntity<Object> createCharacterImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
 		if (userService.getLoggedUserDTO().character() != null) {
-			if (userService.getLoggedUserDTO().character().imageName() == null) {
+			if (!userService.getLoggedUserDTO().character().imageName().equals(null)) {
 				if (!InputSanitizer.isImageValid(imageFile)) {
 					return ResponseEntity.badRequest().body("Error: Invalid image file.");
 				}
@@ -327,7 +337,8 @@ public class grupo13RestController {
         if (characterDTO == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("There is no character");
         } else {
-            userService.deleteCharacter(id);
+			long userId = characterService.findByIdDTO(id).user().id();
+            userService.deleteCharacter(userId);
 			return ResponseEntity.status(HttpStatus.CREATED).body("Character deleted succesfully");
         }
 	}
@@ -360,7 +371,7 @@ public class grupo13RestController {
 		WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
 		// checks if the user has enough money or not
 		if (weaponDTO == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); 
 		}
 		int money = userService.getLoggedUserDTO().money();
 		if (money >= weaponDTO.price()) {
@@ -416,7 +427,7 @@ public class grupo13RestController {
 		ArmorDTO armorDTO = armorService.findByIdDTO(id);
 		// checks if the user has enough money or not
 		if (armorDTO == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); 
 		}
 		int money = userService.getLoggedUserDTO().money();
 		if (money >= armorDTO.price()) {
@@ -445,12 +456,12 @@ public class grupo13RestController {
 			if (userService.hasWeapon(id)) {
 				characterService.equipWeapon(equipment, charId); // equips it, adding the necessary attributes
 				//weaponService.addCharacter(characterDTO, equipment);
-				return equipment;
+				return weaponService.findByIdDTO(id);
 			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); 
 			}
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); 
 		}
 	}
 
@@ -465,19 +476,19 @@ public class grupo13RestController {
 			if (userService.hasArmor(id)) {
 				characterService.equipArmor(equipment, charId); // equips it, adding the necessary attributes
 				//armorService.addCharacter(characterDTO, equipment);
-				return equipment;
+				return armorService.findByIdDTO(id);
 			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); 
 			}
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); 
 		}
 	}
 
 	//Unequip weapons and armors
 
 	@DeleteMapping("/armor/equipment/{id}")
-    public ArmorDTO unEquipArmor(@RequestParam long id) {
+    public ArmorDTO unEquipArmor(@PathVariable long id) {
         //launches error if character doesnt exist, to be improved
 		CharacterDTO characterDTO = userService.getCharacter();
 		Character character = characterMapper.toDomain(characterDTO);
@@ -488,15 +499,15 @@ public class grupo13RestController {
 				characterService.unEquipArmor(id, charId); // equips it, adding the necessary attributes
 				return equipment;
 			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); 
 			}
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); 
 		}
     }
 
 	@DeleteMapping("/weapon/equipment/{id}")
-    public WeaponDTO unEquipWeapon(@RequestParam long id) {
+    public WeaponDTO unEquipWeapon(@PathVariable long id) {
         //launches error if character doesnt exist, to be improved
 		CharacterDTO characterDTO = userService.getCharacter();
 		Character character = characterMapper.toDomain(characterDTO);
@@ -507,10 +518,10 @@ public class grupo13RestController {
 				characterService.unEquipWeapon(id, charId); // equips it, adding the necessary attributes
 				return equipment;
 			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); // later will be automatic
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); 
 			}
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); // later will be automatic
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); 
 		}
     }
 
@@ -543,4 +554,14 @@ public class grupo13RestController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Could not manage");
         }
 	}
+
+	@GetMapping("/user/{id}")
+	public UserDTO getMethodName(@PathVariable long id) {
+		if(id == userService.getLoggedUserDTO().id() || userService.getLoggedUserDTO().roles().contains("ADMIN")){
+			return userService.findById(id);
+		} else {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid id"); 
+		}
+	}
+	
 }
