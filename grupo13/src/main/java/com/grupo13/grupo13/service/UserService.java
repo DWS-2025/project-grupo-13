@@ -358,13 +358,10 @@ public String changeImage(UserDTO dto, String newUserName) {
             if (userRepository.existsById(userid)) {
                 boolean hasChar = characterID(userid)==0?false:true;
                 if(hasChar){
-                    deleteCharacter(userid);
-                    deleteCharacter(userid);
+                    deleteCharacter(userid);                  
                 }
-                userRepository.deleteById(userid);
-                userRepository.deleteById(userid);
+                userRepository.deleteById(userid);             
             } else {
-                throw new NoSuchElementException("User doesn't exist " + userid);
                 throw new NoSuchElementException("User doesn't exist " + userid);
             }
         }
