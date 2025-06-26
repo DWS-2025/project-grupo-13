@@ -15,8 +15,4 @@ public interface CharacterMapper {
     CharacterBasicDTO toBasicDTO(Character character);
     List<CharacterBasicDTO> toBasicDTOs(List<Character> characters);
     Character toBasicDomain(CharacterBasicDTO characterBasicDTO);
-    /* 
-    //  @Mapping(target = "user", ignore = true)
-    Character toDomain(CharacterBasicDTO characterDTO);
-    */
 }

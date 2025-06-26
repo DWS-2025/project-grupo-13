@@ -15,11 +15,4 @@ public interface armorMapper {
     ArmorBasicDTO toBasicDTO(Armor armor);
     List<ArmorBasicDTO> toBasicDTOs(List<Armor> armors);
     Armor toBasicDomain(ArmorBasicDTO armorBasicDTO);
-
-    /*  
-     * //@Mapping(target = "books", ignore = true)
-     * Armor toDomain(ArmorBasicDTO armorDTO);
-     * 
-     * Armor toDomain(ArmorDTO armorDTO);
-     */
 }

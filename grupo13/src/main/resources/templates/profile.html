@@ -2,7 +2,7 @@
 {{#logged}}
 
 <div class="d-flex p-4">
-   <div class="d-flex col-5">
+   <div class="col-5">
       <div class="card w-100 border-dark" style="background-color:  rgb(249, 196, 164);">
          <li class="list-group-item"
             style="background-color:  rgb(249, 196, 164); font-weight: bold; font-size:x-large;">{{userName}}</li>
@@ -21,10 +21,42 @@
          </li>
       </div>
    </div>
+   <div class="col-8 row row-cols-auto g-4 justify-content-center">
+
+      {{#currentWeapon}}
+      <div class="col">
+         <div class="card" style="width:17rem;">
+            <img src="/api/weapon/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+            <div class="card-body">
+               <h5 class="card-title">{{name}}</h5>
+               <p class="card-title">{{description}}</p>
+               <h6 class="card-style">Strength: {{strength}}</h6>
+               <h6 class="card-intimidation">Intimidation: {{intimidation}}</h6>
+            </div>
+         </div>
+      </div>
+      {{/currentWeapon}}
+
+      {{#currentArmor}}
+      <div class="col">
+         <div class="card" style="width:17rem;">
+            <img src="/api/armor/{{id}}/image" class="card-img-top" alt="..." height="306px" width="1024px">
+            <div class="card-body">
+               <h5 class="card-title">{{name}}</h5>
+               <p class="card-title">{{description}}</p>
+               <h6 class="card-style">Defense: {{defense}}</h6>
+               <h6 class="card-style">Style: {{style}}</h6>
+            </div>
+         </div>
+      </div>
+      {{/currentArmor}}
+
+   </div>
 </div>
 
+
 <body class="bg-dark"
-   style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/image/ch_background.jpg') no-repeat center center / cover;">
+   style="background: url('/image/ch_background.jpg') no-repeat center center fixed; background-size: cover; margin: 0;  padding: 0; min-height: 100vh;">
 </body>
 
 {{/logged}}

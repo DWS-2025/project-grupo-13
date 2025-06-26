@@ -1,4 +1,9 @@
 package com.grupo13.grupo13.service;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,11 @@ import org.springframework.security.core.Authentication;
 
 @Service
 public class UserService {
+ private static final Path BACKUP_FOLDER = 
+        Paths.get("").toAbsolutePath()
+             .resolve("backups")
+             .resolve("characters")
+             .normalize();
 
     //attributes
     @Lazy
@@ -269,13 +279,69 @@ public class UserService {
     public void updateName(UserDTO updatedUserDTO, String userName) {
         if (!userExists(userName)) {
             if (updatedUserDTO.equals(getLoggedUserDTO()) || getLoggedUser().getRoles().contains("ADMIN")) {
+               
                 InputSanitizer.validateWhitelist(userName);
+
+               if(updatedUserDTO.character()!=null){
+                String newImageName = changeImage(updatedUserDTO, userName);
+                characterService.findById(updatedUserDTO.character().id()).setImageName(newImageName);
+               }
+                
                 User updatedUser = userRepository.findById(updatedUserDTO.id()).get();
                 updatedUser.setUserName(userName);
                 userRepository.save(updatedUser);
             } else{
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong id");
             }
+        }else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is already taken");
+        }
+    }
+
+    
+    public String changeImage(UserDTO dto, String newUserName) {
+        String currentFileName = dto.character().imageName(); 
+        // build new image name
+        int dotIndex = currentFileName.lastIndexOf('.');
+        String nameWithoutExt = currentFileName.substring(0, dotIndex); 
+        String extension      = currentFileName.substring(dotIndex);    
+        int dashIndex = nameWithoutExt.lastIndexOf('-');
+        if (dashIndex < 0) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Invalid image name"
+            );
+        }
+
+        String prefix      = nameWithoutExt.substring(0, dashIndex); 
+        String oldUserName = nameWithoutExt.substring(dashIndex + 1); 
+        // checking if it matches
+        if (!oldUserName.equals(dto.userName())) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Can't find old file"
+            );
+        }
+        String newFileName = prefix + "-" + newUserName + extension;
+        // replacing file
+        Path oldPath = BACKUP_FOLDER.resolve(currentFileName).normalize();
+        Path newPath = BACKUP_FOLDER.resolve(newFileName).normalize();
+        if (!oldPath.startsWith(BACKUP_FOLDER) || !newPath.startsWith(BACKUP_FOLDER)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Path traversal detected");
+        }
+        try {
+            if (Files.exists(oldPath)) {
+                Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+                return newFileName;
+            }else{   
+                return currentFileName;
+            }   
+        } catch (IOException exc) {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error",
+                exc
+            );
         }
     }
 
@@ -284,9 +350,9 @@ public class UserService {
             if (userRepository.existsById(userid)) {
                 boolean hasChar = characterID(userid)==0?false:true;
                 if(hasChar){
-                    deleteCharacter(userid);
+                    deleteCharacter(userid);                  
                 }
-                userRepository.deleteById(userid);
+                userRepository.deleteById(userid);             
             } else {
                 throw new NoSuchElementException("User doesn't exist " + userid);
             }

@@ -42,6 +42,50 @@ Usuario con permisos elevados, puede acceder al `/admin` para crear objetos o mo
 |  Armor |  1 |   
 ## Diagrama de la BBDD
 ![Diagrama de base de datos](grupo13/images/diagrama.png)
+## Trabajo de cada integrante (JUNIO)
+### Pablo
+Fix de búsqueda dinámica, funciones /admin, imagenes en disco, sanitización, solución de errores.
+#### 5 archivos más modificados:
+`AdminController.java`, `SessionController.java`, `userService.java`, `ImputSanitizer.java`,`characterService.java`.
+#### 5 commits destacados
+https://github.com/DWS-2025/project-grupo-13/commit/38188246819b543ab304923c5efe0f5b8aa3b26d
+https://github.com/DWS-2025/project-grupo-13/commit/a33246259a76126c0c5888332bfd2e5c6528b7a6
+https://github.com/DWS-2025/project-grupo-13/commit/c8c2fa8741b32f33f66e73bec1df5598cde5d602
+https://github.com/DWS-2025/project-grupo-13/commit/0ebaa14ad92793f745680a9b57aeab0dc6f0d6e5
+https://github.com/DWS-2025/project-grupo-13/commit/b1f52b3ad3b4e8ac21a4137be774faead073c15a
+### Andrea
+Introducción DTOs, manejo de DTOs, funciones de gestión de usuarios, pagina del perfil de usuario e y sus implementaciones, solución de errores.
+
+#### 5 archivos más modificados:
+`CharacterService.java`, `SessionController.java`, `grupo13RestController.java`, `UserService.java`,`profile.html`.
+
+#### 5 commits destacados
+https://github.com/DWS-2025/project-grupo-13/commit/6560b9fc6872dcc9787afa0953d896023c55bf2f
+
+https://github.com/DWS-2025/project-grupo-13/commit/450dd12bb716df8f2838e60bfbd9248cf36616e7
+
+https://github.com/DWS-2025/project-grupo-13/commit/7fd56b350cc1ae10fb9b25dab1f3028913fd4e35
+
+https://github.com/DWS-2025/project-grupo-13/commit/634ce7cc6580ab9943cfd087886008575ff42a1e
+
+https://github.com/DWS-2025/project-grupo-13/commit/9feaa3c12db45bbcee9bc0b171b4dadf1d3e1004
+
+### Lucas
+#### 5 archivos más modificados:
+#### 5 commits destacados
+https://github.com/DWS-2025/project-grupo-13/commit/0241c0a9e50388fd16c9a9e147b369465072037b
+https://github.com/DWS-2025/project-grupo-13/commit/6ca70715035b878856bf48d439d18345f1e4e4a4
+https://github.com/DWS-2025/project-grupo-13/commit/444ef3ce6ef77ab5322d52f91668054b93e506f6
+### Eduardo
+paginación y compra de objetos (tienda); cargar objetos predeterminados (SampleData); detalles de formato, tabulaciones, estilos, etc; corrección de errores (pasar botones a forms, capar campos en formularios para la bd, errores al eliminar/editar entidades...)
+#### 5 archivos más modificados:
+`SampleData.java` `listing_armors.html` `listing_weapons.html` `sessionController.java` `userService.java`
+#### 5 commits destacados
+https://github.com/DWS-2025/project-grupo-13/commit/b96187487af726e111c14ad4682791b468e77740
+https://github.com/DWS-2025/project-grupo-13/commit/9fb856d5e7e3285b3dec4c670111ea73f7c21956
+https://github.com/DWS-2025/project-grupo-13/commit/f0c37ae5da0fab9b62531bf17e80fd3fca7b5626
+https://github.com/DWS-2025/project-grupo-13/commit/3fcbff24984ec7952e22335b476423b5223fa700
+https://github.com/DWS-2025/project-grupo-13/commit/e76ab6a52c72b18eca1d28ef781aa60753b6fa51
 ## Trabajo de cada integrante (FASE 3)
 ### Pablo
 Busqueda dinámica, filtros de archivos, blacklists/whitelists, protección path traversal, solución de errores.

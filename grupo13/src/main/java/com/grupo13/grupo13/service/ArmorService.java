@@ -93,7 +93,8 @@ public class ArmorService {
             Armor armor = findById(armorDTO.id());
             Character character = characterMapper.toDomain(characterDTO); ////////////////////////////////////////////////////
             armor.getCharacters().add(character);
-            armorRepository.save(armor);}
+            armorRepository.save(armor);
+        }
     }
 
 	//returns all armors in a list
@@ -128,17 +129,6 @@ public class ArmorService {
 	
     //updates an armor when edited
     public void update(Long oldArmorId, ArmorDTO updatedArmorDTO){
-        
-        /*if(armorRepository.existsById(oldArmorId)){
-
-            Armor updatedArmor = findById(updatedArmorDTO.id());
-            updatedArmor.setId(oldArmorId);
-
-            armorRepository.save(updatedArmor);
-
-        }else{
-            throw new NoSuchElementException();
-        }*/
         if(userService.getLoggedUser().getRoles().contains("ADMIN")){
             InputSanitizer.validateWhitelist(updatedArmorDTO.name());
             InputSanitizer.validateWhitelist(updatedArmorDTO.description());
@@ -197,29 +187,5 @@ public class ArmorService {
             armor.setImageFile(BlobProxy.generateProxy(inputStream, size));
             armorRepository.save(armor);
         }
-    }
-
-    public int maxDefense(){
-        int maxDef=0;
-        for(ArmorBasicDTO arm : mapper.toBasicDTOs(armorRepository.findAll())){
-            maxDef = arm.defense()>maxDef?arm.defense():maxDef;
-        }
-        return maxDef;
-    }
-
-    public int maxPrice(){
-        int maxPrice=0;
-        for(ArmorBasicDTO arm : mapper.toBasicDTOs(armorRepository.findAll())){
-            maxPrice = arm.price()>maxPrice?arm.price():maxPrice;
-        }
-        return maxPrice;
-    }
-
-    public int maxStyle(){
-        int maxStyle=0;
-        for(ArmorBasicDTO arm : mapper.toBasicDTOs(armorRepository.findAll())){
-            maxStyle = arm.style()>maxStyle?arm.style():maxStyle;
-        }
-        return maxStyle;
     }
 }

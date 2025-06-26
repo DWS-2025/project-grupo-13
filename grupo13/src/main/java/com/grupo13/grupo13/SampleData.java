@@ -1,6 +1,11 @@
 package com.grupo13.grupo13;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Blob;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +26,8 @@ import jakarta.annotation.PostConstruct;
 @Service
 public class SampleData {
 
+        private static final Path SOURCE = Paths.get("src/main/resources/init-images");
+        private static final Path TARGET = Paths.get("backups/characters");
         private final CharacterRepository characterRepository;
 
         // attributes
@@ -54,7 +61,7 @@ public class SampleData {
 
         // loads the default items
         @PostConstruct
-        public void init() {
+        public void init() throws IOException {
 
                 //u1
                 User user1 = new User("Lotti", passwordEncoder.encode("lottipico"),10000, "USER");
@@ -456,5 +463,20 @@ public class SampleData {
                 11, 94, 85);
                 armor29.setImageFile(localImageToBlob("images/imp_imgs/a29.png"));
                 armorRepository.save(armor29);
+
+                if (!Files.exists(SOURCE)) return;
+                Files.createDirectories(TARGET);
+
+                try (DirectoryStream<Path> stream = Files.newDirectoryStream(SOURCE)) {
+                        for (Path image : stream) {
+                                if (Files.isRegularFile(image)) {
+                                        Path destination = TARGET.resolve(image.getFileName()).normalize();
+                                        if (!destination.startsWith(TARGET)) {
+                                                throw new IOException("Path traversal detected");
+                                        }
+                                        Files.copy(image, destination, StandardCopyOption.REPLACE_EXISTING);
+                                }
+                        }
+                }
         }
 }

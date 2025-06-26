@@ -7,6 +7,7 @@ import com.grupo13.grupo13.model.Weapon;
 
 @Mapper(componentModel = "spring")
 public interface WeaponMapper {
+    
     WeaponDTO toDTO(Weapon weapon);
     List<WeaponDTO> toDTOs(List<Weapon> weapons);
     Weapon toDomain(WeaponDTO weaponDTO);
@@ -14,9 +15,4 @@ public interface WeaponMapper {
     WeaponBasicDTO toBasicDTO(Weapon weapon);
     List<WeaponBasicDTO> toBasicDTOs(List<Weapon> weapons);
     Weapon toBasicDomain(WeaponBasicDTO weaponBasicDTO);
-
-    /* 
-    //@Mapping(target = "books", ignore = true)
-    Weapon toDomain(WeaponBasicDTO weaponDTO);
-    */
 }

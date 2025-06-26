@@ -19,17 +19,14 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
-import com.grupo13.grupo13.DTOs.UserBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
-import com.grupo13.grupo13.NoSuchElementExceptionCA;
-import com.grupo13.grupo13.mapper.UserMapperImpl;
 import com.grupo13.grupo13.mapper.CharacterMapper;
 import com.grupo13.grupo13.mapper.UserMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
-import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.User;
@@ -156,6 +153,27 @@ public class CharacterService {
         return finalName;     
     }
 
+    public void deleteImageSafely(String imageName) {
+        Path imagePath = BACKUP_FOLDER.resolve(imageName).normalize();
+        if (!imagePath.startsWith(BACKUP_FOLDER)) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Path traversal detected"
+            );
+        }
+        try {
+            if (Files.exists(imagePath)) {
+                Files.delete(imagePath);
+            }
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error deleting image file",
+                e
+            );
+        }
+    }
+
     //show image 
     public ResponseEntity<Object> returnImage(String imageName) throws MalformedURLException {
         if (!imageName.contains(".")) {
@@ -229,12 +247,7 @@ public class CharacterService {
             character.setStrength(0);
             character.setIntimidation(0);
             character.setWeaponEquiped(false);
-            // removes the character from the list
-            /*if (weaponRepository.findById(id).isPresent()) {
-                weaponRepository.findById(id).get().getCharacters().remove(character);
 
-                weaponService.saveDTO(weaponMapper.toDTO(weaponRepository.findById(id).get()));
-            }*/
             Weapon weapon = weaponService.findById(id);
             weapon.getCharacters().remove(character);
             weaponService.save(weapon);
@@ -251,11 +264,7 @@ public class CharacterService {
             character.setDefense(0);
             character.setStyle(0);
             character.setArmorEquiped(false);
-            // removes the character from the list
-            /*if (armorRepository.findById(id).isPresent()) {
-                armorRepository.findById(id).get().getCharacters().remove(character);
-                armorService.saveDTO(armorMapper.toDTO(armorRepository.findById(id).get()));
-            } */
+
             Armor armor = armorService.findById(id);
             armor.getCharacters().remove(character);
             armorService.save(armor);
@@ -263,26 +272,8 @@ public class CharacterService {
         }
     }
 
-    /*// deletes the given character
-    public void delete(Character character) {
-        if (character.getArmor() != null) {
-            long id = character.getArmor().getId();
-            if (armorRepository.findById(id).isPresent()) {
-                armorMapper.toDomain(armorService.findById(id)).getCharacters().remove(character);
-
-            }
-        }
-        if (character.getWeapon() != null) {
-            long id = character.getWeapon().getId();
-            if (weaponService.findById(id).isPresent()) {
-                weaponService.findById(id).get().getCharacters().remove(character);
-            }
-        }
-        userService.getLoggedUser().get().setCharacter(null);
-        characterRepository.deleteById(character.getId());
-    }
-*/
     public void deleteById(long id) {
+        deleteImageSafely(findById(id).getImageName());
         characterRepository.deleteById(id);  
     }
 
@@ -303,51 +294,40 @@ public class CharacterService {
     }
 
     public Resource downloadImage(long id) throws IOException, IllegalAccessException {
-    if (userService.getLoggedUser().getRoles().contains("ADMIN") 
-        || userService.getCharacter().id() == id) {
+        if (userService.getLoggedUser().getRoles().contains("ADMIN") || userService.getCharacter().id() == id) {
 
-        Character character = characterRepository.findById(id).orElseThrow();
+            Character character = characterRepository.findById(id).orElseThrow();
+            String imageName = character.getImageName();
+            if (imageName == null) {
+                throw new NoSuchElementException("Character has no image");
+            }
+            if (!imageName.contains(".")) {
+                imageName = imageName + ".jpg";
+            }
+            if (imageName.contains("..") 
+                || imageName.contains("/") 
+                || imageName.contains("\\") 
+                || imageName.startsWith(".")) {
+                throw new SecurityException("Invalid file name: " + imageName);
+            }
 
-        String imageName = character.getImageName();
-        if (imageName == null) {
-            throw new NoSuchElementException("Character has no image");
+            Path imagePath = BACKUP_FOLDER.resolve(imageName).normalize();
+            if (!imagePath.startsWith(BACKUP_FOLDER)) {
+                throw new SecurityException("Invalid image path: " + imagePath);
+            }
+            if (!Files.exists(imagePath)) {
+                throw new FileNotFoundException("Image not found on disk: " + imagePath);
+            }
+
+            Resource resource = new UrlResource(imagePath.toUri());
+            if (!resource.exists() || !resource.isReadable()) {
+                throw new IOException("Image cannot be read: " + imagePath);
+            }
+            return resource;
+        } else {
+            throw new IllegalAccessException("Not allowed to access this image");
         }
-
-        if (!imageName.contains(".")) {
-            imageName = imageName + ".jpg";
-        }
-
-        if (imageName.contains("..") 
-            || imageName.contains("/") 
-            || imageName.contains("\\") 
-            || imageName.startsWith(".")) {
-            throw new SecurityException("Invalid file name: " + imageName);
-        }
-
-        Path imagePath = BACKUP_FOLDER.resolve(imageName).normalize();
-
-        if (!imagePath.startsWith(BACKUP_FOLDER)) {
-            throw new SecurityException("Invalid image path: " + imagePath);
-        }
-
-        if (!Files.exists(imagePath)) {
-            throw new FileNotFoundException("Image not found on disk: " + imagePath);
-        }
-
-        Resource resource = new UrlResource(imagePath.toUri());
-        if (!resource.exists() || !resource.isReadable()) {
-            throw new IOException("Image cannot be read: " + imagePath);
-        }
-
-        return resource;
-
-    } else {
-        throw new IllegalAccessException("Not allowed to access this image");
     }
-}
-
-
-
 
     //change the image for a new one
     public void replaceImage(long id, InputStream inputStream, long size) {

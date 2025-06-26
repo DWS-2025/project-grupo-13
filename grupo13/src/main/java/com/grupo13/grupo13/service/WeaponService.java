@@ -124,7 +124,7 @@ public class WeaponService {
         return weaponRepository.findById(id).orElseThrow();
     }
 
-//din. search
+    //din. search
     public List<WeaponBasicDTO> search(WeaponSearchDTO probe) {
         Integer strength = (probe.strength() != null && probe.strength() != 0) ? probe.strength() : null;
         Integer price = (probe.price() != null && probe.price() != 0) ? probe.price() : null;
@@ -164,15 +164,6 @@ public class WeaponService {
 	
     //updates a weapon when edited
     public void update(Long oldWeaponid, WeaponDTO updatedWeaponDTO){
-        
-        /*if (weaponRepository.existsById(oldWeaponid)) {
-            Weapon updatedWeapon = findById(updatedWeaponDTO.id());
-            updatedWeapon.setId(oldWeaponid);
-
-            weaponRepository.save(updatedWeapon);
-        }else{
-            throw new NoSuchElementException();
-        } */
         if( userService.getLoggedUser().getRoles().contains("ADMIN")){
             InputSanitizer.validateWhitelist(updatedWeaponDTO.name());
             InputSanitizer.validateWhitelist(updatedWeaponDTO.description());
