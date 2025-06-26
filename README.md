@@ -49,9 +49,13 @@ Fix de búsqueda dinámica, funciones /admin, imagenes en disco, sanitización, 
 `AdminController.java`, `SessionController.java`, `userService.java`, `ImputSanitizer.java`,`characterService.java`.
 #### 5 commits destacados
 https://github.com/DWS-2025/project-grupo-13/commit/38188246819b543ab304923c5efe0f5b8aa3b26d
+
 https://github.com/DWS-2025/project-grupo-13/commit/a33246259a76126c0c5888332bfd2e5c6528b7a6
+
 https://github.com/DWS-2025/project-grupo-13/commit/c8c2fa8741b32f33f66e73bec1df5598cde5d602
+
 https://github.com/DWS-2025/project-grupo-13/commit/0ebaa14ad92793f745680a9b57aeab0dc6f0d6e5
+
 https://github.com/DWS-2025/project-grupo-13/commit/b1f52b3ad3b4e8ac21a4137be774faead073c15a
 ### Andrea
 Introducción DTOs, manejo de DTOs, funciones de gestión de usuarios, pagina del perfil de usuario e y sus implementaciones, solución de errores.
@@ -77,20 +81,30 @@ Carpeta de seguridad, users y adaptar la web al manejo de users. Añadir funcion
 `Security Config`, `Session Controller`, `User Service`,`Grupo13RestController`,`CharacterService`.
 #### 5 commits destacados
 https://github.com/DWS-2025/project-grupo-13/commit/6ca70715035b878856bf48d439d18345f1e4e4a4
+
 https://github.com/DWS-2025/project-grupo-13/commit/444ef3ce6ef77ab5322d52f91668054b93e506f6
+
 https://github.com/DWS-2025/project-grupo-13/commit/c3d197fa201f6d04b39e3b5c5651b6ffaa93401c
+
 https://github.com/DWS-2025/project-grupo-13/commit/cf737d3a01dd1ad1dc6c25cc8c24089de674e4c5
+
 https://github.com/DWS-2025/project-grupo-13/commit/6f153b981393b80b23f9c5108f0fbac36a08a316
+
 ### Eduardo
 paginación y compra de objetos (tienda); cargar objetos predeterminados (SampleData); detalles de formato, tabulaciones, estilos, etc; corrección de errores (pasar botones a forms, capar campos en formularios para la bd, errores al eliminar/editar entidades...)
 #### 5 archivos más modificados:
 `SampleData.java` `listing_armors.html` `listing_weapons.html` `sessionController.java` `userService.java`
 #### 5 commits destacados
 https://github.com/DWS-2025/project-grupo-13/commit/b96187487af726e111c14ad4682791b468e77740
+
 https://github.com/DWS-2025/project-grupo-13/commit/9fb856d5e7e3285b3dec4c670111ea73f7c21956
+
 https://github.com/DWS-2025/project-grupo-13/commit/f0c37ae5da0fab9b62531bf17e80fd3fca7b5626
+
 https://github.com/DWS-2025/project-grupo-13/commit/3fcbff24984ec7952e22335b476423b5223fa700
+
 https://github.com/DWS-2025/project-grupo-13/commit/e76ab6a52c72b18eca1d28ef781aa60753b6fa51
+
 ## Trabajo de cada integrante (FASE 3)
 ### Pablo
 Busqueda dinámica, filtros de archivos, blacklists/whitelists, protección path traversal, solución de errores.
