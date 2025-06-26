@@ -6,12 +6,12 @@
 <form action="/armor/{{armor.id}}/edit" method="post" enctype="multipart/form-data">
     <p style="color:rgb(235, 152, 50);">Name: </p>
     <input type='text' name='name' value="{{armor.name}}"/>
+    <p style="color:rgb(235, 152, 50);">Defense: </p>
+    <input type='text' name='defense' value="{{armor.defense}}"/>
     <p style="color:rgb(235, 152, 50);">Style: </p>
     <input type='text' name='style' value="{{armor.style}}"/>
     <p style="color:rgb(235, 152, 50);">Description:</p>
     <textarea name='description'>{{armor.description}}</textarea>
-    <p style="color:rgb(235, 152, 50);">Defense: </p>
-    <input type='text' name='defense' value="{{armor.defense}}"/>
     <p style="color:rgb(235, 152, 50);">Price: </p>
     <input type='text' name='price' value="{{armor.price}}"/>
     <p style="color:rgb(235, 152, 50);">Image file:</p>

@@ -5,29 +5,30 @@
    <div class="d-flex col-5">
       <div class="card w-100 border-dark" style="background-color:  rgb(249, 196, 164);">
          <img src="/userImage"></img>
-         <form action="/editCharacter" method="POST">
-            <h5 class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.name}}</h5>
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> 
-               <input type="text" name="name" value="{{character.name}}" class="form-control" style="width: 100%;" />
-            </li>
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
-               <input type="hidden" name="_csrf" value="{{token}}" />
-               <input type='submit' class="btn btn-primary" value='Change name'/>
-            </li>
-         </form>
-         <form action="/deleteCharacter" method="POST">
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+         <div class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+            <form action="/editCharacter" method="POST">
+               <h5 class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.name}}</h5>
+               <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> 
+                  <input type="text" name="name" value="{{character.name}}" class="form-control" style="width: 100%;" />
+               </li>
+               <div class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+                  <input type="hidden" name="_csrf" value="{{token}}" />
+                  <input type='submit' class="btn btn-primary"value='Change name'/>
+               </div>
+            </form>
+         </div> 
+         <div class="list-group-item" style="background-color:  rgb(249, 196, 164); height: 53px;">
+            <form action="/deleteCharacter" method="POST">
                <input type="hidden" name="_csrf" value="{{token}}"/>
-               <input type='submit' class="btn btn-primary" value='Delete character'/>
-            </li>
-         </form>
-         
-         <form action="/download" method="GET">
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+               <input type='submit' class="btn btn-primary" style="background-color: #f92929;" value='Delete character'/>            
+            </form> 
+         </div>
+         <div class="list-group-item" style="background-color:  rgb(249, 196, 164); height: 53px">   
+            <form action="/download" method="GET">          
                <input type="hidden" name="_csrf" value="{{token}}"/>
-               <input type='submit' class="btn btn-primary" value='Download image'/>
-            </li>
-         </form>
+               <input type='submit' class="btn btn-primary" style="background-color: #21d95e;" value='Download image'/>
+            </form>
+         </div>
          <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
             <p class="card-text">{{{character.description}}}</p>
          </li> <!--Shows rich text -->

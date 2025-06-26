@@ -6,12 +6,12 @@
 <form action="/weapon/{{weapon.id}}/edit" method="post" enctype="multipart/form-data">
     <p style="color:rgb(235, 152, 50);">Name: </p>
     <input type='text' name='name' value="{{weapon.name}}"/>
+    <p style="color:rgb(235, 152, 50);">Strength: </p>
+    <input type='text' name='strength' value="{{weapon.strength}}"/>
     <p style="color:rgb(235, 152, 50);">Intimidation: </p>
     <input type='text' name='intimidation' value="{{weapon.intimidation}}"/>
     <p style="color:rgb(235, 152, 50);">Description:</p>
     <textarea name='description'>{{weapon.description}}</textarea>
-    <p style="color:rgb(235, 152, 50);">Strength: </p>
-    <input type='text' name='strength' value="{{weapon.strength}}"/>
     <p style="color:rgb(235, 152, 50);">Price: </p>
     <input type='text' name='price' value="{{weapon.price}}"/>
     <p style="color:rgb(235, 152, 50);">Image file:</p>

@@ -5,22 +5,24 @@
    <div class="d-flex col-5">
       <div class="card w-100 border-dark" style="background-color:  rgb(249, 196, 164);">
          <img src="/userImageAdmin/{{viewUser.id}}"></img>
-         <form action="/admin/user/{{viewUser.id}}/editCharacterName" method="POST">
-            <h5 class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.name}}</h5>
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> 
-               <input type="text" name="newName" value="{{character.name}}" class="form-control" style="width: 100%;" />
-            </li>
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
-               <input type="hidden" name="_csrf" value="{{token}}" />
-               <input type="submit" class="btn btn-primary" value="Change Name">
-            </li>
-         </form>
-         <form action="/downloadAdmin/{{viewUser.id}}" method="GET">
-            <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+         <div class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+            <form action="/admin/user/{{viewUser.id}}/editCharacterName" method="POST">
+               <h5 class="list-group-item" style="background-color:  rgb(249, 196, 164);">{{character.name}}</h5>
+               <li class="list-group-item" style="background-color:  rgb(249, 196, 164);"> 
+                  <input type="text" name="newName" value="{{character.name}}" class="form-control" style="width: 100%;" />
+               </li>
+               <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
+                  <input type="hidden" name="_csrf" value="{{token}}" />
+                  <input type="submit" class="btn btn-primary" value="Change Name">
+               </li>
+            </form>
+         </div>
+         <div class="list-group-item" style="background-color:  rgb(249, 196, 164); height: 53px"> 
+            <form action="/downloadAdmin/{{viewUser.id}}" method="GET">
                <input type="hidden" name="_csrf" value="{{token}}"/>
-               <input type='submit' class="btn btn-primary" value='Download image'/>
-            </li>
-         </form>
+               <input type='submit' class="btn btn-primary" style="background-color: #21d95e;" value='Download image'/>
+            </form>
+         </div>
          <li class="list-group-item" style="background-color:  rgb(249, 196, 164);">
             <p class="card-text">{{{character.description}}}</p>
          </li> <!--Shows rich text -->

@@ -266,7 +266,6 @@ public class sessionController {
     @PostMapping("/equipWeapon")
     public String equipWeapon(@RequestParam long id, Model model) {
         CharacterDTO characterDTO = userService.getCharacter();
-        Character character = characterMapper.toDomain(characterDTO);
         WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
         if (weaponDTO != null) { // if it exists
             characterService.equipWeapon(weaponDTO, characterDTO.id()); // equips it, adding the necessary attributes
@@ -281,10 +280,9 @@ public class sessionController {
     @PostMapping("/equipArmor")
     public String equipArmor(@RequestParam long id, Model model) {
         CharacterDTO characterDTO= userService.getCharacter();
-        Character character = characterMapper.toDomain(characterDTO);
         ArmorDTO armorDTO = armorService.findByIdDTO(id);
         if (armorDTO != null) { // if it exists
-            characterService.equipArmor(armorDTO, character.getId()); // equips it, adding the necessary attributes
+            characterService.equipArmor(armorDTO, characterDTO.id()); // equips it, adding the necessary attributes
             //armorService.addCharacter(characterDTO, armorDTO);
             return "redirect:/character";
         } else {
