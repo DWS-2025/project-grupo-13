@@ -182,7 +182,6 @@ public class grupo13RestController {
 		}
 	}
 
-
 	@PutMapping("/armor/{id}")
 	public ResponseEntity<?> replaceArmor(@PathVariable long id, @RequestBody ArmorDTO updatedArmorDTO) {
 		try {
@@ -194,7 +193,6 @@ public class grupo13RestController {
 			return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
 		}
 	}
-
 
 	@PutMapping("/weapon/{id}/image")
 	public ResponseEntity<Object> replaceWeaponImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
@@ -436,8 +434,6 @@ public class grupo13RestController {
 		return weaponService.search(probe); 
 	}
 
-
-
 	@PostMapping("/armor/purchase/{id}")
 	public ArmorDTO purchaseArmor(@PathVariable long id) {
 		ArmorDTO armorDTO = armorService.findByIdDTO(id);
@@ -457,7 +453,6 @@ public class grupo13RestController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough Money");
 		}
 	}
-
 
 	//Equip weapons and armors
 
@@ -487,26 +482,26 @@ public class grupo13RestController {
 
 	@PostMapping("/armor/equipment/{id}")
 	public ArmorDTO equipArmor(@PathVariable long id) {
-		//launches error if character doesnt exist, to be improved
+		// launches error if character doesnt exist, to be improved
 		if (userService.getCharacter() != null) {
-		CharacterDTO characterDTO = userService.getCharacter();
-		Character character = characterMapper.toDomain(characterDTO);
-		long charId = character.getId();
-		ArmorDTO equipment = armorService.findByIdDTO(id);
-		if (equipment != null) { // if it exists
-			if (userService.hasArmor(id)) {
-				characterService.equipArmor(equipment, charId); // equips it, adding the necessary attributes
-				//armorService.addCharacter(characterDTO, equipment);
-				return armorService.findByIdDTO(id);
+			CharacterDTO characterDTO = userService.getCharacter();
+			Character character = characterMapper.toDomain(characterDTO);
+			long charId = character.getId();
+			ArmorDTO equipment = armorService.findByIdDTO(id);
+			if (equipment != null) { // if it exists
+				if (userService.hasArmor(id)) {
+					characterService.equipArmor(equipment, charId); // equips it, adding the necessary attributes
+					// armorService.addCharacter(characterDTO, equipment);
+					return armorService.findByIdDTO(id);
+				} else {
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased");
+				}
 			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); 
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
 			}
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); 
-		}
-	 } else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Character not created");
-	 }
+		}
 	}
 
 	//Unequip weapons and armors
@@ -596,7 +591,4 @@ public class grupo13RestController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid"); 
 		}
 	}
-
-	
-	
 }
