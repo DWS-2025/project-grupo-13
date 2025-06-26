@@ -293,6 +293,8 @@ public class UserService {
             } else{
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong id");
             }
+        }else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is already taken");
         }
     }
 
