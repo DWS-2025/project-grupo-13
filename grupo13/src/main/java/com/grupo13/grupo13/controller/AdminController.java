@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
@@ -60,29 +62,7 @@ public class AdminController {
 
     //private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "src/main/resources/imp_imgs");
 
-    @GetMapping("weapon/{id}")
-    public String showWeapon(Model model, @PathVariable long id){
-        WeaponDTO weapon = weaponService.findByIdDTO(id);
-        if (weapon != null) {
-            model.addAttribute("weapon", weapon);
-            return "show_weapon";
-        }else{
-            return "error";
-        }
-    }
-    
-    @GetMapping("/armor/{id}")
-    public String showArmor(Model model, @PathVariable long id) {
-        ArmorDTO armor = armorService.findByIdDTO(id);
-        if(armor != null){
-            model.addAttribute("armor", armor);
-            return "show_armor";
-        }else{
-            return "error";
-        }
-    }
-
-    @GetMapping("/new_armor")
+   @GetMapping("/new_armor")
     public String newArmor(Model model) {
         model.addAttribute("user", userService.getLoggedUserDTO());
         return "new_armor";
@@ -171,7 +151,8 @@ public class AdminController {
             model.addAttribute("weapon", weapon);
             return "edit_weapon";
         }else{
-            return "error";
+            model.addAttribute("message", "Could not manage, not found");
+            return "sp_errors";
         }
     }
 
@@ -361,32 +342,36 @@ public class AdminController {
 
     @GetMapping("/downloadAdmin/{id}")
     public ResponseEntity<Resource> downloadImageAdmin(@PathVariable long id) throws IOException, IllegalAccessException {
-        if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
-            long idchar = userService.findById(id).character().id();
-            Resource image = characterService.downloadImage(idchar);
-            String cleanFileName = image.getFilename();
-            String username = userService.findById(id).userName();
+        try {
+            if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
+                long idchar = userService.findById(id).character().id();
+                Resource image = characterService.downloadImage(idchar);
+                String cleanFileName = image.getFilename();
+                String username = userService.findById(id).userName();
 
-            if (cleanFileName != null && username != null) {
-                cleanFileName = cleanFileName.replaceFirst("-" + Pattern.quote(username) + "(?=\\.[^.]+$)", "");
-            }
-
-            String contentType = "application/octet-stream";
-            try {
-                Path path = Paths.get(image.getURI());
-                String detectedType = Files.probeContentType(path);
-                if (detectedType != null) {
-                    contentType = detectedType;
+                if (cleanFileName != null && username != null) {
+                    cleanFileName = cleanFileName.replaceFirst("-" + Pattern.quote(username) + "(?=\\.[^.]+$)", "");
                 }
-            } catch (Exception e) {
-            }
-            return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cleanFileName + "\"")
-                .contentType(MediaType.parseMediaType(contentType))
-                .body(image);}
-            
-        else{ 
-            throw new IllegalAccessError("Only an admin can acess this feature");
-        }   
+
+                String contentType = "application/octet-stream";
+                try {
+                    Path path = Paths.get(image.getURI());
+                    String detectedType = Files.probeContentType(path);
+                    if (detectedType != null) {
+                        contentType = detectedType;
+                    }
+                } catch (Exception e) {
+                }
+                return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cleanFileName + "\"")
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(image);}
+                
+            else{ 
+                throw new IllegalAccessError("Only an admin can acess this feature");
+            } 
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The character doesn't have an image");
+        }  
     }
 }

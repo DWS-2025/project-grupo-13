@@ -7,16 +7,12 @@ import com.grupo13.grupo13.model.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+    
     UserDTO toDTO(User user);
     List<UserDTO> toDTOs(List<User> users);
     User toDomain(UserDTO userDTO);
 
     UserBasicDTO toBasicDTO(User user);
     List<UserBasicDTO> toBasicDTOs(List<User> users);
-    User toBasicDomain(UserBasicDTO userBasicDTO);
-
-    /*     
-    @Mapping(target = "character", ignore = true)
-    User toDomain(UserBasicDTO userDTO); 
-    */   
+    User toBasicDomain(UserBasicDTO userBasicDTO);   
 }

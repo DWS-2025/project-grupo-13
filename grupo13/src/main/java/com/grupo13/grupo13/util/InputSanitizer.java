@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class InputSanitizer {
 
     private static final Pattern WHITELIST_PATTERN = Pattern.compile("^[a-zA-Z0-9.,\\s]+$");
+    
     public static void checkIfNameEmpty(MultipartFile file){
         String fileName = file.getOriginalFilename();
         if (fileName == null || fileName.trim().isEmpty() || fileName.startsWith(".")) {
