@@ -374,5 +374,12 @@ public class CharacterService {
             }
         }
         return 0;
-    }  
+    }
+    
+    public void setImageName(long charId, String imageName){
+        Character character = findById(charId);
+        character.setImageName(imageName);
+
+        characterRepository.save(character);
+    }
 }

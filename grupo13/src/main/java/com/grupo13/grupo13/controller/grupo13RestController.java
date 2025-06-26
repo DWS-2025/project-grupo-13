@@ -252,16 +252,19 @@ public class grupo13RestController {
 	}
 
 	@GetMapping("/character/image/{id}")
-	public ResponseEntity<Object> getCharacterImage(@PathVariable long id) throws SQLException, IOException, IllegalAccessException {
-		if(id == userService.getLoggedUserDTO().id() || userService.getLoggedUserDTO().roles().contains("ADMIN")){
-			Resource postImage = characterService.getImageFile(userService.getLoggedUser().getId());
-		return ResponseEntity
-				.ok()
-				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-				.body(postImage);
-		}
-		else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not reach");
+	public ResponseEntity<Object> getCharacterImage(@PathVariable long id)
+			throws SQLException, IOException, IllegalAccessException {
+		if (userService.getLoggedUserDTO().character() != null) {
+			if (id == userService.getLoggedUserDTO().character().id()
+					|| userService.getLoggedUserDTO().roles().contains("ADMIN")) {
+				CharacterDTO c = characterService.findByIdDTO(id);
+				String imageName = c.imageName();
+				return characterService.returnImage(imageName);
+			} else {
+				throw new IllegalAccessError("Only an admin can acess this feature");
+			}
+		} else {
+			return ResponseEntity.badRequest().body("Error, Character not ccreated");
 		}
 	}
 
@@ -294,20 +297,32 @@ public class grupo13RestController {
 	}
 
 	@PostMapping("/character/{id}/image")
-	public ResponseEntity<Object> createCharacterImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+	public ResponseEntity<Object> createCharacterImage(@PathVariable long id,
+			@RequestParam MultipartFile characterImage)
 			throws IOException {
 		if (userService.getLoggedUserDTO().character() != null) {
 			if (!userService.getLoggedUserDTO().character().imageName().equals(null)) {
-				if (!InputSanitizer.isImageValid(imageFile)) {
-					return ResponseEntity.badRequest().body("Error: Invalid image file.");
+
+				if (id == userService.getLoggedUserDTO().character().id()
+						|| userService.getLoggedUserDTO().roles().contains("ADMIN")) {
+					InputSanitizer.checkIfNameEmpty(characterImage);
+					String originalFilename = characterImage.getOriginalFilename();
+					InputSanitizer.validateWhitelist(originalFilename);
+					int dotIndex = originalFilename.lastIndexOf('.');
+					String baseName = (dotIndex == -1) ? originalFilename : originalFilename.substring(0, dotIndex);
+					String extension = (dotIndex == -1) ? "" : originalFilename.substring(dotIndex);
+					String imageName = baseName + "-" + characterService.findByIdDTO(id).user().userName() + extension;
+					if (imageName.equals(null)) {
+						return ResponseEntity.badRequest().body("Error, Make sure the image has a valid name");
+					}
+					characterService.checkImageName(imageName);
+					characterService.setImageName(id, imageName);
+					return ResponseEntity.accepted().body("Created");
+				} else {
+					return ResponseEntity.badRequest().body("Unauthorized");
 				}
-				InputSanitizer.validateWhitelist(imageFile.getOriginalFilename());
-				InputSanitizer.checkIfNameEmpty(imageFile);
-				URI location = fromCurrentRequest().build().toUri();
-				characterService.createCharacterImage(id, location, imageFile.getInputStream(), imageFile.getSize());
-				return ResponseEntity.created(location).build();
 			} else {
-				return ResponseEntity.badRequest().body("Error, already created an image for character");
+				return ResponseEntity.badRequest().body("Error, already has image");
 			}
 		} else {
 			return ResponseEntity.badRequest().body("Error, character is not created character");
@@ -447,27 +462,32 @@ public class grupo13RestController {
 
 	@PostMapping("/weapon/equipment/{id}")
 	public WeaponDTO equipWeapon(@PathVariable long id) {
-		//launches error if character doesnt exist, to be improved
-		CharacterDTO characterDTO = userService.getCharacter();
-		Character character = characterMapper.toDomain(characterDTO);
-		long charId = character.getId();
-		WeaponDTO equipment = weaponService.findByIdDTO(id);
-		if (equipment != null) { // if it exists
-			if (userService.hasWeapon(id)) {
-				characterService.equipWeapon(equipment, charId); // equips it, adding the necessary attributes
-				//weaponService.addCharacter(characterDTO, equipment);
-				return weaponService.findByIdDTO(id);
+		// launches error if character doesnt exist, to be improved
+		if (userService.getCharacter() != null) {
+			CharacterDTO characterDTO = userService.getCharacter();
+			Character character = characterMapper.toDomain(characterDTO);
+			long charId = character.getId();
+			WeaponDTO equipment = weaponService.findByIdDTO(id);
+			if (equipment != null) { // if it exists
+				if (userService.hasWeapon(id)) {
+					characterService.equipWeapon(equipment, charId); // equips it, adding the necessary attributes
+					// weaponService.addCharacter(characterDTO, equipment);
+					return weaponService.findByIdDTO(id);
+				} else {
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased");
+				}
 			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); 
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
 			}
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); 
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Character not created");
 		}
 	}
 
 	@PostMapping("/armor/equipment/{id}")
 	public ArmorDTO equipArmor(@PathVariable long id) {
 		//launches error if character doesnt exist, to be improved
+		if (userService.getCharacter() != null) {
 		CharacterDTO characterDTO = userService.getCharacter();
 		Character character = characterMapper.toDomain(characterDTO);
 		long charId = character.getId();
@@ -483,6 +503,9 @@ public class grupo13RestController {
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"); 
 		}
+	 } else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Character not created");
+	 }
 	}
 
 	//Unequip weapons and armors
@@ -496,7 +519,7 @@ public class grupo13RestController {
 		ArmorDTO equipment = armorService.findByIdDTO(id);
 		if (equipment != null) { // if it exists
 			if (userService.hasArmor(id)) {
-				characterService.unEquipArmor(id, charId); // equips it, adding the necessary attributes
+				characterService.unEquipArmor(charId, id); 
 				return equipment;
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); 
@@ -515,7 +538,7 @@ public class grupo13RestController {
 		WeaponDTO equipment = weaponService.findByIdDTO(id);
 		if (equipment != null) { // if it exists
 			if (userService.hasWeapon(id)) {
-				characterService.unEquipWeapon(id, charId); // equips it, adding the necessary attributes
+				characterService.unEquipWeapon(charId, id); 
 				return equipment;
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not purchased"); 
@@ -563,5 +586,7 @@ public class grupo13RestController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid id"); 
 		}
 	}
+
+	
 	
 }
