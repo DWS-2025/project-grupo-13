@@ -110,6 +110,10 @@ public class UserService {
         return mapper.toBasicDTOs(userRepository.findAll());
     }
 
+    public List<User> findAllNotDTO() {
+        return userRepository.findAll();
+    }
+
     public void save(UserDTO userDTO) {
         User user = getLoggedUser();
         InputSanitizer.validateWhitelist(user.getUserName());
@@ -220,15 +224,15 @@ public class UserService {
     }
 
     //delete character
-    public void deleteCharacter(long id) {
-        if (getLoggedUserDTO().id() == id || getLoggedUser().getRoles().contains("ADMIN")) {
-            Character character = characterService.findById(id);
-            User user = character.getUser();
-            if (character != null) {
-                long charId = character.getId();
+    public void deleteCharacter(long userid) {
+        if (getLoggedUserDTO().id() == userid || getLoggedUser().getRoles().contains("ADMIN")) {
+            long charid = characterID(userid);
+            if (userid!=0) {
+                Character character = characterService.findById(charid);
+                User user = character.getUser();
                 user.setCharacter(null);
                 saveUser(user);
-                characterService.deleteById(charId);
+                characterService.deleteById(charid);
             }
         } else{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Id");
@@ -274,16 +278,16 @@ public class UserService {
         }
     }
 
-    public void deleteUser(long id) {
-        if( getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId() == id){
-            if (userRepository.existsById(id)) {
-                boolean hasChar = characterID(id)==0?false:true;
+    public void deleteUser(long userid) {   
+        if(getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId() == userid){
+            if (userRepository.existsById(userid)) {
+                boolean hasChar = characterID(userid)==0?false:true;
                 if(hasChar){
-                    deleteCharacter(characterID(id));
+                    deleteCharacter(userid);
                 }
-                userRepository.deleteById(id);
+                userRepository.deleteById(userid);
             } else {
-                throw new NoSuchElementException("User doesn't exist " + id);
+                throw new NoSuchElementException("User doesn't exist " + userid);
             }
         }
     }
@@ -313,7 +317,11 @@ public class UserService {
     public long characterID(long userid){
         for(User u : userRepository.findAll()){
             if(u.getId()==userid){
-                return u.getCharacter().getId();
+                if(u.getCharacter()!=null){
+                    return u.getCharacter().getId();
+                }else{
+                    return 0;
+                }
             }
         }
         return 0;
