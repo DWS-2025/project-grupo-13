@@ -349,16 +349,16 @@ public String changeImage(UserDTO dto, String newUserName) {
     
 
 
-    public void deleteUser(long id) {
-        if( getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId() == id){
-            if (userRepository.existsById(id)) {
-                boolean hasChar = characterID(id)==0?false:true;
+    public void deleteUser(long userid) {   
+        if(getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId() == userid){
+            if (userRepository.existsById(userid)) {
+                boolean hasChar = characterID(userid)==0?false:true;
                 if(hasChar){
-                    deleteCharacter(characterID(id));
+                    deleteCharacter(userid);
                 }
-                userRepository.deleteById(id);
+                userRepository.deleteById(userid);
             } else {
-                throw new NoSuchElementException("User doesn't exist " + id);
+                throw new NoSuchElementException("User doesn't exist " + userid);
             }
         }
     }
