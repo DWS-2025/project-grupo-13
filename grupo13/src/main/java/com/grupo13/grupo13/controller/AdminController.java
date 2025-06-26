@@ -369,37 +369,34 @@ public class AdminController {
 
     @GetMapping("/downloadAdmin/{id}")
     public ResponseEntity<Resource> downloadImageAdmin(@PathVariable long id) throws IOException, IllegalAccessException {
-    if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
-    long idchar = userService.findById(id).character().id();
-    Resource image = characterService.downloadImage(idchar);
+        if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
+            long idchar = userService.findById(id).character().id();
+            Resource image = characterService.downloadImage(idchar);
+            String cleanFileName = image.getFilename();
+            String username = userService.findById(id).userName();
 
-    String cleanFileName = image.getFilename();
-    String username = userService.findById(id).userName();
+            if (cleanFileName != null && username != null) {
+                cleanFileName = cleanFileName.replaceFirst("-" + Pattern.quote(username) + "(?=\\.[^.]+$)", "");
+            }
 
-    if (cleanFileName != null && username != null) {
-    cleanFileName = cleanFileName.replaceFirst("-" + Pattern.quote(username) + "(?=\\.[^.]+$)", "");
+            String contentType = "application/octet-stream";
+            try {
+                Path path = Paths.get(image.getURI());
+                String detectedType = Files.probeContentType(path);
+                if (detectedType != null) {
+                    contentType = detectedType;
+                }
+            } catch (Exception e) {
+            }
+            return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cleanFileName + "\"")
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(image);}
+            
+        else{ 
+            throw new IllegalAccessError("Only an admin can acess this feature");
+        }   
     }
-
-    String contentType = "application/octet-stream";
-    try {
-        Path path = Paths.get(image.getURI());
-        String detectedType = Files.probeContentType(path);
-        if (detectedType != null) {
-            contentType = detectedType;
-        }
-    } catch (Exception e) {
-       
-    }
-
-    return ResponseEntity.ok()
-        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cleanFileName + "\"")
-        .contentType(MediaType.parseMediaType(contentType))
-        .body(image);}
-        
-    else{ 
-         throw new IllegalAccessError("Only an admin can acess this feature");
-   }
-}
 
 //POR IMPLEMENTAR
 

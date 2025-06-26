@@ -9,15 +9,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.grupo13.grupo13.model.Armor;
+import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.ArmorRepository;
+import com.grupo13.grupo13.repository.CharacterRepository;
 import com.grupo13.grupo13.repository.UserRepository;
 import com.grupo13.grupo13.repository.WeaponRepository;
 import jakarta.annotation.PostConstruct;
 
 @Service
 public class SampleData {
+
+        private final CharacterRepository characterRepository;
 
         // attributes
         @Autowired
@@ -31,6 +35,10 @@ public class SampleData {
         
         @Autowired
 	private PasswordEncoder passwordEncoder;
+
+        SampleData(CharacterRepository characterRepository) {
+                this.characterRepository = characterRepository;
+        }
 
         public Blob localImageToBlob(String localFilePath) {
                 File imageFile = new File(localFilePath);
@@ -47,11 +55,47 @@ public class SampleData {
         // loads the default items
         @PostConstruct
         public void init() {
-                userRepository.save(new User("user", passwordEncoder.encode("pass"),10000, "USER"));
-                userRepository.save(new User("Lotti", passwordEncoder.encode("lottipico"),10000, "USER"));
-		userRepository.save(new User("admin", passwordEncoder.encode("adminpass"),2147483647, "USER", "ADMIN"));
 
-                //faltan las imagenes
+                //u1
+                User user1 = new User("Lotti", passwordEncoder.encode("lottipico"),10000, "USER");
+                userRepository.save(user1);
+
+                //u2
+                User user2 = new User("Raimundo García Fernández", passwordEncoder.encode("contraseña"),10000, "USER");
+                userRepository.save(user2);
+
+                //u3
+                User user3 = new User("juan", passwordEncoder.encode("juan"),10000, "USER");
+                userRepository.save(user3);
+
+                //u4
+                User user4 = new User("admin", passwordEncoder.encode("adminpass"),2147483647, "USER", "ADMIN");
+                userRepository.save(user4);
+
+                //u5
+                User user5 = new User("user", passwordEncoder.encode("pass"),10000, "USER");
+                userRepository.save(user5);
+
+                //c1
+                Character character1 = new Character("Spinning Cat", "Uiia Io Uuiia Iu", "uiiaiouuiiaiu-Lotti.jpg");
+                characterRepository.save(character1);
+                user1.setCharacter(character1);
+                character1.setUser(user1);
+                userRepository.save(user1);
+
+                //c2
+                Character character2 = new Character("In a village of La Mancha, the name of which I have no desire to call to mind, there lived not long since one of those gentlemen that keep a lance in the lance rack, an old buckler, a lean hack, and a greyhound for coursing.", "First chapter", "jd-Raimundo Garcia Fernandez.jpg");
+                characterRepository.save(character2);
+                user2.setCharacter(character2);
+                character2.setUser(user2);
+                userRepository.save(user2);
+
+                //c3
+                Character character3 = new Character("juan", "juan", "juan-juan.jpg");
+                characterRepository.save(character3);
+                user3.setCharacter(character3);
+                character3.setUser(user3);
+                userRepository.save(user3);
 
                 //w1.png
                 Weapon weapon = new Weapon("Wood Sword", "A simple blade carved from sturdy oak, this sword is the hallmark of novice adventurers. Though not the sharpest or strongest, it is reliable in a pinch and a good starting weapon for those just beginning their journey.",
