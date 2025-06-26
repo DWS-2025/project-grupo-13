@@ -117,6 +117,15 @@ public class sessionController {
 
     @GetMapping("/user")
     public String user(Model model, HttpServletRequest request) {
+        List<WeaponBasicDTO> currentInventoryWeapon = userService.currentUserInventoryWeapon();
+        List<ArmorBasicDTO> currentInventoryArmor = userService.currentUserInventoryArmor();
+        CharacterDTO characterDTO = userService.getCharacter();
+
+        // gets the character and its inventory for mustache
+        model.addAttribute("character", characterDTO);
+        model.addAttribute("currentWeapon", currentInventoryWeapon);
+        model.addAttribute("currentArmor", currentInventoryArmor);
+
         UserDTO user = userService.getLoggedUserDTO();
         model.addAttribute("user", user);
         return "profile";
