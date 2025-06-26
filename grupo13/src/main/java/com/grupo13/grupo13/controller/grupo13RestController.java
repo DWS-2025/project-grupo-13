@@ -25,6 +25,7 @@ import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
+import com.grupo13.grupo13.DTOs.UserBasicDTO;
 import com.grupo13.grupo13.DTOs.UserDTO;
 import com.grupo13.grupo13.DTOs.WeaponBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
@@ -579,11 +580,20 @@ public class grupo13RestController {
 	}
 
 	@GetMapping("/user/{id}")
-	public UserDTO getMethodName(@PathVariable long id) {
+	public UserDTO getUser(@PathVariable long id) {
 		if(id == userService.getLoggedUserDTO().id() || userService.getLoggedUserDTO().roles().contains("ADMIN")){
 			return userService.findById(id);
 		} else {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid id"); 
+		}
+	}
+
+	@GetMapping("/users")
+	public List<UserBasicDTO> getUserList() {
+		if(userService.getLoggedUserDTO().roles().contains("ADMIN")){
+			return userService.findAll();
+		} else {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid"); 
 		}
 	}
 

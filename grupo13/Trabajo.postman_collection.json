@@ -215,6 +215,26 @@
 			"response": []
 		},
 		{
+			"name": "GET - USERS",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{urlapi}}/users",
+					"host": [
+						"{{urlapi}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "POST - WEAPONS",
 			"request": {
 				"method": "POST",
