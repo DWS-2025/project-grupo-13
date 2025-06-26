@@ -274,6 +274,8 @@ public class grupo13RestController {
 		if (!InputSanitizer.isImageValid(imageFile)) {
 			return ResponseEntity.badRequest().body("Error: Invalid image file.");
 		}
+		InputSanitizer.validateWhitelist(imageFile.getOriginalFilename());
+		InputSanitizer.checkIfNameEmpty(imageFile);
 		URI location = fromCurrentRequest().build().toUri();
 		characterService.createCharacterImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.created(location).build();

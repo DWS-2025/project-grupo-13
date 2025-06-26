@@ -36,6 +36,8 @@ import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
+
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -123,7 +125,7 @@ public class sessionController {
             model.addAttribute("message", "File not allowed or missing: you must upload a jpg file.");
             return "sp_errors";
         }
-        
+        InputSanitizer.checkIfNameEmpty(characterImage);
         String originalFilename = characterImage.getOriginalFilename();
         InputSanitizer.validateWhitelist(originalFilename);
         int dotIndex = originalFilename.lastIndexOf('.');
