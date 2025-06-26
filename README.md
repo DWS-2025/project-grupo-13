@@ -71,11 +71,16 @@ https://github.com/DWS-2025/project-grupo-13/commit/634ce7cc6580ab9943cfd0878860
 https://github.com/DWS-2025/project-grupo-13/commit/9feaa3c12db45bbcee9bc0b171b4dadf1d3e1004
 
 ### Lucas
+Carpeta de seguridad, users y adaptar la web al manejo de users. Añadir funcionalidades y htmls para la gestión de seguridad y usuarios; implementacion de nuevas funciones en API REST y protección de esta.
+
 #### 5 archivos más modificados:
+`Security Config`, `Session Controller`, `User Service`,`Grupo13RestController`,`CharacterService`.
 #### 5 commits destacados
-https://github.com/DWS-2025/project-grupo-13/commit/0241c0a9e50388fd16c9a9e147b369465072037b
 https://github.com/DWS-2025/project-grupo-13/commit/6ca70715035b878856bf48d439d18345f1e4e4a4
 https://github.com/DWS-2025/project-grupo-13/commit/444ef3ce6ef77ab5322d52f91668054b93e506f6
+https://github.com/DWS-2025/project-grupo-13/commit/c3d197fa201f6d04b39e3b5c5651b6ffaa93401c
+https://github.com/DWS-2025/project-grupo-13/commit/cf737d3a01dd1ad1dc6c25cc8c24089de674e4c5
+https://github.com/DWS-2025/project-grupo-13/commit/6f153b981393b80b23f9c5108f0fbac36a08a316
 ### Eduardo
 paginación y compra de objetos (tienda); cargar objetos predeterminados (SampleData); detalles de formato, tabulaciones, estilos, etc; corrección de errores (pasar botones a forms, capar campos en formularios para la bd, errores al eliminar/editar entidades...)
 #### 5 archivos más modificados:
