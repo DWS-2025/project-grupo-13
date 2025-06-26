@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -188,14 +187,6 @@ public class AdminController {
         }
     }
     
-    /*@GetMapping("/delete_Character")
-    public String getMethodName(Model model) {
-        characterService.delete(userService.getCharacter());
-        return "deleted_character";
-
-    }
-    */
-
     @PostMapping("/weapon/{id}/edit")
 	public String updateWeapon(Model model, @PathVariable long id, WeaponDTO updatedWeaponDTO, @RequestParam MultipartFile weaponImage) throws IOException{
         Weapon updatedWeapon = weaponMapper.toDomain(updatedWeaponDTO);
@@ -301,7 +292,7 @@ public class AdminController {
     
     @PostMapping("/admin/user/{id}/delete")
 	public String deleteUser(Model model, @PathVariable long id) throws IOException{
-        if( userService.getLoggedUserDTO().roles().contains("ADMIN")){
+        if(userService.getLoggedUserDTO().roles().contains("ADMIN")){
             if(userService.getLoggedUserDTO().id() != id){
                 userService.deleteUser(id);
                 return "deleted_user";
@@ -317,9 +308,10 @@ public class AdminController {
     @PostMapping("/admin/user/{id}/deleteCharacter")
 	public String deleteCharacter(Model model, @PathVariable long id) throws IOException, NotFoundException{
         if(userService.getLoggedUserDTO().roles().contains("ADMIN")){
-            UserDTO u = userService.findById(id);
+            long userid=id;
+            UserDTO u = userService.findById(userid);
             if(u.character()!=null){
-                userService.deleteCharacter(u.character().id());
+                userService.deleteCharacter(userid);
             }else{
                 model.addAttribute("message", "This user doesn't have a character");
                 return "sp_errors";
@@ -397,45 +389,4 @@ public class AdminController {
             throw new IllegalAccessError("Only an admin can acess this feature");
         }   
     }
-
-//POR IMPLEMENTAR
-
-/*@PostMapping("/unEquipWeaponAdmin/")
-    public String unEquipWeapon(@RequestParam long id, Model model, @PathVariable long idUser) {
-        if( userService.getLoggedUser().getRoles().contains("ADMIN")){
-        CharacterDTO characterDTO = userService.getCharacterById(idUser);
-        Character character = characterMapper.toDomain(characterDTO);
-        WeaponDTO weaponDTO = weaponService.findByIdDTO(id);
-
-        if (weaponDTO != null) {
-            characterService.unEquipWeapon(character.getId(), id); // unequips it
-
-            return "redirect:/character";
-        } else {
-            model.addAttribute("message", "Could not unEquip, doesnt exist");
-            return "sp_errors";}
-        }else{
-             throw new IllegalAccessError("Only an admin can acess this feature");
-        }
-
-
-}
-
-    @PostMapping("/unEquipArmorAdmin")
-    public String unEquipArmor(@RequestParam long id, Model model, @PathVariable long idUser) {
-        CharacterDTO characterDTO = userService.getCharacter();
-        Character character = characterMapper.toDomain(characterDTO);
-        ArmorDTO armorDTO = armorService.findByIdDTO(id);
-
-        if (armorDTO != null) {
-            characterService.unEquipArmor(character.getId(), id); // unequips it
-
-            return "redirect:/character";
-        } else {
-            model.addAttribute("message", "Could not unEquip, doesnt exist");
-            return "sp_errors";
-        }
-    }
-*/
-
 }
