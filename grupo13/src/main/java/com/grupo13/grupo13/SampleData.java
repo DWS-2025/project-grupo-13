@@ -25,9 +25,9 @@ import jakarta.annotation.PostConstruct;
 
 @Service
 public class SampleData {
+
         private static final Path SOURCE = Paths.get("src/main/resources/init-images");
         private static final Path TARGET = Paths.get("backups/characters");
-
         private final CharacterRepository characterRepository;
 
         // attributes
@@ -464,19 +464,19 @@ public class SampleData {
                 armor29.setImageFile(localImageToBlob("images/imp_imgs/a29.png"));
                 armorRepository.save(armor29);
 
-        if (!Files.exists(SOURCE)) return;
-        Files.createDirectories(TARGET);
+                if (!Files.exists(SOURCE)) return;
+                Files.createDirectories(TARGET);
 
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(SOURCE)) {
-            for (Path image : stream) {
-                if (Files.isRegularFile(image)) {
-                    Path destination = TARGET.resolve(image.getFileName()).normalize();
-                    if (!destination.startsWith(TARGET)) {
-                        throw new IOException("Path traversal detected");
-                    }
-                    Files.copy(image, destination, StandardCopyOption.REPLACE_EXISTING);
+                try (DirectoryStream<Path> stream = Files.newDirectoryStream(SOURCE)) {
+                        for (Path image : stream) {
+                                if (Files.isRegularFile(image)) {
+                                        Path destination = TARGET.resolve(image.getFileName()).normalize();
+                                        if (!destination.startsWith(TARGET)) {
+                                                throw new IOException("Path traversal detected");
+                                        }
+                                        Files.copy(image, destination, StandardCopyOption.REPLACE_EXISTING);
+                                }
+                        }
                 }
-            }
-        }
         }
 }

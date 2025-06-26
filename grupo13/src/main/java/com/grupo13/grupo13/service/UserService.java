@@ -41,6 +41,7 @@ public class UserService {
              .resolve("backups")
              .resolve("characters")
              .normalize();
+
     //attributes
     @Lazy
     @Autowired
@@ -296,62 +297,51 @@ public class UserService {
     }
 
     
-public String changeImage(UserDTO dto, String newUserName) {
-    String currentFileName = dto.character().imageName(); 
+    public String changeImage(UserDTO dto, String newUserName) {
+        String currentFileName = dto.character().imageName(); 
+        // build new image name
+        int dotIndex = currentFileName.lastIndexOf('.');
+        String nameWithoutExt = currentFileName.substring(0, dotIndex); 
+        String extension      = currentFileName.substring(dotIndex);    
+        int dashIndex = nameWithoutExt.lastIndexOf('-');
+        if (dashIndex < 0) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Invalid image name"
+            );
+        }
 
-    // build new image name
-    int dotIndex = currentFileName.lastIndexOf('.');
-    String nameWithoutExt = currentFileName.substring(0, dotIndex); 
-    String extension      = currentFileName.substring(dotIndex);    
-
-    int dashIndex = nameWithoutExt.lastIndexOf('-');
-    if (dashIndex < 0) {
-        throw new ResponseStatusException(
-            HttpStatus.BAD_REQUEST,
-            "Invalid image name"
-        );
+        String prefix      = nameWithoutExt.substring(0, dashIndex); 
+        String oldUserName = nameWithoutExt.substring(dashIndex + 1); 
+        // checking if it matches
+        if (!oldUserName.equals(dto.userName())) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Can't find old file"
+            );
+        }
+        String newFileName = prefix + "-" + newUserName + extension;
+        // replacing file
+        Path oldPath = BACKUP_FOLDER.resolve(currentFileName).normalize();
+        Path newPath = BACKUP_FOLDER.resolve(newFileName).normalize();
+        if (!oldPath.startsWith(BACKUP_FOLDER) || !newPath.startsWith(BACKUP_FOLDER)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Path traversal detected");
+        }
+        try {
+            if (Files.exists(oldPath)) {
+                Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+                return newFileName;
+            }else{   
+                return currentFileName;
+            }   
+        } catch (IOException exc) {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error",
+                exc
+            );
+        }
     }
-
-    
-    String prefix      = nameWithoutExt.substring(0, dashIndex); 
-    String oldUserName = nameWithoutExt.substring(dashIndex + 1); 
-
-    // checking if it matches
-    if (!oldUserName.equals(dto.userName())) {
-        throw new ResponseStatusException(
-            HttpStatus.BAD_REQUEST,
-            "Can't find old file"
-        );
-    }
-
-   
-    String newFileName = prefix + "-" + newUserName + extension; 
-
-    // replacing file
-    Path oldPath = BACKUP_FOLDER.resolve(currentFileName).normalize();
-    Path newPath = BACKUP_FOLDER.resolve(newFileName).normalize();
-    if (!oldPath.startsWith(BACKUP_FOLDER) || !newPath.startsWith(BACKUP_FOLDER)) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Path traversal detected");
-    }
-    try {
-        if (Files.exists(oldPath)) {
-            Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
-            return newFileName;
-        }else{   
-            return currentFileName;
-}
-    } catch (IOException exc) {
-        throw new ResponseStatusException(
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            "Error",
-            exc
-        );
-    }
-       
-}
-
-    
-
 
     public void deleteUser(long userid) {   
         if(getLoggedUser().getRoles().contains("ADMIN")|| getLoggedUser().getId() == userid){

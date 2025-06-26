@@ -1,5 +1,4 @@
 package com.grupo13.grupo13.controller;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.grupo13.grupo13.model.Character;
 import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.DTOs.ArmorBasicDTO;
@@ -74,6 +72,28 @@ public class sessionController {
 
     @Autowired
     private UserMapper userMapper;
+
+     @GetMapping("weapon/{id}")
+    public String showWeapon(Model model, @PathVariable long id){
+        WeaponDTO weapon = weaponService.findByIdDTO(id);
+        if (weapon != null) {
+            model.addAttribute("weapon", weapon);
+            return "show_weapon";
+        }else{
+            return "error";
+        }
+    }
+    
+    @GetMapping("/armor/{id}")
+    public String showArmor(Model model, @PathVariable long id) {
+        ArmorDTO armor = armorService.findByIdDTO(id);
+        if(armor != null){
+            model.addAttribute("armor", armor);
+            return "show_armor";
+        }else{
+            return "error";
+        }
+    }
 
     @GetMapping("/character")
     public String index(Model model, HttpSession session) {
@@ -216,17 +236,6 @@ public class sessionController {
             model.addAttribute("weapons", weaponService.findAll());
         }
         return "search";
-    }
-
-    @GetMapping("weaponview/{id}")
-    public String showWeapon(Model model, @PathVariable long id) {
-        WeaponDTO weapon = weaponService.findByIdDTO(id);
-        if (weapon != null) {
-            model.addAttribute("weapon", weapon);
-            return "view_weapon";
-        } else {
-            return "error";
-        }
     }
 
     @PostMapping("/purchaseWeapon")
