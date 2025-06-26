@@ -1,4 +1,5 @@
 package com.grupo13.grupo13.controller;
+import java.security.Principal;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,12 +9,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.grupo13.grupo13.security.jwt.AuthResponse;
 import com.grupo13.grupo13.security.jwt.LoginRequest;
 import com.grupo13.grupo13.security.jwt.UserLoginService;
 import com.grupo13.grupo13.security.jwt.AuthResponse.Status;
 import com.grupo13.grupo13.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,9 +33,14 @@ public class LoginRestController {
 	@PostMapping("/login")
 	public ResponseEntity<AuthResponse> login(
 			@RequestBody LoginRequest loginRequest,
-			HttpServletResponse response) {
+			HttpServletResponse response, HttpServletRequest request) {
 		
-		return userService.login(response, loginRequest);
+		Principal principal = request.getUserPrincipal();
+		if(principal == null){ // if isnt logged, it logs in, otherwise, it wont let de user
+			return userService.login(response, loginRequest);
+		} else{
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Already logged in");
+		}
 	}
 
 	@PostMapping("/refresh")

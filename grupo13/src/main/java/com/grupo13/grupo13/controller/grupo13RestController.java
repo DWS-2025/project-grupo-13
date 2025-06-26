@@ -237,48 +237,71 @@ public class grupo13RestController {
 
 	// SHOW 1 -------------------------------------------------
 
-	@GetMapping("/character/")
-	public CharacterDTO getCharacter() {
-		return characterService.findByIdDTO(userService.getLoggedUser().getId());
+	@GetMapping("/character/{id}")
+	public CharacterDTO getCharacter(@PathVariable long id) {
+		if(id == userService.getLoggedUserDTO().id() || userService.getLoggedUserDTO().roles().contains("ADMIN")){
+			return characterService.findByIdDTO(userService.getLoggedUser().getId());
+		}
+		else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not reach");
+		}
 	}
 
-	@GetMapping("/character/image")
-	public ResponseEntity<Object> getCharacterImage() throws SQLException, IOException, IllegalAccessException {
-		Resource postImage = characterService.getImageFile(userService.getLoggedUser().getId());
+	@GetMapping("/character/image/{id}")
+	public ResponseEntity<Object> getCharacterImage(@PathVariable long id) throws SQLException, IOException, IllegalAccessException {
+		if(id == userService.getLoggedUserDTO().id() || userService.getLoggedUserDTO().roles().contains("ADMIN")){
+			Resource postImage = characterService.getImageFile(userService.getLoggedUser().getId());
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
 				.body(postImage);
+		}
+		else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not reach");
+		}
 	}
 
 	// CREATE -------------------------------------------------
 
 	@PostMapping("/characters")
 	public ResponseEntity<?> createCharacter(@RequestBody CharacterDTO characterDTO) {
-		try{
-			InputSanitizer.validateWhitelist(characterDTO.name());
-			InputSanitizer.validateWhitelist(characterDTO.description());
-			InputSanitizer.validateWhitelist(characterDTO.imageName());
-			characterService.save(characterDTO);
-			Character character = characterMapper.toDomain(characterDTO);
-			URI location = fromCurrentRequest().path("/{id}").buildAndExpand(character.getId()).toUri();
-			return ResponseEntity.created(location).body(characterDTO);
-		}catch (IllegalArgumentException ex) {
-	 		return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+		if (userService.getLoggedUserDTO().character() == null) {
+			try {
+				InputSanitizer.validateWhitelist(characterDTO.name());
+				InputSanitizer.validateWhitelist(characterDTO.description());
+				InputSanitizer.validateWhitelist(characterDTO.imageName());
+				characterService.save(characterDTO);
+				Character character = characterMapper.toDomain(characterDTO);
+				URI location = fromCurrentRequest().path("/{id}").buildAndExpand(character.getId()).toUri();
+				return ResponseEntity.created(location).body(characterDTO);
+			} catch (IllegalArgumentException ex) {
+				return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+			}
+		} else {
+			return ResponseEntity.badRequest().body("Error, already created character");
 		}
+
 	}
 
 	@PostMapping("/character/{id}/image")
 	public ResponseEntity<Object> createCharacterImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws IOException {
-		if (!InputSanitizer.isImageValid(imageFile)) {
-			return ResponseEntity.badRequest().body("Error: Invalid image file.");
+		if (userService.getLoggedUserDTO().character() != null) {
+			if (userService.getLoggedUserDTO().character().imageName() == null) {
+				if (!InputSanitizer.isImageValid(imageFile)) {
+					return ResponseEntity.badRequest().body("Error: Invalid image file.");
+				}
+				InputSanitizer.validateWhitelist(imageFile.getOriginalFilename());
+				InputSanitizer.checkIfNameEmpty(imageFile);
+				URI location = fromCurrentRequest().build().toUri();
+				characterService.createCharacterImage(id, location, imageFile.getInputStream(), imageFile.getSize());
+				return ResponseEntity.created(location).build();
+			} else {
+				return ResponseEntity.badRequest().body("Error, already created an image for character");
+			}
+		} else {
+			return ResponseEntity.badRequest().body("Error, character is not created character");
 		}
-		InputSanitizer.validateWhitelist(imageFile.getOriginalFilename());
-		InputSanitizer.checkIfNameEmpty(imageFile);
-		URI location = fromCurrentRequest().build().toUri();
-		characterService.createCharacterImage(id, location, imageFile.getInputStream(), imageFile.getSize());
-		return ResponseEntity.created(location).build();
 	}
 
 	// Update character
@@ -364,25 +387,25 @@ public class grupo13RestController {
 			@RequestParam(required = false) Integer price,
 			@RequestParam(required = false) Integer intimidation) {
     
-		String n = (name != null && !name.isBlank()) ? name : null;
-		String d = (description != null && !description.isBlank()) ? description : null;
-		Integer s = (strength != null && strength > 0) ? strength : null;
-		Integer p = (price != null && price > 0) ? price : null;
-		Integer i = (intimidation != null && intimidation > 0) ? intimidation : null;
+		String nameToSearch = (name != null && !name.isBlank()) ? name : null;
+		String descriptionToSearch = (description != null && !description.isBlank()) ? description : null;
+		Integer strengthToSearch = (strength != null && strength > 0) ? strength : null;
+		Integer priceToSearch = (price != null && price > 0) ? price : null;
+		Integer intimidationToSearch = (intimidation != null && intimidation > 0) ? intimidation : null;
 
 		int nonNull = 0;
-		if (n != null) nonNull++;
-		if (d != null) nonNull++;
-		if (s != null) nonNull++;
-		if (p != null) nonNull++;
-		if (i != null) nonNull++;
+		if (nameToSearch != null) nonNull++;
+		if (descriptionToSearch != null) nonNull++;
+		if (strengthToSearch != null) nonNull++;
+		if (priceToSearch != null) nonNull++;
+		if (intimidationToSearch != null) nonNull++;
 		if (nonNull < 2) {
 			throw new ResponseStatusException(
 				HttpStatus.BAD_REQUEST,
 				"Search with at least 2 fields"
 			);
 		}
-		WeaponSearchDTO probe = new WeaponSearchDTO(n, d, s, p, i);
+		WeaponSearchDTO probe = new WeaponSearchDTO(nameToSearch, descriptionToSearch, strengthToSearch, priceToSearch, intimidationToSearch);
 		return weaponService.search(probe); 
 	}
 

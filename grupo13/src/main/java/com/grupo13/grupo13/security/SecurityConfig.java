@@ -66,19 +66,30 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.POST, "/api/auth/logout").permitAll()				
 					.requestMatchers(HttpMethod.GET, "/api/weapon/*/image").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/armor/*/image").permitAll()
-					.requestMatchers(HttpMethod.GET, "/api/weapons/search").permitAll()
-					.requestMatchers(HttpMethod.GET, "/api/armors/search").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/search").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/weapons").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/armors").permitAll()
 					.requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
 
                     // PRIVATE ENDPOINTS
+					.requestMatchers(HttpMethod.GET, "/api/characters").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/api/weapons").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/api/armors").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/api/weapon/*/image").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/api/armor/*/image").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.PUT, "/api/weapon/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.PUT, "/api/armor/**").hasRole("ADMIN")
+
+					.requestMatchers(HttpMethod.DELETE, "/api/character/**").hasRole("USER")
+					.requestMatchers(HttpMethod.DELETE, "/api/user/**").hasRole("USER")
+
 					.requestMatchers(HttpMethod.GET, "/api/**").hasRole("USER")
                     .requestMatchers(HttpMethod.POST,"/api/**").hasRole("USER")
                     .requestMatchers(HttpMethod.PUT,"/api/**").hasRole("USER")
-                    .requestMatchers(HttpMethod.DELETE,"/api/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.PUT, "/api/editCharacter").hasRole("USER")
+                    .requestMatchers(HttpMethod.PUT, "/api/editCharacter").hasRole("USER")
 					.requestMatchers(HttpMethod.PUT, "/api/editUser").hasRole("USER")
+					.requestMatchers(HttpMethod.DELETE,"/api/**").hasRole("ADMIN")
+					
 
 					// PUBLIC ENDPOINTS
 					.anyRequest().permitAll()
