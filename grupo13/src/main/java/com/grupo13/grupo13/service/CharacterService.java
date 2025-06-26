@@ -19,6 +19,8 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
@@ -156,6 +158,30 @@ public class CharacterService {
         return finalName;     
     }
 
+    public void deleteImageSafely(String imageName) {
+
+    Path imagePath = BACKUP_FOLDER.resolve(imageName).normalize();
+ 
+    if (!imagePath.startsWith(BACKUP_FOLDER)) {
+        throw new ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Path traversal detected"
+        );
+    }
+    try {
+        if (Files.exists(imagePath)) {
+            Files.delete(imagePath);
+        }
+    } catch (IOException e) {
+        throw new ResponseStatusException(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "Error deleting image file",
+            e
+        );
+    }
+}
+
+
     //show image 
     public ResponseEntity<Object> returnImage(String imageName) throws MalformedURLException {
         if (!imageName.contains(".")) {
@@ -283,6 +309,7 @@ public class CharacterService {
     }
 */
     public void deleteById(long id) {
+        deleteImageSafely(findById(id).getImageName());
         characterRepository.deleteById(id);  
     }
 
