@@ -24,13 +24,17 @@ import org.springframework.web.server.ResponseStatusException;
 import com.grupo13.grupo13.DTOs.ArmorDTO;
 import com.grupo13.grupo13.DTOs.CharacterBasicDTO;
 import com.grupo13.grupo13.DTOs.CharacterDTO;
+import com.grupo13.grupo13.DTOs.UserBasicDTO;
 import com.grupo13.grupo13.DTOs.WeaponDTO;
 import com.grupo13.grupo13.NoSuchElementExceptionCA;
+import com.grupo13.grupo13.mapper.UserMapperImpl;
 import com.grupo13.grupo13.mapper.CharacterMapper;
+import com.grupo13.grupo13.mapper.UserMapper;
 import com.grupo13.grupo13.mapper.WeaponMapper;
 import com.grupo13.grupo13.mapper.armorMapper;
 import com.grupo13.grupo13.model.Armor;
 import com.grupo13.grupo13.model.Character;
+import com.grupo13.grupo13.model.User;
 import com.grupo13.grupo13.model.Weapon;
 import com.grupo13.grupo13.repository.ArmorRepository;
 import com.grupo13.grupo13.repository.CharacterRepository;
@@ -41,8 +45,6 @@ import java.nio.file.Path;
 @Service
 public class CharacterService {
 
-    private final NoSuchElementExceptionCA noSuchElementExceptionCA;
-    private final UserService userService;
     private static final Path BACKUP_FOLDER = 
         Paths.get("").toAbsolutePath()
              .resolve("backups")
@@ -66,18 +68,16 @@ public class CharacterService {
     private ArmorService armorService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private CharacterMapper mapper;
 
     @Autowired
     private WeaponMapper weaponMapper;
 
     @Autowired
-    private armorMapper armorMapper;
-    
-    CharacterService(UserService userService, NoSuchElementExceptionCA noSuchElementExceptionCA) {
-        this.userService = userService;
-        this.noSuchElementExceptionCA = noSuchElementExceptionCA;
-    }
+    private UserMapper userMapper;
 
     // returns all characters in a list
     public List<CharacterBasicDTO> findAll() {
@@ -411,4 +411,15 @@ public class CharacterService {
             throw new IllegalStateException("Not your character");
         }
     }
+
+    public long userID(long charid){
+        for(User u : userService.findAllNotDTO()){
+            if(userService.characterID(u.getId()) != 0){
+                if(u.getCharacter().getId() == charid){
+                    return u.getId();
+                }
+            }
+        }
+        return 0;
+    }  
 }

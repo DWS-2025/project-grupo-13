@@ -61,7 +61,7 @@ public class SampleData {
                 userRepository.save(user1);
 
                 //u2
-                User user2 = new User("Raimundo García Fernández", passwordEncoder.encode("contraseña"),10000, "USER");
+                User user2 = new User("Raimundo Garcia Fernandez", passwordEncoder.encode("contraseña"),10000, "USER");
                 userRepository.save(user2);
 
                 //u3

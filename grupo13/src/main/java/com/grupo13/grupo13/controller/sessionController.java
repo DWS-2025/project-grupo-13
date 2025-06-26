@@ -36,8 +36,6 @@ import com.grupo13.grupo13.service.ArmorService;
 import com.grupo13.grupo13.service.CharacterService;
 import com.grupo13.grupo13.service.UserService;
 import com.grupo13.grupo13.service.WeaponService;
-
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -146,12 +144,6 @@ public class sessionController {
         characterService.save(savedCharacterDTO, characterImage, imageName);
         characterService.saveUser(savedCharacterDTO); 
         userService.save(userService.getLoggedUserDTO());
-
-        /* // saves image in the correspondent folder
-        Files.createDirectories(IMAGES_FOLDER);
-        Path imagePath = IMAGES_FOLDER.resolve(imageName);
-        characterImage.transferTo(imagePath);
-        */
 
         model.addAttribute("character", character);
         List<WeaponBasicDTO> currentWeapon = userService.currentUserInventoryWeapon();
@@ -341,34 +333,6 @@ public class sessionController {
                 .body(image);
     }
 
-  /*  @GetMapping("/Weapon/{id}/image")
-    public ResponseEntity<Object> downloadImageWeapon(@PathVariable long id) throws SQLException {
-        WeaponDTO op = weaponService.findById(id);
-        if (op.isPresent() && op.get().getimageFile() != null) {
-            Blob image = op.get().getimageFile();
-            Resource file = new InputStreamResource(image.getBinaryStream());
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                    .contentLength(image.length()).body(file);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-
-    }
-
-    @GetMapping("/Armor/{id}/image")
-    public ResponseEntity<Object> downloadImageArmor(@PathVariable long id) throws SQLException {
-        Optional<Armor> op = armorService.findById(id);
-        if (op.isPresent() && op.get().getimageFile() != null) {
-            Blob image = op.get().getimageFile();
-            Resource file = new InputStreamResource(image.getBinaryStream());
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                    .contentLength(image.length()).body(file);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-
-    }
- */
     @GetMapping("/character/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
         CharacterDTO characterDTO = characterService.findByIdDTO(id);
@@ -434,10 +398,10 @@ public class sessionController {
     
     @PostMapping("/deleteCharacter")
     public String deleteCharacter(Model model) {
-        long id =userService.getLoggedUserDTO().id();
-        UserDTO u = userService.findById(id);
+        long userid = userService.getLoggedUserDTO().id();
+        UserDTO u = userService.findById(userid);
         if(u.character()!=null){
-            userService.deleteCharacter(u.character().id());
+            userService.deleteCharacter(userid);
         }else{
             model.addAttribute("message", "This user doesn't have a character");
             return "sp_errors";
@@ -448,32 +412,27 @@ public class sessionController {
   
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadImage() throws IOException, IllegalAccessException {
-    Long id = userService.getCharacter().id();
-    Resource image = characterService.downloadImage(id);
+        Long id = userService.getCharacter().id();
+        Resource image = characterService.downloadImage(id);
+        String cleanFileName = image.getFilename();
+        String username = userService.getLoggedUserDTO().userName();
 
-    String cleanFileName = image.getFilename();
-    String username = userService.getLoggedUserDTO().userName();
-
-    if (cleanFileName != null && username != null) {
-    cleanFileName = cleanFileName.replaceFirst("-" + Pattern.quote(username) + "(?=\\.[^.]+$)", "");
-    }
-
-    String contentType = "application/octet-stream";
-    try {
-        Path path = Paths.get(image.getURI());
-        String detectedType = Files.probeContentType(path);
-        if (detectedType != null) {
-            contentType = detectedType;
+        if (cleanFileName != null && username != null) {
+        cleanFileName = cleanFileName.replaceFirst("-" + Pattern.quote(username) + "(?=\\.[^.]+$)", "");
         }
-    } catch (Exception e) {
-       
+
+        String contentType = "application/octet-stream";
+        try {
+            Path path = Paths.get(image.getURI());
+            String detectedType = Files.probeContentType(path);
+            if (detectedType != null) {
+                contentType = detectedType;
+            }
+        } catch (Exception e) {
+        }
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cleanFileName + "\"")
+            .contentType(MediaType.parseMediaType(contentType))
+            .body(image);
     }
-
-    return ResponseEntity.ok()
-        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cleanFileName + "\"")
-        .contentType(MediaType.parseMediaType(contentType))
-        .body(image);
-}
-
-
 }

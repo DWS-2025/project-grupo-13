@@ -26,7 +26,7 @@ public class LoginWebController {
 	public String login(HttpServletRequest request) {
 		Principal principal = request.getUserPrincipal();
         if (principal != null) {
-			return "redirect:/";
+			return "/";
 		}
 		return "login";
 	}
